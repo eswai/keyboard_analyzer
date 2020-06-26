@@ -1,12 +1,13 @@
 <script>
-  export let press = false;
   export let legend = [""];
   export let size = 1;
+  export let value = 0;
 
-  $: css = press ? "keyon" : "keyoff"
+  $: gb = 255 - value * 10;
+  let width = 36 * size - 4;
 </script>
 
-<div class="key {css}" style="width: {36 * size - 4}px">
+<div class="key" style="width: {width}px; background-color:rgb(255, {gb}, {gb});">
   {#each legend as a}
   <div>{a}</div>
   {/each}
@@ -26,14 +27,6 @@
     /* grid-template-columns: 20px 20px; */
     font-size: 10px;
     /* align-items: baseline; */
-  }
-  
-  .keyon {
-    background-color:#caffbd;
-  }
-
-  .keyoff {
-    background-color:#ffffff;
   }
 
 </style>

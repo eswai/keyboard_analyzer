@@ -3,11 +3,35 @@
 	import mykeyboard from './jis_romaji.json';
 
 	let text = "My best keyboard.";
+	mykeyboard.rev = 0;
+
+	function analyze() {
+		for (let tk of mykeyboard.keys) {
+			tk.value = 0;
+		}
+		for (let i = 0; i < text.length; i++) {
+			// console.log(text.charAt(i));
+			if (text.charAt(i) in mykeyboard.conversion) {
+				let c = mykeyboard.conversion[text.charAt(i)]
+				// console.log(c);
+				for (let ck of c.keys) {
+					for (let tk of mykeyboard.keys) {
+						if (tk.id == ck) {
+							tk.value++;
+						}
+					}
+				}
+			}
+		}
+		mykeyboard.rev++;
+		// console.log(mykeyboard)
+	}
 </script>
 
 <main>
 	<h1>Keyboard Analyzer</h1>
-	<textarea>{text}</textarea>
+	<textarea bind:value={text} />
+	<button on:click={analyze}>Analyze</button>
 	<Keyboard layout={mykeyboard} />
 </main>
 
