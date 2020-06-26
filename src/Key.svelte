@@ -3,7 +3,7 @@
   export let size = 1;
   export let value = 0;
 
-  $: gb = 255 - value * 10;
+  $: gb = 255 * (1 - value);
   let width = 36 * size - 4;
 </script>
 

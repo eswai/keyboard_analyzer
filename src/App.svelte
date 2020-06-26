@@ -9,6 +9,7 @@
 		for (let tk of mykeyboard.keys) {
 			tk.value = 0;
 		}
+		let maxv = 0;
 		for (let i = 0; i < text.length; i++) {
 			// console.log(text.charAt(i));
 			if (text.charAt(i) in mykeyboard.conversion) {
@@ -18,10 +19,14 @@
 					for (let tk of mykeyboard.keys) {
 						if (tk.id == ck) {
 							tk.value++;
+							if (maxv < tk.value) maxv = tk.value;
 						}
 					}
 				}
 			}
+		}
+		for (let tk of mykeyboard.keys) {
+			tk.value /= maxv;
 		}
 		mykeyboard.rev++;
 		// console.log(mykeyboard)
