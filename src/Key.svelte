@@ -6,11 +6,15 @@
   let width = 36 * size - 4;
 
   function heatmap(v){
+    const scale = 20;
     if (v > 0) {
-      let h = (1.0 - v) * 240;
-      return "hsl(" + h + ", 85%, 60%)";
+      // let h = (1.0 - Math.log2(v * scale + 1) / Math.log2(scale + 1)) * 100;
+      // let h = (1.0 - v) * 100;
+      // return "hsl(" + h + ", 85%, 60%)";
+      let l = 65 + (1 - Math.log2(v * scale + 1) / Math.log2(scale + 1)) * 35;
+      return "hsl(0, 100%, " + l + "%)";
     } else {
-      return "white"
+      return "white";
     }
     
   }
