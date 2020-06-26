@@ -3,11 +3,20 @@
   export let size = 1;
   export let value = 0;
 
-  $: gb = 255 * (1 - value);
   let width = 36 * size - 4;
+
+  function heatmap(v){
+    if (v > 0) {
+      let h = (1.0 - v) * 240;
+      return "hsl(" + h + ", 85%, 60%)";
+    } else {
+      return "white"
+    }
+    
+  }
 </script>
 
-<div class="key" style="width: {width}px; background-color:rgb(255, {gb}, {gb});">
+<div class="key" style="width: {width}px; background-color:{heatmap(value)};">
   {#each legend as a}
   <div>{a}</div>
   {/each}
