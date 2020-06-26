@@ -1,8 +1,14 @@
 <script>
+	import Keyboard from './Keyboard.svelte';
+	import mykeyboard from './jis_romaji.json';
+
+	let text = "My best keyboard.";
 </script>
 
 <main>
 	<h1>Keyboard Analyzer</h1>
+	<textarea>{text}</textarea>
+	<Keyboard layout={mykeyboard} />
 </main>
 
 <style>
