@@ -23,6 +23,14 @@
 						}
 					}
 				}
+				for (let ck of c.shift) {
+					for (let tk of mykeyboard.keys) {
+						if (tk.id == ck) {
+							tk.value++;
+							if (maxv < tk.value) maxv = tk.value;
+						}
+					}
+				}
 			}
 		}
 		for (let tk of mykeyboard.keys) {
