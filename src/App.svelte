@@ -41,6 +41,7 @@
     let karray = [];
     uncounted = [];
     total_char = text.length;
+    total_key = 0;
 
     let hantext = text.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
       return String.fromCharCode(s.charCodeAt(0) - 65248);
