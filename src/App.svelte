@@ -10,15 +10,17 @@
 		keydic[mk.id] = mk;
 	}
 
-	let uncounted = 0;
+	let uncounted = [];
+	let ul = 0;
 	function analyze() {
 		for (let tk of mykeyboard.keys) {
 			tk.count = 0;
 		}
 		for (let i = 0; i < text.length; i++) {
 			// console.log(text.charAt(i));
-			if (text.charAt(i) in mykeyboard.conversion) {
-				let mc = mykeyboard.conversion[text.charAt(i)]
+			let ch = text.charAt(i);
+			if (ch in mykeyboard.conversion) {
+				let mc = mykeyboard.conversion[ch]
 				// console.log(c);
 				for (let ck of mc.keys) {
 					keydic[ck].count++;
@@ -27,7 +29,7 @@
 					keydic[cs].count++;
 				}
 			} else {
-				uncounted++;
+				uncounted.push(ch);
 			}
 		}
 
@@ -41,6 +43,8 @@
 		}
 		mykeyboard.rev++;
 		// console.log(mykeyboard)
+		console.log(uncounted);
+		ul = uncounted.length;
 	}
 </script>
 
@@ -51,7 +55,7 @@
 	<div class="kbd">
 		<Keyboard layout={mykeyboard} />
 	</div>
-	<p>{uncounted} characters uncounted.</p>
+	<p>{ul} characters uncounted.</p>
 	
 </main>
 
