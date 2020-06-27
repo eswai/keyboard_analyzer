@@ -5,34 +5,36 @@
 	let text = "My best keyboard.";
 	mykeyboard.rev = 0;
 
+	let keydic = {};
+	for (let mk of mykeyboard.keys) {
+		keydic[mk.id] = mk;
+	}
+
+	let uncounted = 0;
 	function analyze() {
 		for (let tk of mykeyboard.keys) {
 			tk.count = 0;
-			tk.value = 0;
 		}
-		let maxv = 0;
 		for (let i = 0; i < text.length; i++) {
 			// console.log(text.charAt(i));
 			if (text.charAt(i) in mykeyboard.conversion) {
-				let c = mykeyboard.conversion[text.charAt(i)]
+				let mc = mykeyboard.conversion[text.charAt(i)]
 				// console.log(c);
-				for (let ck of c.keys) {
-					for (let tk of mykeyboard.keys) {
-						if (tk.id == ck) {
-							tk.count++;
-							if (maxv < tk.count) maxv = tk.count;
-						}
-					}
+				for (let ck of mc.keys) {
+					keydic[ck].count++;
 				}
-				for (let ck of c.shift) {
-					for (let tk of mykeyboard.keys) {
-						if (tk.id == ck) {
-							tk.count++;
-							if (maxv < tk.count) maxv = tk.count;
-						}
-					}
+				for (let cs of mc.shift) {
+					keydic[cs].count++;
 				}
+			} else {
+				uncounted++;
 			}
+		}
+
+		// normalize count
+		let maxv = 0;
+		for (let tk of mykeyboard.keys) {
+			if (maxv < tk.count) maxv = tk.count;
 		}
 		for (let tk of mykeyboard.keys) {
 			tk.value = tk.count / maxv;
@@ -49,6 +51,7 @@
 	<div class="kbd">
 		<Keyboard layout={mykeyboard} />
 	</div>
+	<p>{uncounted} characters not counted.</p>
 	
 </main>
 
