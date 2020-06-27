@@ -7,6 +7,7 @@
 
 	function analyze() {
 		for (let tk of mykeyboard.keys) {
+			tk.count = 0;
 			tk.value = 0;
 		}
 		let maxv = 0;
@@ -18,23 +19,23 @@
 				for (let ck of c.keys) {
 					for (let tk of mykeyboard.keys) {
 						if (tk.id == ck) {
-							tk.value++;
-							if (maxv < tk.value) maxv = tk.value;
+							tk.count++;
+							if (maxv < tk.count) maxv = tk.count;
 						}
 					}
 				}
 				for (let ck of c.shift) {
 					for (let tk of mykeyboard.keys) {
 						if (tk.id == ck) {
-							tk.value++;
-							if (maxv < tk.value) maxv = tk.value;
+							tk.count++;
+							if (maxv < tk.count) maxv = tk.count;
 						}
 					}
 				}
 			}
 		}
 		for (let tk of mykeyboard.keys) {
-			tk.value /= maxv;
+			tk.value = tk.count / maxv;
 		}
 		mykeyboard.rev++;
 		// console.log(mykeyboard)
@@ -59,8 +60,12 @@
 	h1 {
 		color: #ff3e00;
 		text-transform: uppercase;
-		font-size: 4em;
+		font-size: 3em;
 		font-weight: 100;
+	}
+
+	textarea {
+		width: 100%;
 	}
 
 	@media (min-width: 640px) {

@@ -2,6 +2,7 @@
   export let legend = [""];
   export let size = 1;
   export let value = 0;
+  export let count = 0;
 
   let width = 36 * size - 4;
 
@@ -24,6 +25,9 @@
   {#each legend as a}
   <div>{a}</div>
   {/each}
+  {#if count > 0}
+  <div>{count}</div>
+  {/if}
 </div>
 
 <style>
