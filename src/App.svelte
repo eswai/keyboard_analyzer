@@ -46,7 +46,10 @@
 	<h1>Keyboard Analyzer</h1>
 	<textarea bind:value={text} />
 	<button on:click={analyze}>Analyze</button>
-	<Keyboard layout={mykeyboard} />
+	<div class="kbd">
+		<Keyboard layout={mykeyboard} />
+	</div>
+	
 </main>
 
 <style>
@@ -66,6 +69,10 @@
 
 	textarea {
 		width: 100%;
+	}
+
+	.kbd {
+		display: flex;
 	}
 
 	@media (min-width: 640px) {
