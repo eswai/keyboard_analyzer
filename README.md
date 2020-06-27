@@ -25,4 +25,8 @@ fingerはそのキーを何指で押すかを示しており、左小指から�
 
 漢字まじりの文章をカナ文字に変換するために[kuromoji.js](https://github.com/takuyaa/kuromoji.js)を使用させていただいています。
 
+## テストサイト
+
+https://keyboard-analyzer.vercel.app/
+
 ![](screenshot.png)
