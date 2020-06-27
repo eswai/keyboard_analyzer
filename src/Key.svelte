@@ -6,6 +6,8 @@
 
   let width = 36 * size - 4;
 
+  let css = legend.length > 1 ? "key2led" : "key1led";
+
   function heatmap(v){
     const scale = 20;
     if (v > 0) {
@@ -21,29 +23,47 @@
   }
 </script>
 
-<div class="key" style="width: {width}px; background-color:{heatmap(value)};">
+<div class={css} style="width: {width}px; background-color:{heatmap(value)};">
   {#each legend as a}
   <div>{a}</div>
   {/each}
   {#if count > 0}
-  <div>{count}</div>
+  <div class="counter">{count}</div>
   {/if}
 </div>
 
 <style>
 
-  .key {
+  .key1led {
     /* float: left; */
     margin: 1px;
     height:30px;
     background-color:#ffffff;
     border:1px solid #bebebe;
     border-radius:4px;
-    /* display: grid; */
-    /* grid-template-rows: 18px 18px; */
-    /* grid-template-columns: 20px 20px; */
+    display: grid;
+    grid-template-rows: 14px 14px;
+    /* grid-template-columns: 14px 14px; */
     font-size: 10px;
     /* align-items: baseline; */
+  }
+   .key2led {
+    /* float: left; */
+    margin: 1px;
+    height:30px;
+    background-color:#ffffff;
+    border:1px solid #bebebe;
+    border-radius:4px;
+    display: grid;
+    grid-template-rows: 14px 14px;
+    grid-template-columns: 14px 14px;
+    font-size: 10px;
+    /* align-items: baseline; */
+  }
+
+  .counter {
+    color: #79402f;
+    grid-column: 1 / 3;
   }
 
 </style>
