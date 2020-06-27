@@ -13,7 +13,7 @@
 
 	function kanaToHira(str) {
     return str.replace(/[\u30a1-\u30f6]/g, function(match) {
-        var chr = match.charCodeAt(0) - 0x60;
+        let chr = match.charCodeAt(0) - 0x60;
         return String.fromCharCode(chr);
     });
 	}
@@ -28,6 +28,17 @@
 			return String.fromCharCode(s.charCodeAt(0) - 65248);
 		});
 
+		function incCounter(c) {
+			let mc = mykeyboard.conversion[c]
+			// console.log(c);
+			for (let ck of mc.keys) {
+				keydic[ck].count++;
+			}
+			for (let cs of mc.shift) {
+				keydic[cs].count++;
+			}
+		}
+
 		kuromoji.builder({
 			dicPath: 'dict'
 		}).build((error, tokenizer) => {
@@ -40,7 +51,7 @@
 					karray.push(kanaToHira(pa.surface_form));
 				}
 			}
-			
+
 			let ktext = karray.join("");
 			console.log(ktext);
 
@@ -49,18 +60,15 @@
 			}
 			for (let i = 0; i < ktext.length; i++) {
 				// console.log(ktext.charAt(i));
-				let ch = ktext.charAt(i);
-				if (ch in mykeyboard.conversion) {
-					let mc = mykeyboard.conversion[ch]
-					// console.log(c);
-					for (let ck of mc.keys) {
-						keydic[ck].count++;
-					}
-					for (let cs of mc.shift) {
-						keydic[cs].count++;
-					}
+				let ch1 = ktext.charAt(i);
+				let ch2 = ktext.substr(i, 2);
+				if (ch2 in mykeyboard.conversion) {
+					incCounter(ch2);
+					i++;
+				} else if (ch1 in mykeyboard.conversion) {
+					incCounter(ch1)
 				} else {
-					uncounted.push(ch);
+					uncounted.push(ch1);
 				}
 			}
 
