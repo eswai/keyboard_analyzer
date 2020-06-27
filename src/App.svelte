@@ -51,7 +51,7 @@
 	<div class="kbd">
 		<Keyboard layout={mykeyboard} />
 	</div>
-	<p>{uncounted} characters not counted.</p>
+	<p>{uncounted} characters uncounted.</p>
 	
 </main>
 

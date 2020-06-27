@@ -16,7 +16,7 @@
       }
       keylayout.push(row);
     }
-    console.log(keylayout)
+    // console.log(keylayout)
   }
 </script>
 
@@ -37,7 +37,7 @@
   {#each keylayout as row}
   <div class="row">
     {#each row as key}
-    <Key legend={key.legend} size={key.size} value={key.value}/>
+    <Key legend={key.legend} size={key.size} value={key.value} count={key.count}/>
     {/each}
   </div>
   {/each}
