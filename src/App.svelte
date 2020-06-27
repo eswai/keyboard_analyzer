@@ -90,7 +90,7 @@
 </script>
 
 <main>
-	<h1>Keyboard Analyzer</h1>
+	<h1>keyboard layout analyzer</h1>
 	<textarea bind:value={text} />
 	<button on:click={analyze}>Analyze</button>
 	<div class="kbd">
