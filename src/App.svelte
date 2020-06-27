@@ -22,10 +22,16 @@
 	let ul = 0;
 	function analyze() {
 		let karray = [];
+		uncounted = [];
+
+		let hantext = text.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+			return String.fromCharCode(s.charCodeAt(0) - 65248);
+		});
+
 		kuromoji.builder({
 			dicPath: 'dict'
 		}).build((error, tokenizer) => {
-			const parsed = tokenizer.tokenize(text);
+			const parsed = tokenizer.tokenize(hantext);
 			console.log(parsed);
 			for (let pa of parsed) {
 				if (pa.reading) {
