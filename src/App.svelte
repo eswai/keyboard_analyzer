@@ -3,7 +3,7 @@
 	import mykeyboard from './jis_romaji.json';
 	import kuromoji from './kuromoji/kuromoji.js';
 
-	let text = "My best keyboard.";
+	let text = "人類が増えすぎた人口を宇宙に移民させるようになって、既に半世紀が過ぎていた。地球の周りの巨大な人工都市は人類の第二の故郷となり、人々はそこで子を産み、育て、そして死んでいった。";
 	mykeyboard.rev = 0;
 
 	let keydic = {};
