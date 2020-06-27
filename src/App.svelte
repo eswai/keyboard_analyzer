@@ -1,131 +1,146 @@
 <script>
-	import Keyboard from './Keyboard.svelte';
-	import mykeyboard from './jis_romaji.json';
-	import kuromoji from './kuromoji/kuromoji.js';
+  import Keyboard from './Keyboard.svelte';
+  import mykeyboard from './jis_romaji.json';
+  import kuromoji from './kuromoji/kuromoji.js';
 
-	let text = "人類が増えすぎた人口を宇宙に移民させるようになって、既に半世紀が過ぎていた。地球の周りの巨大な人工都市は人類の第二の故郷となり、人々はそこで子を産み、育て、そして死んでいった。";
-	mykeyboard.rev = 0;
+  let text = "人類が増えすぎた人口を宇宙に移民させるようになって、既に半世紀が過ぎていた。地球の周りの巨大な人工都市は人類の第二の故郷となり、人々はそこで子を産み、育て、そして死んでいった。";
+  mykeyboard.rev = 0;
 
-	let keydic = {};
-	for (let mk of mykeyboard.keys) {
-		keydic[mk.id] = mk;
-	}
+  let uncounted = [];
+  let ul = 0;
+  let total_char = 0;
+  let total_key = 0;
+  let total_kana = 0;
 
-	function kanaToHira(str) {
+  let keydic = {};
+  for (let mk of mykeyboard.keys) {
+    keydic[mk.id] = mk;
+  }
+
+  function kanaToHira(str) {
     return str.replace(/[\u30a1-\u30f6]/g, function(match) {
         let chr = match.charCodeAt(0) - 0x60;
         return String.fromCharCode(chr);
     });
-	}
+  }
 
-	let uncounted = [];
-	let ul = 0;
-	function analyze() {
-		let karray = [];
-		uncounted = [];
+  function incCounter(c) {
+    let mc = mykeyboard.conversion[c]
+    // console.log(c);
+    for (let ck of mc.keys) {
+			keydic[ck].count++;
+			total_key++;
+    }
+    for (let cs of mc.shift) {
+			keydic[cs].count++;
+			total_key++;
+    }
+  }
 
-		let hantext = text.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
-			return String.fromCharCode(s.charCodeAt(0) - 65248);
-		});
+  function analyze() {
+    let karray = [];
+    uncounted = [];
+    total_char = text.length;
 
-		function incCounter(c) {
-			let mc = mykeyboard.conversion[c]
-			// console.log(c);
-			for (let ck of mc.keys) {
-				keydic[ck].count++;
-			}
-			for (let cs of mc.shift) {
-				keydic[cs].count++;
-			}
-		}
+    let hantext = text.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+      return String.fromCharCode(s.charCodeAt(0) - 65248);
+    });
 
-		kuromoji.builder({
-			dicPath: 'dict'
-		}).build((error, tokenizer) => {
-			const parsed = tokenizer.tokenize(hantext);
-			console.log(parsed);
-			for (let pa of parsed) {
-				if (pa.reading) {
-					karray.push(kanaToHira(pa.reading));
-				} else {
-					karray.push(kanaToHira(pa.surface_form));
-				}
-			}
+    kuromoji.builder({
+      dicPath: 'dict'
+    }).build((error, tokenizer) => {
+      const parsed = tokenizer.tokenize(hantext);
+      console.log(parsed);
+      for (let pa of parsed) {
+        if (pa.reading) {
+          karray.push(kanaToHira(pa.reading));
+        } else {
+          karray.push(kanaToHira(pa.surface_form));
+        }
+      }
 
-			let ktext = karray.join("");
-			console.log(ktext);
+      let ktext = karray.join("");
+      total_kana = ktext.length;
+      console.log(ktext);
 
-			for (let tk of mykeyboard.keys) {
-				tk.count = 0;
-			}
-			for (let i = 0; i < ktext.length; i++) {
-				// console.log(ktext.charAt(i));
-				let ch1 = ktext.charAt(i);
-				let ch2 = ktext.substr(i, 2);
-				if (ch2 in mykeyboard.conversion) {
-					incCounter(ch2);
-					i++;
-				} else if (ch1 in mykeyboard.conversion) {
-					incCounter(ch1)
-				} else {
-					uncounted.push(ch1);
-				}
-			}
+      for (let tk of mykeyboard.keys) {
+        tk.count = 0;
+      }
+      for (let i = 0; i < ktext.length; i++) {
+        // console.log(ktext.charAt(i));
+        let ch1 = ktext.charAt(i);
+        let ch2 = ktext.substr(i, 2);
+        if (ch2 in mykeyboard.conversion) {
+          incCounter(ch2);
+          i++;
+        } else if (ch1 in mykeyboard.conversion) {
+          incCounter(ch1)
+        } else {
+          uncounted.push(ch1);
+        }
+      }
 
-			// normalize count
-			let maxv = 0;
-			for (let tk of mykeyboard.keys) {
-				if (maxv < tk.count) maxv = tk.count;
-			}
-			for (let tk of mykeyboard.keys) {
-				tk.value = tk.count / maxv;
-			}
-			mykeyboard.rev++;
-			// console.log(mykeyboard)
-			console.log(uncounted);
-			ul = uncounted.length;
-		
-		});
-	}
+      // normalize count
+      let maxv = 0;
+      for (let tk of mykeyboard.keys) {
+        if (maxv < tk.count) maxv = tk.count;
+      }
+      for (let tk of mykeyboard.keys) {
+        tk.value = tk.count / maxv;
+      }
+      mykeyboard.rev++;
+      // console.log(mykeyboard)
+      console.log(uncounted);
+      ul = uncounted.length;
+    
+    });
+  }
 </script>
 
 <main>
-	<h1>keyboard layout analyzer</h1>
-	<textarea bind:value={text} />
-	<button on:click={analyze}>Analyze</button>
-	<div class="kbd">
-		<Keyboard layout={mykeyboard} />
-	</div>
-	<p>{ul} characters uncounted.</p>
-	
+  <h1>keyboard layout analyzer</h1>
+  <textarea bind:value={text} />
+  <button on:click={analyze}>Analyze</button>
+  <div class="kbd">
+    <Keyboard layout={mykeyboard} />
+  </div>
+  <p class="info">入力した文字数 {total_char}</p>
+  <p class="info">入力した文字数(かな) {total_kana}</p>
+  <p class="info">入力できなかった文字数 {ul}</p>
+  <p class="info">打鍵したキー数 {total_key}</p>
+
 </main>
 
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
+  main {
+    text-align: center;
+    padding: 1em;
+    max-width: 240px;
+    margin: 0 auto;
+  }
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 3em;
-		font-weight: 100;
-	}
+  h1 {
+    color: #ff3e00;
+    text-transform: uppercase;
+    font-size: 3em;
+    font-weight: 100;
+  }
 
-	textarea {
-		width: 100%;
-	}
+  textarea {
+    width: 100%;
+  }
 
-	.kbd {
-		display: flex;
-	}
+  .kbd {
+    display: flex;
+  }
 
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
+  .info {
+    font-size: 10pt;
+  }
+
+  @media (min-width: 640px) {
+    main {
+      max-width: none;
+    }
+  }
 </style>
