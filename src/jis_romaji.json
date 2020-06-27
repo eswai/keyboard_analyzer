@@ -320,7 +320,16 @@
         "ゎ": {"keys": ["x", "w", "a"], "shift":[], "type": "seq", "ime": true},
         "っ": {"keys": ["x", "t", "u"], "shift":[], "type": "seq", "ime": true},
         "。": {"keys": ["."], "shift":[], "type": "seq", "ime": true},
-        "、": {"keys": [","], "shift":[], "type": "seq", "ime": true}
+        "、": {"keys": [","], "shift":[], "type": "seq", "ime": true},
+        "，": {"keys": [","], "shift":[], "type": "seq", "ime": true},
+        "ゐ": {"keys": ["i"], "shift":[], "type": "seq", "ime": true},
+        "（": {"keys": ["8"], "shift":["shift"], "type": "seq", "ime": true},
+        "）": {"keys": ["9"], "shift":["shift"], "type": "seq", "ime": true},
+        "「": {"keys": ["["], "shift":[], "type": "seq", "ime": true},
+        "」": {"keys": ["]"], "shift":[], "type": "seq", "ime": true},
+        "［": {"keys": ["["], "shift":[], "type": "seq", "ime": true},
+        "］": {"keys": ["]"], "shift":[], "type": "seq", "ime": true},
+        "　": {"keys": ["space"], "shift":[], "type": "seq", "ime": true}
     
     }
 }
