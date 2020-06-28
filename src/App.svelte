@@ -3,13 +3,15 @@
   import romaji from './keyboards/jis_romaji.json';
   import naginata from './keyboards/jis_naginata.json';
   import nicola from './keyboards/jis_nicola.json';
+  import eucalyn from './keyboards/jis_eucalyn.json';
   import kuromoji from './kuromoji/kuromoji.js';
   import Chart from 'svelte-frappe-charts';
 
   const keyboards = {
     "ローマ字" : romaji,
     "薙刀式": naginata,
-    "親指シフト": nicola
+    "親指シフト": nicola,
+    "Eucalyn": eucalyn
   };
 
   let selected_kb = "ローマ字";
