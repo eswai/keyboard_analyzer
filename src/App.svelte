@@ -21,6 +21,7 @@
   let total_key = 0; // 打鍵したキー数
   let total_kana = 0; // 入力した文字数（かな）
   let finger_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let total_action = 0;
   let showkb = false;
   let finger_chart;
 
@@ -39,6 +40,11 @@
   function incCounter(c) {
     let mc = mykeyboard.conversion[c]
     // console.log(c);
+    if (mc.type == "sim") {
+      total_action++;
+    } else {
+      total_action += mc.keys.length + mc.shift.length;
+    }
     for (let ck of mc.keys) {
 			keydic[ck].count++;
       total_key++;
@@ -58,6 +64,7 @@
     total_char = text.length;
     total_key = 0;
     finger_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    total_action = 0;
 
     mykeyboard = keyboards[selected_kb];
 
@@ -151,6 +158,7 @@
   <p class="info">入力した文字数(かな) {total_kana}</p>
   <p class="info">入力できなかった文字数 {ul}</p>
   <p class="info">打鍵したキー数 {total_key}</p>
+  <p class="info">打鍵アクション数 {total_action}</p>
 
   <div class="chart">
     <Chart data={finger_chart} type="bar" height="200" />
