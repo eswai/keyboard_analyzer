@@ -69,6 +69,14 @@
         {"id": "app"   , "legend": ["App"]       , "size": 1.25, "finger": 5},     
         {"id": "ctrlr" , "legend": ["Ctrl"]      , "size": 1.25, "finger": 9}  
     ],
+    "arpeggio": [
+      ["w", "e"], ["e", "r"], ["w", "r"],
+      ["s", "d"], ["d", "f"], ["s", "f"],
+      ["e", "f"], ["w", "f"], ["f", "b"], ["d", "v"], ["s", "v"],
+      ["o", "i"], ["i", "u"], ["o", "u"],
+      ["l", "k"], ["k", "j"], ["l", "j"],
+      ["i", "j"], ["o", "j"], ["j", "n"], ["k", "m"], ["l", "m"]
+    ],
     "conversion": {
         " ": {"keys": ["space"], "shift":[], "type":"seq"},
         "!": {"keys": ["1"], "shift":["shift"], "type":"seq"},

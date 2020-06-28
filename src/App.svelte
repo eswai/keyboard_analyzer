@@ -28,6 +28,7 @@
   let finger_chart;
   let samefinger_chart;
   let last_key = ""; // 直前に押したキー
+  let total_arpeggio;
 
   let keydic = {};
   $: for (let mk of mykeyboard.keys) {
@@ -65,6 +66,13 @@
       if (ck in keydic && last_key in keydic && ck != last_key && keydic[ck].finger == keydic[last_key].finger) {
         same_finger[keydic[ck].finger]++;
       }
+      // アルペジオ
+      for (let i = 0; i < mykeyboard.arpeggio.length; i++) {
+        let ar = mykeyboard.arpeggio[i];
+        if (ar.includes(ck) && ar.includes(last_key)) {
+          total_arpeggio[i]++;
+        }
+    }
       last_key = ck;
     }
     if (mc.shift.length == 0) {
@@ -85,6 +93,8 @@
   }
 
   function analyze() {
+    mykeyboard = keyboards[selected_kb];
+
     showkb = false;
     let karray = []; // 変換後のかな文字の配列
     uncounted = [];
@@ -96,8 +106,8 @@
     shift_key = [];
     same_finger = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     last_key = "";
-
-    mykeyboard = keyboards[selected_kb];
+    total_arpeggio = new Array(mykeyboard.arpeggio.length);
+    total_arpeggio.fill(0);
 
     // 全角英数を半角に変換
     let hantext = text.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
@@ -199,6 +209,7 @@
   <p class="info">打鍵したキー数 {total_key}</p>
   <p class="info">連続シフトした場合の打鍵キー数 {total_skey}</p>
   <p class="info">打鍵アクション数 {total_action}</p>
+  <p class="info">アルペジオの数 {sum(total_arpeggio)}</p>
   <p class="info">同じ指で連続して違うキーを打鍵した数 {sum(same_finger)}</p>
 
   <div class="chart">
