@@ -27,6 +27,7 @@
   let showkb = false;
   let finger_chart;
   let samefinger_chart;
+  let arpeggio_chart;
   let last_key = ""; // 直前に押したキー
   let total_arpeggio;
 
@@ -162,7 +163,7 @@
       console.log(uncounted);
       ul = uncounted.length;
 
-      console.log(finger_count);
+      // console.log(finger_count);
       finger_chart = {
         labels: ['左小', '左薬', '左中', '左人', '左親', '右親', '右人', '右中', '右薬', '右小'],
         datasets: [
@@ -176,6 +177,14 @@
         datasets: [
           {
             values: same_finger
+          }
+        ]
+      };
+      arpeggio_chart = {
+        labels: mykeyboard.arpeggio,
+        datasets: [
+          {
+            values: total_arpeggio
           }
         ]
       };
@@ -220,6 +229,11 @@
   <div class="chart">
     同じ指で連続して違うキーを打鍵した数
     <Chart data={samefinger_chart} type="bar" height="200" />
+  </div>
+
+  <div class="chart">
+    アルペジオの詳細
+    <Chart data={arpeggio_chart} type="bar" height="200" />
   </div>
   {/if}
 
