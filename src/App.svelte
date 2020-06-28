@@ -3,6 +3,7 @@
   import romaji from './keyboards/jis_romaji.json';
   import naginata from './keyboards/jis_naginata.json';
   import kuromoji from './kuromoji/kuromoji.js';
+  import Chart from 'svelte-frappe-charts';
 
   const keyboards = {
     "ローマ字" : romaji,
@@ -19,7 +20,9 @@
   let total_char = 0; // 入力した文字数
   let total_key = 0; // 打鍵したキー数
   let total_kana = 0; // 入力した文字数（かな）
+  let finger_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let showkb = false;
+  let finger_chart;
 
   let keydic = {};
   $: for (let mk of mykeyboard.keys) {
@@ -38,11 +41,13 @@
     // console.log(c);
     for (let ck of mc.keys) {
 			keydic[ck].count++;
-			total_key++;
+      total_key++;
+      finger_count[keydic[ck].finger]++;
     }
     for (let cs of mc.shift) {
 			keydic[cs].count++;
 			total_key++;
+      finger_count[keydic[cs].finger]++;
     }
   }
 
@@ -52,6 +57,7 @@
     uncounted = [];
     total_char = text.length;
     total_key = 0;
+    finger_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     mykeyboard = keyboards[selected_kb];
 
@@ -107,6 +113,16 @@
       // console.log(mykeyboard)
       console.log(uncounted);
       ul = uncounted.length;
+
+      console.log(finger_count);
+      finger_chart = {
+        labels: ['左小', '左薬', '左中', '左人', '左親', '右親', '右人', '右中', '右薬', '右小'],
+        datasets: [
+          {
+            values: finger_count,
+          }
+        ]
+      };
       showkb = true;
     
     });
@@ -135,6 +151,10 @@
   <p class="info">入力した文字数(かな) {total_kana}</p>
   <p class="info">入力できなかった文字数 {ul}</p>
   <p class="info">打鍵したキー数 {total_key}</p>
+
+  <div class="chart">
+    <Chart data={finger_chart} type="bar" height="200" />
+  </div>
   {/if}
 
 </main>
@@ -164,6 +184,10 @@
 
   .info {
     font-size: 10pt;
+  }
+
+  .chart {
+    width: 600px;
   }
 
   @media (min-width: 640px) {
