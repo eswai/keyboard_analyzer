@@ -23,13 +23,22 @@
   let total_kana = 0; // 入力した文字数（かな）
   let finger_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let total_action = 0;
+  let same_finger = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let showkb = false;
   let finger_chart;
+  let samefinger_chart;
+  let last_key = ""; // 直前に押したキー
 
   let keydic = {};
   $: for (let mk of mykeyboard.keys) {
     keydic[mk.id] = mk;
   }
+
+  var sum  = function(arr) {
+      return arr.reduce(function(prev, current, i, arr) {
+          return prev+current;
+      });
+  };
 
   function kanaToHira(str) {
     return str.replace(/[\u30a1-\u30f6]/g, function(match) {
@@ -52,6 +61,11 @@
       total_key++;
       total_skey++;
       finger_count[keydic[ck].finger]++;
+      // 同じ指で違うキーを連続して押す
+      if (ck in keydic && last_key in keydic && ck != last_key && keydic[ck].finger == keydic[last_key].finger) {
+        same_finger[keydic[ck].finger]++;
+      }
+      last_key = ck;
     }
     if (mc.shift.length == 0) {
       shift_key = [];
@@ -80,6 +94,8 @@
     finger_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     total_action = 0;
     shift_key = [];
+    same_finger = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    last_key = "";
 
     mykeyboard = keyboards[selected_kb];
 
@@ -141,7 +157,15 @@
         labels: ['左小', '左薬', '左中', '左人', '左親', '右親', '右人', '右中', '右薬', '右小'],
         datasets: [
           {
-            values: finger_count,
+            values: finger_count
+          }
+        ]
+      };
+      samefinger_chart = {
+        labels: ['左小', '左薬', '左中', '左人', '左親', '右親', '右人', '右中', '右薬', '右小'],
+        datasets: [
+          {
+            values: same_finger
           }
         ]
       };
@@ -175,9 +199,16 @@
   <p class="info">打鍵したキー数 {total_key}</p>
   <p class="info">連続シフトした場合の打鍵キー数 {total_skey}</p>
   <p class="info">打鍵アクション数 {total_action}</p>
+  <p class="info">同じ指で連続して違うキーを打鍵 {sum(same_finger)}</p>
 
   <div class="chart">
+    指ごとの打鍵数
     <Chart data={finger_chart} type="bar" height="200" />
+  </div>
+
+  <div class="chart">
+    同じ指で違うキーを連続して打鍵した数
+    <Chart data={samefinger_chart} type="bar" height="200" />
   </div>
   {/if}
 
@@ -211,7 +242,9 @@
   }
 
   .chart {
+    font-size: 10pt;
     width: 600px;
+    margin: 0px auto;
   }
 
   @media (min-width: 640px) {
