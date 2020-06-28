@@ -122,7 +122,7 @@
     total_alter = 0;
 
     // 全角英数を半角に変換
-    let hantext = text.replace(/[！-～]/g, function(s) {
+    let hantext = text.replace(/[＂-＇＊-＞＠-ｚ]/g, function(s) {
       return String.fromCharCode(s.charCodeAt(0) - 65248);
     });
 
@@ -135,12 +135,16 @@
       for (let pa of parsed) {
         if (pa.reading) { // 漢字、カナ
           karray.push(kanaToHira(pa.reading));
-        } else if (!kana_only) { // 英数字
+        } else { // 英数字
           karray.push(kanaToHira(pa.surface_form));
         }
       }
 
       let ktext = karray.join("");
+      if (kana_only) {
+        ktext = ktext.replace(/[\u0000-\u2999\u3003-\u3040\u3097-\uff00\uff02-\uff1e\uff20-\uffff]/g, "");
+      }
+
       total_kana = ktext.length;
       console.log(ktext);
 
