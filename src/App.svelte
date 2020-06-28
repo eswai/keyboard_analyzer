@@ -199,7 +199,7 @@
   <p class="info">打鍵したキー数 {total_key}</p>
   <p class="info">連続シフトした場合の打鍵キー数 {total_skey}</p>
   <p class="info">打鍵アクション数 {total_action}</p>
-  <p class="info">同じ指で連続して違うキーを打鍵 {sum(same_finger)}</p>
+  <p class="info">同じ指で連続して違うキーを打鍵した数 {sum(same_finger)}</p>
 
   <div class="chart">
     指ごとの打鍵数
@@ -207,7 +207,7 @@
   </div>
 
   <div class="chart">
-    同じ指で違うキーを連続して打鍵した数
+    同じ指で連続して違うキーを打鍵した数
     <Chart data={samefinger_chart} type="bar" height="200" />
   </div>
   {/if}
