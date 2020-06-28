@@ -2,12 +2,14 @@
   import Keyboard from './Keyboard.svelte';
   import romaji from './keyboards/jis_romaji.json';
   import naginata from './keyboards/jis_naginata.json';
+  import nicola from './keyboards/jis_nicola.json';
   import kuromoji from './kuromoji/kuromoji.js';
   import Chart from 'svelte-frappe-charts';
 
   const keyboards = {
     "ローマ字" : romaji,
-    "薙刀式": naginata
+    "薙刀式": naginata,
+    "親指シフト": nicola
   };
 
   let selected_kb = "ローマ字";
