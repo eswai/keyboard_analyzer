@@ -30,6 +30,7 @@
   let arpeggio_chart;
   let last_key = ""; // 直前に押したキー
   let total_arpeggio;
+  let total_alter = 0; // 交互打鍵
 
   let keydic = {};
   $: for (let mk of mykeyboard.keys) {
@@ -73,7 +74,11 @@
         if (ar.includes(ck) && ar.includes(last_key)) {
           total_arpeggio[i]++;
         }
-    }
+      }
+      // 交互打鍵
+      if (ck in keydic && last_key in keydic && ((keydic[ck].finger < 5 && keydic[last_key].finger >= 5) || (keydic[ck].finger >= 5 && keydic[last_key].finger < 5))) {
+        total_alter++;
+      }
       last_key = ck;
     }
     if (mc.shift.length == 0) {
@@ -109,6 +114,7 @@
     last_key = "";
     total_arpeggio = new Array(mykeyboard.arpeggio.length);
     total_arpeggio.fill(0);
+    total_alter = 0;
 
     // 全角英数を半角に変換
     let hantext = text.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
@@ -215,6 +221,7 @@
   <p class="info">連続シフトした場合の打鍵キー数 {total_skey}</p>
   <p class="info">打鍵アクション数 {total_action}</p>
   <p class="info">アルペジオの数 {sum(total_arpeggio)}</p>
+  <p class="info">交互打鍵の数 {total_alter}</p>
   <p class="info">同じ指で連続して違うキーを打鍵した数 {sum(same_finger)}</p>
 
   <label class="chart">キー打鍵ヒートマップ</label>
