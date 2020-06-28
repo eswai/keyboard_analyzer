@@ -256,7 +256,7 @@
       "ぺ": {"keys": [","], "shift":["muhen"], "type": "sim", "ime": true},
       "ぽ": {"keys": ["l"], "shift":["muhen"], "type": "sim", "ime": true},
 
-      "ゃ": {"keys": ["q"], "shift":[], "type": "sim", "ime": true},
+      "ゃ": {"keys": ["r"], "shift":["muhen"], "type": "sim", "ime": true},
       "ゅ": {"keys": ["f"], "shift":["muhen"], "type": "sim", "ime": true},
       "ょ": {"keys": ["l"], "shift":["henk"], "type": "sim", "ime": true},
       "ぁ": {"keys": ["q"], "shift":["muhen"], "type": "sim", "ime": true},
@@ -264,7 +264,7 @@
       "ぅ": {"keys": ["z"], "shift":["muhen"], "type": "sim", "ime": true},
       "ぇ": {"keys": ["p"], "shift":["henk"], "type": "sim", "ime": true},
       "ぉ": {"keys": ["/"], "shift":["henk"], "type": "sim", "ime": true},
-      "ゎ": {"keys": [""], "shift":[], "type": "sim", "ime": true},
+      "ゎ": {"keys": ["."], "shift":["henk"], "type": "sim", "ime": true},
       "っ": {"keys": [";"], "shift":["henk"], "type": "sim", "ime": true},
       "。": {"keys": ["q"], "shift":[], "type": "sim", "ime": true},
       "、": {"keys": [":"], "shift":[], "type": "sim", "ime": true},
