@@ -208,10 +208,6 @@
   <button on:click={analyze}>Analyze</button>
 
   {#if showkb == true}
-  <div class="kbd">
-    <Keyboard layout={mykeyboard} />
-  </div>
-
   <p class="info">入力した文字数 {total_char}</p>
   <p class="info">入力した文字数(かな) {total_kana}</p>
   <p class="info">入力できなかった文字数 {ul}</p>
@@ -220,6 +216,11 @@
   <p class="info">打鍵アクション数 {total_action}</p>
   <p class="info">アルペジオの数 {sum(total_arpeggio)}</p>
   <p class="info">同じ指で連続して違うキーを打鍵した数 {sum(same_finger)}</p>
+
+  <label class="chart">キー打鍵ヒートマップ</label>
+  <div class="kbd">
+    <Keyboard layout={mykeyboard} />
+  </div>
 
   <div class="chart">
     指ごとの打鍵数
@@ -260,6 +261,7 @@
 
   .kbd {
     display: flex;
+    margin: 10px auto;
   }
 
   .info {
