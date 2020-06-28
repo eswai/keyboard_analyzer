@@ -2,7 +2,7 @@
     "name": "薙刀式",
     "layout": [15, 14, 13, 13, 11],
     "keys": [
-        {"id": "zkhk"  , "legend": ["全角"]      , "size": 2,   "finger": 1},       
+        {"id": "zkhk"  , "legend": ["全角"]      , "size": 1,   "finger": 1},       
         {"id": "1"     , "legend": ["1", "!"]    , "size": 1,   "finger": 1},       
         {"id": "2"     , "legend": ["2", "\""]   , "size": 1,   "finger": 1},       
         {"id": "3"     , "legend": ["3", "#"]    , "size": 1,   "finger": 2},       
