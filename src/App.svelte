@@ -8,13 +8,13 @@
   import Chart from 'svelte-frappe-charts';
 
   const keyboards = {
-    "ローマ字" : romaji,
+    "QWERTYローマ字" : romaji,
     "薙刀式": naginata,
     "親指シフト": nicola,
-    "Eucalyn": eucalyn
+    "Eucalynローマ字": eucalyn
   };
 
-  let selected_kb = "ローマ字";
+  let selected_kb = "QWERTYローマ字";
   let mykeyboard = keyboards[selected_kb];
 
   let text = "人類が増えすぎた人口を宇宙に移民させるようになって、既に半世紀が過ぎていた。地球の周りの巨大な人工都市は人類の第二の故郷となり、人々はそこで子を産み、育て、そして死んでいった。";
