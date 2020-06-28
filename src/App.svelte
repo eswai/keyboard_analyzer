@@ -122,7 +122,7 @@
     total_alter = 0;
 
     // 全角英数を半角に変換
-    let hantext = text.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+    let hantext = text.replace(/[！-～]/g, function(s) {
       return String.fromCharCode(s.charCodeAt(0) - 65248);
     });
 
