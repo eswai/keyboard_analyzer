@@ -274,7 +274,8 @@
       "）": {"keys": ["9"], "shift":["henk"], "type": "sim", "ime": true},
       "「": {"keys": ["4"], "shift":["muhen"], "type": "sim", "ime": true},
       "」": {"keys": ["5"], "shift":["muhen"], "type": "sim", "ime": true},
-      "　": {"keys": ["space"], "shift":[], "type": "sim", "ime": true}
-  
+      "　": {"keys": ["space"], "shift":[], "type": "sim", "ime": true},
+      "？": {"keys": ["/"], "shift":["shift"], "type": "seq", "ime": true},
+      "！": {"keys": ["1"], "shift":["shift"], "type": "seq", "ime": true}
   }
 }
