@@ -28,7 +28,7 @@
   let finger_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let total_action = 0;
   let same_finger = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  let showkb = false;
+  let showkb;
   let finger_chart;
   let samefinger_chart;
   let arpeggio_chart;
@@ -267,6 +267,9 @@
     <Chart data={arpeggio_chart} type="bar" height="200" valuesOverPoints="1"  />
   </div>
   {/if}
+  {#if showkb == false}
+  <p class="ongoing">分析を実行中...</p>
+  {/if}
 
 </main>
 
@@ -302,6 +305,10 @@
     font-size: 10pt;
     width: 600px;
     margin: 0px auto;
+  }
+
+  .ongoing {
+    color: #ff3e00;
   }
 
   @media (min-width: 640px) {
