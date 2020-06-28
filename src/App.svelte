@@ -36,6 +36,7 @@
   let total_arpeggio;
   let total_alter = 0; // 交互打鍵
   let kana_only = false;
+  let aozora = false;
 
   let keydic = {};
   $: for (let mk of mykeyboard.keys) {
@@ -144,6 +145,9 @@
       if (kana_only) {
         ktext = ktext.replace(/[\u0000-\u2999\u3003-\u3040\u3097-\uff00\uff02-\uff1e\uff20-\uffff]/g, "");
       }
+      if (aozora) {
+        ktext = ktext.replace(/（.+?）/g, "");
+      }
 
       total_kana = ktext.length;
       console.log(ktext);
@@ -223,6 +227,11 @@
   <label>
     <input type="checkbox" bind:checked={kana_only}>
     カナのみ分析
+  </label>
+
+  <label>
+    <input type="checkbox" bind:checked={aozora}>
+    青空文庫モード(ルビを除去)
   </label>
 
   <button on:click={analyze}>Analyze</button>
