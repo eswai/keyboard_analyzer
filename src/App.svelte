@@ -254,17 +254,17 @@
 
   <div class="chart">
     指ごとの打鍵数
-    <Chart data={finger_chart} type="bar" height="200" valuesOverPoints="1" />
+    <Chart data={finger_chart} type="bar" height="200" valuesOverPoints="1" colors ={['light-blue']} barOptions={{spaceRatio:0.5}}/>
   </div>
 
   <div class="chart">
     同じ指で連続して違うキーを打鍵した数
-    <Chart data={samefinger_chart} type="bar" height="200" valuesOverPoints="1"  />
+    <Chart data={samefinger_chart} type="bar" height="200" valuesOverPoints="1" colors ={['light-blue']} barOptions={{spaceRatio:0.5}} />
   </div>
 
   <div class="chart">
     アルペジオの詳細
-    <Chart data={arpeggio_chart} type="bar" height="200" valuesOverPoints="1"  />
+    <Chart data={arpeggio_chart} type="bar" height="200" valuesOverPoints="1" colors ={['light-blue']} barOptions={{spaceRatio:0.3}} />
   </div>
   {/if}
   {#if showkb == false}
@@ -294,7 +294,7 @@
 
   .kbd {
     display: flex;
-    margin: 10px auto;
+    margin: 0px auto 20px;
   }
 
   .info {
@@ -304,7 +304,7 @@
   .chart {
     font-size: 10pt;
     width: 600px;
-    margin: 0px auto;
+    margin: 0px auto 15px;
   }
 
   .ongoing {
