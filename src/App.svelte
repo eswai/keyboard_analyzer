@@ -235,17 +235,17 @@
 
   <div class="chart">
     指ごとの打鍵数
-    <Chart data={finger_chart} type="bar" height="200" />
+    <Chart data={finger_chart} type="bar" height="200" valuesOverPoints="1" />
   </div>
 
   <div class="chart">
     同じ指で連続して違うキーを打鍵した数
-    <Chart data={samefinger_chart} type="bar" height="200" />
+    <Chart data={samefinger_chart} type="bar" height="200" valuesOverPoints="1"  />
   </div>
 
   <div class="chart">
     アルペジオの詳細
-    <Chart data={arpeggio_chart} type="bar" height="200" />
+    <Chart data={arpeggio_chart} type="bar" height="200" valuesOverPoints="1"  />
   </div>
   {/if}
 
