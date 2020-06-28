@@ -19,6 +19,7 @@
   let ul = 0; // 入力できなかった文字数
   let total_char = 0; // 入力した文字数
   let total_key = 0; // 打鍵したキー数
+  let total_skey = 0; // 打鍵したキー数、連続シフトを考慮
   let total_kana = 0; // 入力した文字数（かな）
   let finger_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let total_action = 0;
@@ -37,6 +38,7 @@
     });
   }
 
+  let shift_key = [];
   function incCounter(c) {
     let mc = mykeyboard.conversion[c]
     // console.log(c);
@@ -48,13 +50,24 @@
     for (let ck of mc.keys) {
 			keydic[ck].count++;
       total_key++;
+      total_skey++;
       finger_count[keydic[ck].finger]++;
     }
-    for (let cs of mc.shift) {
-			keydic[cs].count++;
-			total_key++;
-      finger_count[keydic[cs].finger]++;
+    if (mc.shift.length == 0) {
+      shift_key = [];
+    } else {
+      for (let cs of mc.shift) {
+        // 連続シフト
+        if (!shift_key.includes(cs)) {
+          total_skey++;
+        }
+        keydic[cs].count++;
+        total_key++;
+        finger_count[keydic[cs].finger]++;
+      }
+      shift_key = mc.shift;
     }
+
   }
 
   function analyze() {
@@ -63,8 +76,10 @@
     uncounted = [];
     total_char = text.length;
     total_key = 0;
+    total_skey = 0;
     finger_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     total_action = 0;
+    shift_key = [];
 
     mykeyboard = keyboards[selected_kb];
 
@@ -158,6 +173,7 @@
   <p class="info">入力した文字数(かな) {total_kana}</p>
   <p class="info">入力できなかった文字数 {ul}</p>
   <p class="info">打鍵したキー数 {total_key}</p>
+  <p class="info">連続シフトした場合の打鍵キー数 {total_skey}</p>
   <p class="info">打鍵アクション数 {total_action}</p>
 
   <div class="chart">
