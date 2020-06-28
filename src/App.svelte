@@ -35,6 +35,7 @@
   let last_key = ""; // 直前に押したキー
   let total_arpeggio;
   let total_alter = 0; // 交互打鍵
+  let kana_only = false;
 
   let keydic = {};
   $: for (let mk of mykeyboard.keys) {
@@ -134,7 +135,7 @@
       for (let pa of parsed) {
         if (pa.reading) { // 漢字、カナ
           karray.push(kanaToHira(pa.reading));
-        } else { // 英数字
+        } else if (!kana_only) { // 英数字
           karray.push(kanaToHira(pa.surface_form));
         }
       }
@@ -214,6 +215,11 @@
     <option>{k}</option>
     {/each}
   </select>
+
+  <label>
+    <input type="checkbox" bind:checked={kana_only}>
+    カナのみ分析
+  </label>
 
   <button on:click={analyze}>Analyze</button>
 
