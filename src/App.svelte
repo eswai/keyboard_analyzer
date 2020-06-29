@@ -147,6 +147,8 @@
       }
       if (aozora) {
         ktext = ktext.replace(/（.+?）/g, "");
+        ktext = ktext.replace(/《.+?》/g, "");
+        ktext = ktext.replace(/｜/g, "");
       }
 
       total_kana = ktext.length;
@@ -231,7 +233,7 @@
 
   <label>
     <input type="checkbox" bind:checked={aozora}>
-    青空文庫モード(ルビを除去)
+    青空文庫モード(ルビ｜《》（）を除去)
   </label>
 
   <button on:click={analyze}>Analyze</button>
