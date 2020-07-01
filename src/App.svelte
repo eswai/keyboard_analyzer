@@ -81,8 +81,9 @@
         // アルペジオ
         for (let i = 0; i < mykeyboard.arpeggio.length; i++) {
           let ar = mykeyboard.arpeggio[i];
-          if (ar.includes(ck) && ar.includes(last_key)) {
+          if ((ar[0] == ck && ar[1] == last_key) || (ar[1] == ck && ar[0] == last_key)) {
             total_arpeggio[i]++;
+            // console.log(last_key, ck);
           }
         }
         // 交互打鍵
