@@ -37,13 +37,14 @@
   let total_alter = 0; // 交互打鍵
   let kana_only = false;
   let aozora = false;
+  let keyseq = "";
 
   let keydic = {};
   $: for (let mk of mykeyboard.keys) {
     keydic[mk.id] = mk;
   }
 
-  var sum  = function(arr) {
+  var sum = function(arr) {
       return arr.reduce(function(prev, current, i, arr) {
           return prev+current;
       });
@@ -66,24 +67,28 @@
       total_action += mc.keys.length + mc.shift.length;
     }
     for (let ck of mc.keys) {
-			keydic[ck].count++;
+      keydic[ck].count++;
       total_key++;
       total_skey++;
       finger_count[keydic[ck].finger]++;
-      // 同じ指で違うキーを連続して押す
-      if (ck in keydic && last_key in keydic && ck != last_key && keydic[ck].finger == keydic[last_key].finger) {
-        same_finger[keydic[ck].finger]++;
-      }
-      // アルペジオ
-      for (let i = 0; i < mykeyboard.arpeggio.length; i++) {
-        let ar = mykeyboard.arpeggio[i];
-        if (ar.includes(ck) && ar.includes(last_key)) {
-          total_arpeggio[i]++;
+      keyseq += ck;
+
+      if (ck in keydic && last_key in keydic) {
+        // 同じ指で違うキーを連続して押す
+        if (ck != last_key && keydic[ck].finger == keydic[last_key].finger) {
+          same_finger[keydic[ck].finger]++;
         }
-      }
-      // 交互打鍵
-      if (ck in keydic && last_key in keydic && ((keydic[ck].finger < 5 && keydic[last_key].finger >= 5) || (keydic[ck].finger >= 5 && keydic[last_key].finger < 5))) {
-        total_alter++;
+        // アルペジオ
+        for (let i = 0; i < mykeyboard.arpeggio.length; i++) {
+          let ar = mykeyboard.arpeggio[i];
+          if (ar.includes(ck) && ar.includes(last_key)) {
+            total_arpeggio[i]++;
+          }
+        }
+        // 交互打鍵
+        if (((keydic[ck].finger < 5 && keydic[last_key].finger >= 5) || (keydic[ck].finger >= 5 && keydic[last_key].finger < 5))) {
+          total_alter++;
+        }
       }
       last_key = ck;
     }
@@ -121,6 +126,7 @@
     total_arpeggio = new Array(mykeyboard.arpeggio.length);
     total_arpeggio.fill(0);
     total_alter = 0;
+    keyseq = "";
 
     // 全角英数を半角に変換
     let hantext = text.replace(/[＂-＇＊-＞＠-ｚ]/g, function(s) {
@@ -171,6 +177,7 @@
         }
       }
 
+      console.log(keyseq);
       // normalize count
       let maxv = 0;
       for (let tk of mykeyboard.keys) {
