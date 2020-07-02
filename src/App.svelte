@@ -170,7 +170,11 @@
         // console.log(ktext.charAt(i));
         let ch1 = ktext.charAt(i);
         let ch2 = ktext.substr(i, 2);
-        if (ch2 in mykeyboard.conversion) {
+        let ch3 = ktext.substr(i, 3);
+        if (ch3 in mykeyboard.conversion) {
+          incCounter(ch3);
+          i += 2;
+        } else if (ch2 in mykeyboard.conversion) {
           incCounter(ch2);
           i++;
         } else if (ch1 in mykeyboard.conversion) {
