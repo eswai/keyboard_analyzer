@@ -5,6 +5,7 @@
   import nicola from './keyboards/jis_nicola.json';
   import eucalyn from './keyboards/jis_eucalyn.json';
   import shingeta from './keyboards/jis_shingeta.json';
+  import asuka from './keyboards/jis_asuka123.json';
   import kuromoji from './kuromoji/kuromoji.js';
   import Chart from 'svelte-frappe-charts';
 
@@ -13,7 +14,8 @@
     "薙刀式": naginata,
     "親指シフト": nicola,
     "Eucalynローマ字": eucalyn,
-    "新下駄": shingeta
+    "新下駄": shingeta,
+    "飛鳥123": asuka
   };
 
   let selected_kb = "QWERTYローマ字";
