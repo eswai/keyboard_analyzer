@@ -8,6 +8,20 @@
 
   let csskey = legend.length > 1 ? "key2led" : "key1led";
   let csscnt = legend.length > 1 ? "cnt2led" : "cnt1led";
+  switch (legend.length) {
+    case 1:
+      csskey = "key1led";
+      csscnt = "cnt1led";
+      break;
+    case 2:
+      csskey = "key2led";
+      csscnt = "cnt2led";
+      break;
+    default:
+      csskey = "key3led";
+      csscnt = "cnt3led";
+      break;
+  }
 
   function heatmap(v){
     const scale = 20;
@@ -61,6 +75,20 @@
     /* align-items: baseline; */
   }
 
+   .key3led {
+    /* float: left; */
+    margin: 1px;
+    height:30px;
+    background-color:#ffffff;
+    border:1px solid #bebebe;
+    border-radius:4px;
+    display: grid;
+    grid-template-rows: 15px 15px;
+    grid-template-columns: 10px 10px 10px;
+    font-size: 10px;
+    /* align-items: baseline; */
+  }
+
   .cnt1led {
     color: #79402f;
   }
@@ -70,4 +98,8 @@
     grid-column: 1 / 3;
   }
 
+  .cnt3led {
+    color: #79402f;
+    grid-column: 1 / 4;
+  }
 </style>
