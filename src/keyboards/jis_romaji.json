@@ -1,5 +1,6 @@
 {
   "name": "ローマ字入力",
+  "remark": "",
   "layout": [15, 14, 13, 13, 11],
     "keys": [
         {"id": "zkhk"  , "legend": ["全角"]      , "size": 1,   "finger": 1},       

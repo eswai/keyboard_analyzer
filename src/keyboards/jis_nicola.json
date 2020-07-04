@@ -1,5 +1,6 @@
 {
   "name": "親指シフト",
+  "remark": "",
   "layout": [15, 14, 14, 13, 11],
   "keys": [
       {"id": "zkhk"  , "legend": ["全角"]      , "size": 1,    "finger": 1},       

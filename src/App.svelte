@@ -54,7 +54,9 @@
   let aozora = false;
   let keyseq = "";
 
-  let listSelectionDialog;
+  let optionDialog;
+  let remarkDialog;
+  let remark = "";
 
   let keydic = {};
   $: for (let mk of mykeyboard.keys) {
@@ -139,6 +141,10 @@
       shift_key = mc.shift;
     }
 
+  }
+
+  function kbchange() {
+    remark = keyboards[selected_kb].remark;
   }
 
   function analyze() {
@@ -290,9 +296,11 @@
       {/each}
     </Select>
   
-  <Dialog bind:this={listSelectionDialog} aria-labelledby="list-selection-title" aria-describedby="list-selection-content" >
-      <Title id="list-selection-title">分析オプション</Title>
-      <Content id="list-selection-content">
+  <Button color="secondary" on:click={analyze} variant="outlined"><Label>分析開始</Label></Button>
+
+  <Dialog bind:this={optionDialog} aria-labelledby="option-title" aria-describedby="option-content" >
+      <Title id="option-title">分析オプション</Title>
+      <Content id="option-content">
         <div class="optionfield">
           <FormField>
             <Checkbox bind:checked={kana_only} />
@@ -312,9 +320,22 @@
         </Button>
       </Actions>
   </Dialog>
-  <Button color="secondary" on:click={() => listSelectionDialog.open()}><Label>オプション選択</Label></Button>
+  <Button color="secondary" on:click={() => optionDialog.open()}><Label>オプション選択</Label></Button>
 
-  <Button color="secondary" on:click={analyze} variant="outlined"><Label>分析開始</Label></Button>
+  <Dialog bind:this={remarkDialog} aria-labelledby="remark-title" aria-describedby="remark-content" >
+      <Title id="remark-title">{selected_kb}</Title>
+      <Content id="remark-content">
+        <div class="textfield">
+        {remark}
+        </div>
+      </Content>
+      <Actions>
+        <Button action="accept">
+          <Label>閉じる</Label>
+        </Button>
+      </Actions>
+  </Dialog>
+  <Button color="secondary" on:click={() => {kbchange();remarkDialog.open()}}><Label>補足説明</Label></Button>
 
   </div>
 

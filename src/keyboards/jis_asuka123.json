@@ -1,5 +1,6 @@
 {
   "name": "飛鳥123",
+  "remark": "2010.07.13版 https://ameblo.jp/asuka-layout/entry-10589277915.html",
   "layout": [15, 14, 13, 13, 11],
   "keys": [
     {"id": "zkhk"  , "legend": ["全角"]      , "size": 1,   "finger": 1},       
