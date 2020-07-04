@@ -132,12 +132,13 @@
     } else {
       for (let cs of mc.shift) {
         // 連続シフト
-        if (shift_key.includes(cs)) {
+        if (mc.renzsft && shift_key.includes(cs)) {
           renzoku_shift++;
+        } else {
+          keydic[cs].count++;
+          total_key++;
+          keydic[cs].shifted++;
         }
-        keydic[cs].count++;
-        total_key++;
-        keydic[cs].shifted++;
       }
       shift_key = mc.shift;
     }
