@@ -256,13 +256,13 @@
   <Dialog bind:this={listSelectionDialog} aria-labelledby="list-selection-title" aria-describedby="list-selection-content" >
       <Title id="list-selection-title">分析オプション</Title>
       <Content id="list-selection-content">
-        <div>
+        <div class="optionfield">
           <FormField>
             <Checkbox bind:checked={kana_only} />
             <span slot="label">カナのみ分析</span>
           </FormField>
         </div>
-        <div>
+        <div class="optionfield">
           <FormField>
             <Checkbox bind:checked={aozora} />
             <span slot="label">青空文庫モード(ルビ｜《》（）を除去)</span>
@@ -289,7 +289,8 @@
         <Cell>項目</Cell>
         <Cell>結果</Cell>
         <Cell>項目</Cell>
-        <Cell>結果</Cell>      </Row>
+        <Cell>結果</Cell>
+      </Row>
     </Head>
     <Body>
       <Row>
@@ -361,6 +362,10 @@
 
   .inputfield {
     text-align: center;
+  }
+
+  .optionfield {
+    text-align: left;
   }
 
   h1 {
