@@ -66,6 +66,10 @@
       });
   };
 
+  function percent(v) {
+    return (v * 100).toFixed(1) + '%'
+  }
+
   function kanaToHira(str) {
     return str.replace(/[\u30a1-\u30f6]/g, function(match) {
         let chr = match.charCodeAt(0) - 0x60;
@@ -124,9 +128,9 @@
     } else {
       for (let cs of mc.shift) {
         // 連続シフト
-        if (!shift_key.includes(cs)) {
-          total_schar++;
-        }
+        // if (!shift_key.includes(cs)) {
+        //   total_schar++;
+        // }
         keydic[cs].count++;
         total_key++;
         keydic[cs].shifted++;
@@ -320,46 +324,60 @@
       <Row>
         <Cell>項目</Cell>
         <Cell>結果</Cell>
+        <Cell></Cell>
         <Cell>項目</Cell>
         <Cell>結果</Cell>
+        <Cell></Cell>
       </Row>
     </Head>
     <Body>
       <Row>
         <Cell><div class="textfield">総文字数</div></Cell>
         <Cell><div class="numberfield">{total_char}</div></Cell>
-        <Cell><div class="textfield">総カナ数</div></Cell>
+        <Cell><div class="numberfield"></div></Cell>
+        <Cell><div class="textfield">総カナ文字数</div></Cell>
         <Cell><div class="numberfield">{total_kana}</div></Cell>
+        <Cell><div class="numberfield"></div></Cell>
       </Row>
       <Row>
         <Cell><div class="textfield">総打鍵数</div></Cell>
         <Cell><div class="numberfield">{total_key}</div></Cell>
+        <Cell><div class="numberfield"></div></Cell>
         <Cell><div class="textfield">総アクション数</div></Cell>
         <Cell><div class="numberfield">{total_action}</div></Cell>
+        <Cell><div class="numberfield"></div></Cell>
       </Row>
       <Row>
         <Cell><div class="textfield">シフト文字数</div></Cell>
         <Cell><div class="numberfield">{total_schar}</Cell>
+        <Cell><div class="numberfield">{percent(total_schar / total_kana)}</div></Cell>
         <Cell><div class="textfield">うち連続シフト数</div></Cell>
         <Cell><div class="numberfield"></Cell>
+        <Cell><div class="numberfield"></div></Cell>
       </Row>
       <Row>
         <Cell><div class="textfield">同指連続数</div></Cell>
         <Cell><div class="numberfield">{sum(same_finger)}</div></Cell>
+        <Cell><div class="numberfield">{percent(sum(same_finger) / total_action)}</div></Cell>
         <Cell><div class="textfield">うち段越え数</div></Cell>
         <Cell><div class="numberfield"></Cell>
+        <Cell><div class="numberfield"></div></Cell>
       </Row>
       <Row>
         <Cell><div class="textfield">左右交互打鍵数</div></Cell>
         <Cell><div class="numberfield">{total_alter}</div></Cell>
+        <Cell><div class="numberfield">{percent(total_alter / total_action)}</div></Cell>
         <Cell><div class="textfield">片手連続数の平均</div></Cell>
         <Cell><div class="numberfield"></Cell>
+        <Cell><div class="numberfield"></div></Cell>
       </Row>
       <Row>
         <Cell><div class="textfield">アルペジオ数</div></Cell>
         <Cell><div class="numberfield">{sum(total_arpeggio)}</div></Cell>
+        <Cell><div class="numberfield">{percent(sum(total_arpeggio) / total_action)}</div></Cell>
         <Cell><div class="textfield">入力できなかった文字数</div></Cell>
         <Cell><div class="numberfield">{ul}</div></Cell>
+        <Cell><div class="numberfield"></div></Cell>
       </Row>
     </Body>
   </DataTable>
