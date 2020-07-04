@@ -323,7 +323,7 @@
   <div style="display: flex; flex-direction: column;">
 
     <div class="card-container">
-      <Card style="width: 600px;" variant="outlined">
+      <Card variant="outlined">
         <DataTable>
           <Head>
             <Row>
