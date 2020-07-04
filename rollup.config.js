@@ -4,6 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import json from '@rollup/plugin-json';
+import postcss from 'rollup-plugin-postcss';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -21,9 +22,7 @@ export default {
 			dev: !production,
 			// we'll extract any component CSS out into
 			// a separate file - better for performance
-			css: css => {
-				css.write('public/build/bundle.css');
-			}
+			emitCss: true
 		}),
 
 		// If you have external dependencies installed from
@@ -49,7 +48,20 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser()
+    production && terser(),
+    
+    postcss({
+      extract: true,
+      minimize: true,
+      use: [
+        ['sass', {
+          includePaths: [
+            './src/theme',
+            './node_modules'
+          ]
+        }]
+      ]
+    })
 	],
 	watch: {
 		clearScreen: false

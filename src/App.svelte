@@ -9,6 +9,14 @@
   import kuromoji from './kuromoji/kuromoji.js';
   import Chart from 'svelte-frappe-charts';
 
+  import Textfield from '@smui/textfield';
+  import Button, {Label} from '@smui/button';
+  import Dialog, {Title, Content, Actions, InitialFocus} from '@smui/dialog';
+  import Checkbox from '@smui/checkbox';
+  import FormField from '@smui/form-field';
+  import Select, {Option} from '@smui/select';
+  import DataTable, {Head, Body, Row, Cell} from '@smui/data-table';
+
   const keyboards = {
     "QWERTYローマ字" : romaji,
     "薙刀式": naginata,
@@ -42,6 +50,8 @@
   let kana_only = false;
   let aozora = false;
   let keyseq = "";
+
+  let listSelectionDialog;
 
   let keydic = {};
   $: for (let mk of mykeyboard.keys) {
@@ -234,36 +244,84 @@
 <main>
   <h1>keyboard layout analyzer</h1>
 
-  <textarea bind:value={text} />
+  <Textfield fullwidth textarea bind:value={text} label="入力テキスト" />
 
-  <select bind:value={selected_kb}>
+  <Select bind:value={selected_kb} label="配列">
     {#each Object.keys(keyboards) as k}
     <option>{k}</option>
     {/each}
-  </select>
+  </Select>
+  
+  <Dialog bind:this={listSelectionDialog} aria-labelledby="list-selection-title" aria-describedby="list-selection-content" >
+      <Title id="list-selection-title">分析オプション</Title>
+      <Content id="list-selection-content">
+        <div>
+          <FormField>
+            <Checkbox bind:checked={kana_only} />
+            <span slot="label">カナのみ分析</span>
+          </FormField>
+        </div>
+        <div>
+          <FormField>
+            <Checkbox bind:checked={aozora} />
+            <span slot="label">青空文庫モード(ルビ｜《》（）を除去)</span>
+          </FormField>
+        </div>
+      </Content>
+      <Actions>
+        <Button action="accept">
+          <Label>閉じる</Label>
+        </Button>
+      </Actions>
+  </Dialog>
+  <Button color="secondary" on:click={() => listSelectionDialog.open()}><Label>オプション選択</Label></Button>
 
-  <label>
-    <input type="checkbox" bind:checked={kana_only}>
-    カナのみ分析
-  </label>
-
-  <label>
-    <input type="checkbox" bind:checked={aozora}>
-    青空文庫モード(ルビ｜《》（）を除去)
-  </label>
-
-  <button on:click={analyze}>Analyze</button>
+  <Button color="secondary" on:click={analyze} variant="outlined"><Label>分析開始</Label></Button>
 
   {#if showkb == true}
-  <p class="info">入力した文字数 {total_char}</p>
-  <p class="info">入力した文字数(かな) {total_kana}</p>
-  <p class="info">入力できなかった文字数 {ul}</p>
-  <p class="info">打鍵したキー数 {total_key}</p>
-  <p class="info">連続シフトした場合の打鍵キー数 {total_skey}</p>
-  <p class="info">打鍵アクション数 {total_action}</p>
-  <p class="info">アルペジオの数 {sum(total_arpeggio)}</p>
-  <p class="info">交互打鍵の数 {total_alter}</p>
-  <p class="info">同じ指で連続して違うキーを打鍵した数 {sum(same_finger)}</p>
+  <div class="chart">
+  <DataTable>
+    <Head>
+      <Row>
+        <Cell>項目</Cell>
+        <Cell>結果</Cell>
+        <Cell>項目</Cell>
+        <Cell>結果</Cell>      </Row>
+    </Head>
+    <Body>
+      <Row>
+        <Cell>入力した文字数</Cell>
+        <Cell>{total_char}</Cell>
+        <Cell>入力した文字数(かな)</Cell>
+        <Cell>{total_kana}</Cell>
+      </Row>
+      <Row>
+        <Cell>入力できなかった文字数</Cell>
+        <Cell>{ul}</Cell>
+        <Cell>打鍵したキー数</Cell>
+        <Cell>{total_key}</Cell>
+      </Row>
+      <Row>
+        <Cell>連続シフトした場合の打鍵キー数</Cell>
+        <Cell>{total_skey}</Cell>
+        <Cell>打鍵アクション数</Cell>
+        <Cell>{total_action}</Cell>
+      </Row>
+      <Row>
+        <Cell>アルペジオの数</Cell>
+        <Cell>{sum(total_arpeggio)}</Cell>
+        <Cell>交互打鍵の数</Cell>
+        <Cell>{total_alter}</Cell>
+      </Row>
+      <Row>
+        <Cell>同じ指で連続して違うキーを打鍵した数</Cell>
+        <Cell>{sum(same_finger)}</Cell>
+        <Cell>入力した文字数</Cell>
+        <Cell>{total_char}</Cell>
+      </Row>
+    </Body>
+  </DataTable>
+  </div>
 
   <label class="chart">キー打鍵ヒートマップ</label>
   <div class="kbd">
@@ -304,10 +362,6 @@
     text-transform: uppercase;
     font-size: 3em;
     font-weight: 100;
-  }
-
-  textarea {
-    width: 100%;
   }
 
   .kbd {
