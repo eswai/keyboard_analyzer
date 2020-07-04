@@ -16,6 +16,7 @@
   import FormField from '@smui/form-field';
   import Select, {Option} from '@smui/select';
   import DataTable, {Head, Body, Row, Cell} from '@smui/data-table';
+  import Card from '@smui/card';
 
   const keyboards = {
     "QWERTYローマ字" : romaji,
@@ -383,24 +384,37 @@
   </DataTable>
   </div>
 
-  <label class="chart">キー打鍵ヒートマップ</label>
-  <div class="kbd">
-    <Keyboard layout={mykeyboard} />
-  </div>
+  <div style="display: flex; flex-direction: column;">
+    <div class="card-container">
+      <Card style="width: 600px; margin: 3px;" variant="outlined" padded>
+        キー打鍵ヒートマップ
+        <div class="kbd">
+          <Keyboard layout={mykeyboard} />
+        </div>
+      </Card>
+    </div>
 
-  <div class="chart">
-    指ごとの打鍵数
-    <Chart data={finger_chart} type="bar" height="200" colors ={['light-blue', 'blue', 'purple']} barOptions={{stacked:true, spaceRatio:0.5}}/>
-  </div>
+    <div class="card-container">
+      <Card style="width: 600px; margin: 3px;" variant="outlined" padded>
+        指ごとの打鍵数
+        <Chart data={finger_chart} type="bar" height="200" colors ={['light-blue', 'blue', 'purple']} barOptions={{stacked:true, spaceRatio:0.5}}/>
+      </Card>
+    </div>
 
-  <div class="chart">
-    同じ指で連続して違うキーを打鍵した数
-    <Chart data={samefinger_chart} type="bar" height="200" valuesOverPoints="1" colors ={['light-blue']} barOptions={{spaceRatio:0.5}} />
-  </div>
+    <div class="card-container">
+      <Card style="width: 600px; margin: 3px;" variant="outlined" padded>
+        同じ指で連続して違うキーを打鍵した数
+        <Chart data={samefinger_chart} type="bar" height="200" valuesOverPoints="1" colors ={['light-blue']} barOptions={{spaceRatio:0.5}} />
+      </Card>
+    </div>
 
-  <div class="chart">
-    アルペジオの詳細
-    <Chart data={arpeggio_chart} type="bar" height="200" valuesOverPoints="1" colors ={['light-blue']} barOptions={{spaceRatio:0.3}} />
+    <div class="card-container">
+      <Card style="width: 600px; margin: 3px;" variant="outlined" padded>
+        アルペジオの詳細
+        <Chart data={arpeggio_chart} type="bar" height="200" valuesOverPoints="1" colors ={['light-blue']} barOptions={{spaceRatio:0.3}} />
+      </Card>
+    </div>
+
   </div>
   {/if}
   {#if showkb == false}
@@ -418,6 +432,7 @@
 
   .inputfield {
     text-align: center;
+    margin: 5px;
   }
 
   .optionfield {
@@ -442,18 +457,21 @@
 
   .kbd {
     display: flex;
-    margin: 0px auto 20px;
-  }
-
-  .chart {
-    font-size: 10pt;
-    width: 600px;
-    margin: 0px auto 15px;
+    margin: 5px;
   }
 
   .ongoing {
     color: #ff3e00;
     text-align: center;
+  }
+
+  .card-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+    min-width: 380px;
+    margin: 3px;
   }
 
   @media (min-width: 640px) {
