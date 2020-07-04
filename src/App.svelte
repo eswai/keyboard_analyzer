@@ -246,11 +246,12 @@
 
   <Textfield fullwidth textarea bind:value={text} label="入力テキスト" />
 
-  <Select bind:value={selected_kb} label="配列">
-    {#each Object.keys(keyboards) as k}
-    <option>{k}</option>
-    {/each}
-  </Select>
+  <div class="inputfield">
+    <Select bind:value={selected_kb} label="配列">
+      {#each Object.keys(keyboards) as k}
+      <option>{k}</option>
+      {/each}
+    </Select>
   
   <Dialog bind:this={listSelectionDialog} aria-labelledby="list-selection-title" aria-describedby="list-selection-content" >
       <Title id="list-selection-title">分析オプション</Title>
@@ -277,6 +278,8 @@
   <Button color="secondary" on:click={() => listSelectionDialog.open()}><Label>オプション選択</Label></Button>
 
   <Button color="secondary" on:click={analyze} variant="outlined"><Label>分析開始</Label></Button>
+
+  </div>
 
   {#if showkb == true}
   <div class="chart">
@@ -351,10 +354,13 @@
 
 <style>
   main {
-    text-align: center;
     padding: 1em;
     max-width: 240px;
     margin: 0 auto;
+  }
+
+  .inputfield {
+    text-align: center;
   }
 
   h1 {
@@ -369,10 +375,6 @@
     margin: 0px auto 20px;
   }
 
-  .info {
-    font-size: 10pt;
-  }
-
   .chart {
     font-size: 10pt;
     width: 600px;
@@ -381,6 +383,7 @@
 
   .ongoing {
     color: #ff3e00;
+    text-align: center;
   }
 
   @media (min-width: 640px) {
