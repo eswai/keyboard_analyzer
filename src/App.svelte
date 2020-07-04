@@ -368,6 +368,7 @@
     text-transform: uppercase;
     font-size: 3em;
     font-weight: 100;
+    text-align: center;
   }
 
   .kbd {
