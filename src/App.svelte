@@ -38,6 +38,7 @@
   let total_key = 0; // 打鍵したキー数
   let total_schar = 0; // 打鍵したキー数、連続シフトを考慮
   let total_kana = 0; // 入力した文字数（かな）
+  let renzoku_shift = 0;
   let finger_tandoku= [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let finger_douji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let finger_shifted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -131,9 +132,9 @@
     } else {
       for (let cs of mc.shift) {
         // 連続シフト
-        // if (!shift_key.includes(cs)) {
-        //   total_schar++;
-        // }
+        if (shift_key.includes(cs)) {
+          renzoku_shift++;
+        }
         keydic[cs].count++;
         total_key++;
         keydic[cs].shifted++;
@@ -156,6 +157,7 @@
     total_char = text.length;
     total_key = 0;
     total_schar = 0;
+    renzoku_shift = 0;
     finger_tandoku = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     finger_douji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     finger_shifted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -378,8 +380,8 @@
               <Cell><div class="numberfield">{total_schar}</Cell>
               <Cell><div class="numberfield">{percent(total_schar / total_kana)}</div></Cell>
               <Cell><div class="textfield">うち連続シフト数</div></Cell>
-              <Cell><div class="numberfield"></Cell>
-              <Cell><div class="numberfield"></div></Cell>
+              <Cell><div class="numberfield">{renzoku_shift}</Cell>
+              <Cell><div class="numberfield">{percent(renzoku_shift / total_kana)}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">同指連続数</div></Cell>
