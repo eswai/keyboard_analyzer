@@ -35,9 +35,11 @@
   let ul = 0; // 入力できなかった文字数
   let total_char = 0; // 入力した文字数
   let total_key = 0; // 打鍵したキー数
-  let total_skey = 0; // 打鍵したキー数、連続シフトを考慮
+  let total_schar = 0; // 打鍵したキー数、連続シフトを考慮
   let total_kana = 0; // 入力した文字数（かな）
-  let finger_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let finger_tandoku= [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let finger_douji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let finger_shifted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let total_action = 0;
   let same_finger = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   let showkb;
@@ -80,11 +82,21 @@
     } else {
       total_action += mc.keys.length + mc.shift.length;
     }
+    if (mc.shift.length > 0) {
+      total_schar++;
+    }
+
     for (let ck of mc.keys) {
+      if (mc.shift.length > 0) {
+        keydic[ck].shifted++;
+      } else if (mc.type == 'sim' && mc.keys.length > 1) {
+        keydic[ck].douji++;
+      } else {
+        keydic[ck].tandoku++;
+      }
+      
       keydic[ck].count++;
       total_key++;
-      total_skey++;
-      finger_count[keydic[ck].finger]++;
       keyseq += ck;
 
       if (ck in keydic && last_key in keydic) {
@@ -113,11 +125,11 @@
       for (let cs of mc.shift) {
         // 連続シフト
         if (!shift_key.includes(cs)) {
-          total_skey++;
+          total_schar++;
         }
         keydic[cs].count++;
         total_key++;
-        finger_count[keydic[cs].finger]++;
+        keydic[cs].shifted++;
       }
       shift_key = mc.shift;
     }
@@ -132,8 +144,10 @@
     uncounted = [];
     total_char = text.length;
     total_key = 0;
-    total_skey = 0;
-    finger_count = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    total_schar = 0;
+    finger_tandoku = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    finger_douji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    finger_shifted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     total_action = 0;
     shift_key = [];
     same_finger = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -176,7 +190,10 @@
       console.log(ktext);
 
       for (let tk of mykeyboard.keys) {
-        tk.count = 0;
+        tk.count = 0; // 合計
+        tk.tandoku = 0; // 単独
+        tk.douji = 0; // シフトではない同時押し
+        tk.shifted = 0; // シフト入力
       }
       for (let i = 0; i < ktext.length; i++) {
         // console.log(ktext.charAt(i));
@@ -194,6 +211,12 @@
         } else {
           uncounted.push(ch1);
         }
+      }
+
+      for (let k of mykeyboard.keys) {
+        finger_tandoku[k.finger] += k.tandoku;
+        finger_douji[k.finger] += k.douji;
+        finger_shifted[k.finger] += k.shifted;
       }
 
       console.log(keyseq);
@@ -215,8 +238,17 @@
         labels: ['左小', '左薬', '左中', '左人', '左親', '右親', '右人', '右中', '右薬', '右小'],
         datasets: [
           {
-            values: finger_count
-          }
+            name: "単独",
+            values: finger_tandoku
+          },
+          {
+            name: "同時",
+            values: finger_douji
+          },
+          {
+            name: "シフト",
+            values: finger_shifted
+          },
         ]
       };
       samefinger_chart = {
@@ -282,7 +314,7 @@
   </div>
 
   {#if showkb == true}
-  <div class="chart">
+  <div class="inputfield">
   <DataTable>
     <Head>
       <Row>
@@ -294,34 +326,40 @@
     </Head>
     <Body>
       <Row>
-        <Cell>入力した文字数</Cell>
+        <Cell><div class="textfield">総文字数</div></Cell>
         <Cell><div class="numberfield">{total_char}</div></Cell>
-        <Cell>入力した文字数(かな)</Cell>
+        <Cell><div class="textfield">総カナ数</div></Cell>
         <Cell><div class="numberfield">{total_kana}</div></Cell>
       </Row>
       <Row>
-        <Cell>入力できなかった文字数</Cell>
-        <Cell><div class="numberfield">{ul}</div></Cell>
-        <Cell>打鍵したキー数</Cell>
+        <Cell><div class="textfield">総打鍵数</div></Cell>
         <Cell><div class="numberfield">{total_key}</div></Cell>
-      </Row>
-      <Row>
-        <Cell>連続シフトした場合の打鍵キー数</Cell>
-        <Cell><div class="numberfield">{total_skey}</div></Cell>
-        <Cell>打鍵アクション数</Cell>
+        <Cell><div class="textfield">総アクション数</div></Cell>
         <Cell><div class="numberfield">{total_action}</div></Cell>
       </Row>
       <Row>
-        <Cell>アルペジオの数</Cell>
-        <Cell><div class="numberfield">{sum(total_arpeggio)}</div></Cell>
-        <Cell>交互打鍵の数</Cell>
-        <Cell><div class="numberfield">{total_alter}</div></Cell>
+        <Cell><div class="textfield">シフト文字数</div></Cell>
+        <Cell><div class="numberfield">{total_schar}</Cell>
+        <Cell><div class="textfield">うち連続シフト数</div></Cell>
+        <Cell><div class="numberfield"></Cell>
       </Row>
       <Row>
-        <Cell>同じ指で連続して違うキーを打鍵した数</Cell>
+        <Cell><div class="textfield">同指連続数</div></Cell>
         <Cell><div class="numberfield">{sum(same_finger)}</div></Cell>
-        <Cell>入力した文字数</Cell>
-        <Cell><div class="numberfield">{total_char}</div></Cell>
+        <Cell><div class="textfield">うち段越え数</div></Cell>
+        <Cell><div class="numberfield"></Cell>
+      </Row>
+      <Row>
+        <Cell><div class="textfield">左右交互打鍵数</div></Cell>
+        <Cell><div class="numberfield">{total_alter}</div></Cell>
+        <Cell><div class="textfield">片手連続数の平均</div></Cell>
+        <Cell><div class="numberfield"></Cell>
+      </Row>
+      <Row>
+        <Cell><div class="textfield">アルペジオ数</div></Cell>
+        <Cell><div class="numberfield">{sum(total_arpeggio)}</div></Cell>
+        <Cell><div class="textfield">入力できなかった文字数</div></Cell>
+        <Cell><div class="numberfield">{ul}</div></Cell>
       </Row>
     </Body>
   </DataTable>
@@ -334,7 +372,7 @@
 
   <div class="chart">
     指ごとの打鍵数
-    <Chart data={finger_chart} type="bar" height="200" valuesOverPoints="1" colors ={['light-blue']} barOptions={{spaceRatio:0.5}}/>
+    <Chart data={finger_chart} type="bar" height="200" colors ={['light-blue', 'blue', 'purple']} barOptions={{stacked:true, spaceRatio:0.5}}/>
   </div>
 
   <div class="chart">
@@ -370,6 +408,10 @@
 
   .numberfield {
     text-align: right;
+  }
+
+  .textfield {
+    text-align: left;
   }
 
   h1 {
