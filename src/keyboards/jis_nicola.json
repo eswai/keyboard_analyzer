@@ -174,7 +174,7 @@
       "|": {"keys": ["\\"], "shift":["shift"], "type":"seq"},
       "}": {"keys": ["]"], "shift":["shift"], "type":"seq"},
       "~": {"keys": ["^"], "shift":["shift"], "type":"seq"},
-      "\n": {"keys": ["v", "m"], "shift":[], "type":"seq"},
+      "\n": {"keys": ["enter"], "shift":[], "type":"seq"},
       "\t": {"keys": ["tab"], "shift":[], "type":"seq"},
 
       "IME ON": {"keys": ["zkhk"], "shift":[], "type": "sim"},
