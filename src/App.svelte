@@ -295,33 +295,33 @@
     <Body>
       <Row>
         <Cell>入力した文字数</Cell>
-        <Cell>{total_char}</Cell>
+        <Cell><div class="numberfield">{total_char}</div></Cell>
         <Cell>入力した文字数(かな)</Cell>
-        <Cell>{total_kana}</Cell>
+        <Cell><div class="numberfield">{total_kana}</div></Cell>
       </Row>
       <Row>
         <Cell>入力できなかった文字数</Cell>
-        <Cell>{ul}</Cell>
+        <Cell><div class="numberfield">{ul}</div></Cell>
         <Cell>打鍵したキー数</Cell>
-        <Cell>{total_key}</Cell>
+        <Cell><div class="numberfield">{total_key}</div></Cell>
       </Row>
       <Row>
         <Cell>連続シフトした場合の打鍵キー数</Cell>
-        <Cell>{total_skey}</Cell>
+        <Cell><div class="numberfield">{total_skey}</div></Cell>
         <Cell>打鍵アクション数</Cell>
-        <Cell>{total_action}</Cell>
+        <Cell><div class="numberfield">{total_action}</div></Cell>
       </Row>
       <Row>
         <Cell>アルペジオの数</Cell>
-        <Cell>{sum(total_arpeggio)}</Cell>
+        <Cell><div class="numberfield">{sum(total_arpeggio)}</div></Cell>
         <Cell>交互打鍵の数</Cell>
-        <Cell>{total_alter}</Cell>
+        <Cell><div class="numberfield">{total_alter}</div></Cell>
       </Row>
       <Row>
         <Cell>同じ指で連続して違うキーを打鍵した数</Cell>
-        <Cell>{sum(same_finger)}</Cell>
+        <Cell><div class="numberfield">{sum(same_finger)}</div></Cell>
         <Cell>入力した文字数</Cell>
-        <Cell>{total_char}</Cell>
+        <Cell><div class="numberfield">{total_char}</div></Cell>
       </Row>
     </Body>
   </DataTable>
@@ -366,6 +366,10 @@
 
   .optionfield {
     text-align: left;
+  }
+
+  .numberfield {
+    text-align: right;
   }
 
   h1 {
