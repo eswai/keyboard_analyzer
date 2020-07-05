@@ -2,6 +2,7 @@
   import Keyboard from './Keyboard.svelte';
   import romaji from './keyboards/jis_romaji.json';
   import naginata from './keyboards/jis_naginata.json';
+  import ortho_naginata from './keyboards/ortho_naginata.json';
   import nicola from './keyboards/jis_nicola.json';
   import eucalyn from './keyboards/jis_eucalyn.json';
   import shingeta from './keyboards/jis_shingeta.json';
@@ -21,6 +22,7 @@
   const keyboards = {
     "QWERTYローマ字" : romaji,
     "薙刀式": naginata,
+    "薙刀式 MiniAxe": ortho_naginata,
     "親指シフト": nicola,
     "Eucalynローマ字": eucalyn,
     "新下駄": shingeta,

@@ -6,9 +6,13 @@
 
   let width = 36 * size - 4;
 
-  let csskey = legend.length > 1 ? "key2led" : "key1led";
-  let csscnt = legend.length > 1 ? "cnt2led" : "cnt1led";
+  let csskey;
+  let csscnt;
   switch (legend.length) {
+    case 0:
+      csskey = "keynone";
+      csscnt = "cnt1led";
+      break;
     case 1:
       csskey = "key1led";
       csscnt = "cnt1led";
@@ -48,6 +52,18 @@
 </div>
 
 <style>
+  .keynone {
+    /* float: left; */
+    margin: 1px;
+    height:30px;
+    background-color:#ffffff;
+    border: 1px solid white;
+    border-radius:4px;
+    display: grid;
+    grid-template-rows: 15px 15px;
+    font-size: 10px;
+    /* align-items: baseline; */
+  }
 
   .key1led {
     /* float: left; */
