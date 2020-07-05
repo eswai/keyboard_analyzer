@@ -1,28 +1,27 @@
   let keyboard;
   let text;
-  let keyseq = "";
-  let keydic = {};
-  let uncounted = []; // 入力できなかった文字
+  let keyseq;
+  let keydic;
+  let uncounted; // 入力できなかった文字
 
-  let finger_tandoku= [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  let finger_douji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  let finger_shifted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  let finger_onaji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let finger_tandoku;
+  let finger_douji;
+  let finger_shifted;
+  let finger_onaji;
   let arpeggio;
   
-  let nkey = 0; // 打鍵したキー数
-  let nreshift = 0; // 連続シフト
-  let nkana = 0; // 入力した文字数（かな）
-  let naction = 0;
-  let nkougo = 0; // 交互打鍵
-  let nshift = 0;
-  let ndangoe = 0;
+  let nkey; // 打鍵したキー数
+  let nreshift; // 連続シフト
+  let nkana; // 入力した文字数（かな）
+  let naction;
+  let nkougo; // 交互打鍵
+  let nshift;
+  let ndangoe;
 
-  let last_key = ""; // 直前に押したキー
-  let shift_key = [];
+  let last_key; // 直前に押したキー
+  let shift_key;
 
 export function analyzeKeyboard(t, kb) {
-
   keyboard = kb;
   text = t;
 
@@ -38,10 +37,30 @@ function preprocess() {
     return String.fromCharCode(s.charCodeAt(0) - 65248);
   });
 
+  // 文字から押したキーへの辞書を作る
   keydic = {};
   for (let mk of keyboard.keys) {
     keydic[mk.id] = mk;
   }
+
+  nkana = text.length;
+  nkey = 0;
+  nshift = 0;
+  nreshift = 0;
+  naction = 0;
+  nkougo = 0;
+
+  uncounted = [];
+  finger_tandoku = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  finger_douji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  finger_shifted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  finger_onaji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  arpeggio = new Array(keyboard.arpeggio.length);
+  arpeggio.fill(0);
+
+  shift_key = []; // 直前に押していたシフトキー
+  last_key = ""; // 直前に押していたキー
+  keyseq = ""; // 押したキーの羅列
 }
 
 function postprocess() {
@@ -113,9 +132,10 @@ function incCounter(c) {
     }
     last_key = ck;
   }
-  if (mc.shift.length == 0) {
+
+  if (mc.shift.length == 0) { // シフトキーを押していない
     shift_key = [];
-  } else {
+  } else { // シフトキーを押している
     for (let cs of mc.shift) {
       // 連続シフト
       if (mc.renzsft && shift_key.includes(cs)) {
@@ -131,27 +151,7 @@ function incCounter(c) {
 
 }
 
-
 function doAnalyze() {
-
-  uncounted = [];
-  nkana = text.length;
-  nkey = 0;
-  nshift = 0;
-  nreshift = 0;
-  finger_tandoku = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  finger_douji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  finger_shifted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  naction = 0;
-  shift_key = [];
-  finger_onaji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  last_key = "";
-  arpeggio = new Array(keyboard.arpeggio.length);
-  arpeggio.fill(0);
-  nkougo = 0;
-  keyseq = "";
-
-  nkana = text.length;
   console.log(text);
 
   for (let tk of keyboard.keys) {
