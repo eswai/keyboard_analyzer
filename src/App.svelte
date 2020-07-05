@@ -427,7 +427,7 @@
     <div class="card-container">
       <Card style="width: 600px; margin: 3px;" variant="outlined" padded>
         指ごとの打鍵数
-        <Chart data={finger_chart} type="bar" height="200" colors ={['light-blue', 'blue', 'purple']} barOptions={{stacked:true, spaceRatio:0.5}}/>
+        <Chart data={finger_chart} type="bar" height="230" colors ={['light-blue', 'blue', 'purple']} barOptions={{stacked:true, spaceRatio:0.5}}/>
       </Card>
     </div>
 
