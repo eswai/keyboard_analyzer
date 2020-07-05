@@ -12,6 +12,7 @@
   import eucalyn from './keyboards/jis_eucalyn.json';
   import shingeta from './keyboards/jis_shingeta.json';
   import asuka from './keyboards/jis_asuka123.json';
+  import wter from './keyboards/jis_wter.json';
 
   // Material UI
   import Textfield from '@smui/textfield';
@@ -31,7 +32,8 @@
     "親指シフト": nicola,
     "Eucalynローマ字": eucalyn,
     "新下駄": shingeta,
-    "飛鳥123": asuka
+    "飛鳥123": asuka,
+    "自作配列(開発中)": wter
   };
 
   let selected_kb = "QWERTYローマ字";
