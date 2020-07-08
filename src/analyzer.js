@@ -39,7 +39,7 @@ function preprocess() {
 
   // 文字から押したキーへの辞書を作る
   keydic = {};
-  for (let mk of keyboard.keys) {
+  for (let mk of keyboard.keys.flat()) {
     keydic[mk.id] = mk;
   }
 
@@ -154,7 +154,7 @@ function incCounter(c) {
 function doAnalyze() {
   console.log(text);
 
-  for (let tk of keyboard.keys) {
+  for (let tk of keyboard.keys.flat()) {
     tk.count = 0; // 合計
     tk.tandoku = 0; // 単独
     tk.douji = 0; // シフトではない同時押し
@@ -179,7 +179,7 @@ function doAnalyze() {
     }
   }
 
-  for (let k of keyboard.keys) {
+  for (let k of keyboard.keys.flat()) {
     finger_tandoku[k.finger] += k.tandoku;
     finger_douji[k.finger] += k.douji;
     finger_shifted[k.finger] += k.shifted;
@@ -188,10 +188,10 @@ function doAnalyze() {
   console.log(keyseq);
   // normalize count
   let maxv = 0;
-  for (let tk of keyboard.keys) {
+  for (let tk of keyboard.keys.flat()) {
     if (maxv < tk.count) maxv = tk.count;
   }
-  for (let tk of keyboard.keys) {
+  for (let tk of keyboard.keys.flat()) {
     tk.value = tk.count / maxv;
   }
   keyboard.rev = Math.random();

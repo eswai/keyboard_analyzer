@@ -1,8 +1,8 @@
 {
   "name": "薙刀式",
   "remark": "V12究極版。センターシフトをシフト、濁音半濁音小書き拗音外来音は、すべてシフトでない同時押し。QPは小指押し。",
-  "layout": [11, 11, 11, 11],
   "keys": [
+    [
       {"id": "q"     , "legend": ["小"]         , "size": 1,    "finger": 0},       
       {"id": "w"     , "legend": ["き", "ね"]         , "size": 1,    "finger": 1},       
       {"id": "e"     , "legend": ["て", "り"]         , "size": 1,    "finger": 2},       
@@ -13,7 +13,8 @@
       {"id": "u"     , "legend": ["BS", "さ"]         , "size": 1,    "finger": 6},       
       {"id": "i"     , "legend": ["る", "よ"]         , "size": 1,    "finger": 7},       
       {"id": "o"     , "legend": ["す", "え"]         , "size": 1,    "finger": 8},       
-      {"id": "p"     , "legend": ["へ", "ゆ"]         , "size": 1,    "finger": 9},       
+      {"id": "p"     , "legend": ["へ", "ゆ"]         , "size": 1,    "finger": 9}      
+    ], [
       {"id": "a"     , "legend": ["ろ", "せ"]         , "size": 1,    "finger": 0},       
       {"id": "s"     , "legend": ["ひ", "ぬ"]         , "size": 1,    "finger": 1},       
       {"id": "d"     , "legend": ["と", "に"]         , "size": 1,    "finger": 2},       
@@ -24,7 +25,8 @@
       {"id": "j"     , "legend": ["あ", "の"]         , "size": 1,    "finger": 6},       
       {"id": "k"     , "legend": ["い", "も"]         , "size": 1,    "finger": 7},       
       {"id": "l"     , "legend": ["う", "わ"]         , "size": 1,    "finger": 8},       
-      {"id": ";"     , "legend": ["ー", "つ"]    , "size": 1,    "finger": 9},       
+      {"id": ";"     , "legend": ["ー", "つ"]    , "size": 1,    "finger": 9}      
+    ], [
       {"id": "z"     , "legend": ["ほ"]         , "size": 1,    "finger": 0},       
       {"id": "x"     , "legend": ["け"]         , "size": 1,    "finger": 1},       
       {"id": "c"     , "legend": ["は", "を"]         , "size": 1,    "finger": 2},       
@@ -35,7 +37,8 @@
       {"id": "m"     , "legend": ["な", "。"]         , "size": 1,    "finger": 6},       
       {"id": ","     , "legend": ["ん", "む"]    , "size": 1,    "finger": 7},       
       {"id": "."     , "legend": ["ら", "ふ"]    , "size": 1,    "finger": 8},       
-      {"id": "/"     , "legend": ["れ"]    , "size": 1,    "finger": 9},   
+      {"id": "/"     , "legend": ["れ"]    , "size": 1,    "finger": 9}   
+    ], [
       {"id": "none"  , "legend": []       , "size": 1, "finger": 0},    
       {"id": "none"  , "legend": []       , "size": 1, "finger": 0},    
       {"id": "ctrl"   , "legend": ["Ctrl"]       , "size": 1, "finger": 4},    
@@ -47,6 +50,7 @@
       {"id": "win"  , "legend": ["Win"]       , "size": 1, "finger": 5},    
       {"id": "none"  , "legend": []       , "size": 1, "finger": 0},    
       {"id": "none"  , "legend": []       , "size": 1, "finger": 0}    
+    ]
   ],
   "arpeggio": [
     ["w", "e"], ["e", "r"], ["w", "r"],
