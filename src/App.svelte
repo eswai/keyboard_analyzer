@@ -115,6 +115,10 @@
       doute = r.douteRenzoku;
       ul = r.nUncounted;
 
+      let arpeggioLegend = mykeyboard.arpeggio.map(function(a){
+        return mykeyboard.keys[a[0][0]][a[0][1]].legend[0] + mykeyboard.keys[a[1][0]][a[1][1]].legend[0];
+      })
+
       finger_chart = {
         labels: ['左小', '左薬', '左中', '左人', '左親', '右親', '右人', '右中', '右薬', '右小'],
         datasets: [
@@ -141,7 +145,7 @@
         ]
       };
       arpeggio_chart = {
-        labels: mykeyboard.arpeggio,
+        labels: arpeggioLegend,
         datasets: [
           {
             values: r.arpeggio
