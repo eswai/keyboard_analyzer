@@ -42,6 +42,11 @@ function preprocess() {
   for (let mk of keyboard.keys.flat()) {
     keydic[mk.id] = mk;
   }
+  for (let i = 0; i < keyboard.keys.length; i++) {
+    for (let k of keyboard.keys[i]) {
+      k.row = i;
+    }
+  } 
 
   nkana = text.length;
   nkey = 0;
@@ -49,6 +54,7 @@ function preprocess() {
   nreshift = 0;
   naction = 0;
   nkougo = 0;
+  ndangoe = 0;
 
   uncounted = [];
   finger_tandoku = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -116,6 +122,9 @@ function incCounter(c) {
       // 同じ指で違うキーを連続して押す
       if (ck != last_key && keydic[ck].finger == keydic[last_key].finger) {
         finger_onaji[keydic[ck].finger]++;
+        if (keydic[last_key].row != keydic[ck].row) {
+          ndangoe++;
+        }
       }
       // アルペジオ
       for (let i = 0; i < keyboard.arpeggio.length; i++) {
