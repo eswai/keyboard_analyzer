@@ -9,6 +9,7 @@
   let finger_shifted;
   let finger_onaji;
   let arpeggio;
+  let douteList;
   
   let nkey; // 打鍵したキー数
   let nreshift; // 連続シフト
@@ -20,6 +21,8 @@
 
   let last_key; // 直前に押したキー
   let shift_key;
+  let doute;
+
 
 export function analyzeKeyboard(t, kb) {
   keyboard = kb;
@@ -63,10 +66,13 @@ function preprocess() {
   finger_onaji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   arpeggio = new Array(keyboard.arpeggio.length);
   arpeggio.fill(0);
+  douteList = [];
 
   shift_key = []; // 直前に押していたシフトキー
   last_key = ""; // 直前に押していたキー
   keyseq = ""; // 押したキーの羅列
+  doute = 1;
+
 }
 
 function postprocess() {
@@ -89,7 +95,8 @@ function postprocess() {
       "shift": finger_shifted,
       "onaji": finger_onaji
     },
-    "arpeggio": arpeggio
+    "arpeggio": arpeggio,
+    "douteRenzoku": sum(douteList) / douteList.length
   };
 }
 
@@ -139,6 +146,10 @@ function incCounter(c) {
       // 交互打鍵
       if (((keydic[ck].finger < 5 && keydic[last_key].finger >= 5) || (keydic[ck].finger >= 5 && keydic[last_key].finger < 5))) {
         nkougo++;
+        if (doute > 1) douteList.push(doute);
+        doute = 1;
+      } else {
+        doute++;
       }
     }
     last_key = ck;
@@ -189,6 +200,7 @@ function doAnalyze() {
       uncounted.push(ch1);
     }
   }
+  if (doute > 1) douteList.push(doute);
 
   for (let k of keyboard.keys.flat()) {
     finger_tandoku[k.finger] += k.tandoku;
@@ -232,7 +244,12 @@ export function conv_kana(text) {
 }
 
 function sum(arr) {
-  return arr.reduce(function(prev, current, i, arr) {
-    return prev+current;
-  });
+  if (arr.length == 0) {
+    return 0;
+  } else {
+    return arr.reduce(function(prev, current, i, arr) {
+      return prev+current;
+    });
+  }
+
 };

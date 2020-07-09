@@ -58,6 +58,7 @@
   let ndangoe;
   let narpeggio;
   let nkougo; // 交互打鍵
+  let doute;
 
   // 出力グラフ
   let finger_chart;
@@ -111,6 +112,7 @@
       narpeggio = r.nArpeggio;
       ndouyubi = r.nDouyubi;
       ndangoe = r.nDangoe;
+      doute = r.douteRenzoku;
       ul = r.nUncounted;
 
       finger_chart = {
@@ -262,7 +264,7 @@
               <Cell><div class="numberfield">{nkougo}</div></Cell>
               <Cell><div class="numberfield">{percent(nkougo / naction)}</div></Cell>
               <Cell><div class="textfield">片手連続数の平均</div></Cell>
-              <Cell><div class="numberfield"></Cell>
+              <Cell><div class="numberfield">{doute.toFixed(1)}</Cell>
               <Cell><div class="numberfield"></div></Cell>
             </Row>
             <Row>
