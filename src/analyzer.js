@@ -120,7 +120,9 @@ function incCounter(c) {
       // アルペジオ
       for (let i = 0; i < keyboard.arpeggio.length; i++) {
         let ar = keyboard.arpeggio[i];
-        if ((ar[0] == ck && ar[1] == last_key) || (ar[1] == ck && ar[0] == last_key)) {
+        let k1 = keyboard.keys[ar[0][0]][ar[0][1]];
+        let k2 = keyboard.keys[ar[1][0]][ar[1][1]];
+        if ((k1.id == ck && k2.id == last_key) || (k2.id == ck && k1.id == last_key)) {
           arpeggio[i]++;
           // console.log(last_key, ck);
         }
