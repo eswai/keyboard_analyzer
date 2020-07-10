@@ -144,7 +144,7 @@ function incCounter(c) {
         }
       }
       // 交互打鍵
-      if (((keydic[ck].finger < 5 && keydic[last_key].finger >= 5) || (keydic[ck].finger >= 5 && keydic[last_key].finger < 5))) {
+      if (((keydic[ck].finger <= 3 && keydic[last_key].finger >= 6) || (keydic[ck].finger >= 6 && keydic[last_key].finger <= 3))) {
         nkougo++;
         if (doute > 1) douteList.push(doute);
         doute = 1;
