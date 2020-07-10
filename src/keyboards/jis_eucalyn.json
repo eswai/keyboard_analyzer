@@ -3,8 +3,8 @@
   "remark": "",
   "keys": [
     [
-      {"id": "zkhk"  , "legend": ["全角"]      , "size": 1,   "finger": 1},       
-      {"id": "1"     , "legend": ["1", "!"]    , "size": 1,   "finger": 1},       
+      {"id": "zkhk"  , "legend": ["全角"]      , "size": 1,   "finger": 0},       
+      {"id": "1"     , "legend": ["1", "!"]    , "size": 1,   "finger": 0},       
       {"id": "2"     , "legend": ["2", "\""]   , "size": 1,   "finger": 1},       
       {"id": "3"     , "legend": ["3", "#"]    , "size": 1,   "finger": 2},       
       {"id": "4"     , "legend": ["4", "$"]    , "size": 1,   "finger": 3},       
@@ -13,14 +13,14 @@
       {"id": "7"     , "legend": ["7", "'"]    , "size": 1,    "finger": 6},       
       {"id": "8"     , "legend": ["8", "("]    , "size": 1,    "finger": 7},       
       {"id": "9"     , "legend": ["9", ")"]    , "size": 1,    "finger": 8},       
-      {"id": "0"     , "legend": ["0"]         , "size": 1,    "finger": 8},       
-      {"id": "-"     , "legend": ["-", "="]    , "size": 1,    "finger": 8},       
-      {"id": "^"     , "legend": ["^", "~"]    , "size": 1,    "finger": 8},       
-      {"id": "\\"    , "legend": ["\\", "|"]    , "size": 1,    "finger": 8},  
-      {"id": "bs"    , "legend": ["BS"]        , "size": 1,    "finger": 8}      
+      {"id": "0"     , "legend": ["0"]         , "size": 1,    "finger": 9},       
+      {"id": "-"     , "legend": ["-", "="]    , "size": 1,    "finger": 9},       
+      {"id": "^"     , "legend": ["^", "~"]    , "size": 1,    "finger": 9},       
+      {"id": "\\"    , "legend": ["\\", "|"]    , "size": 1,    "finger": 9},  
+      {"id": "bs"    , "legend": ["BS"]        , "size": 1,    "finger": 9}      
     ], [
-      {"id": "tab"   , "legend": ["Tab"]       , "size": 1.5,  "finger": 1},     
-      {"id": "q"     , "legend": ["Q"]         , "size": 1,    "finger": 1},       
+      {"id": "tab"   , "legend": ["Tab"]       , "size": 1.5,  "finger": 0},     
+      {"id": "q"     , "legend": ["Q"]         , "size": 1,    "finger": 0},       
       {"id": "w"     , "legend": ["W"]         , "size": 1,    "finger": 1},       
       {"id": ","     , "legend": [",", "<"]    , "size": 1,    "finger": 2},       
       {"id": "."     , "legend": [".", ">"]    , "size": 1,    "finger": 3},       
@@ -29,9 +29,9 @@
       {"id": "r"     , "legend": ["R"]         , "size": 1,    "finger": 6},       
       {"id": "d"     , "legend": ["D"]         , "size": 1,    "finger": 7},       
       {"id": "y"     , "legend": ["Y"]         , "size": 1,    "finger": 8},       
-      {"id": "p"     , "legend": ["P"]         , "size": 1,    "finger": 8},       
-      {"id": "@"     , "legend": ["@", "`"]    , "size": 1,    "finger": 8},       
-      {"id": "["     , "legend": ["[", "{"]    , "size": 1,    "finger": 8},       
+      {"id": "p"     , "legend": ["P"]         , "size": 1,    "finger": 9},       
+      {"id": "@"     , "legend": ["@", "`"]    , "size": 1,    "finger": 9},       
+      {"id": "["     , "legend": ["[", "{"]    , "size": 1,    "finger": 9},       
       {"id": "enter" , "legend": ["Enter"]     , "size": 1.5,  "finger": 9}   
     ], [
       {"id": "caps"  , "legend": ["Caps Lock"] , "size": 1.75, "finger": 0},   
