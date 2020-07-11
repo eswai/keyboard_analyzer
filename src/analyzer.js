@@ -18,6 +18,8 @@
   let nkougo; // 交互打鍵
   let nshift;
   let ndangoe;
+  let ntandoku;
+  let ndouji;
 
   let last_key; // 直前に押したキー
   let shift_key;
@@ -58,6 +60,8 @@ function preprocess() {
   naction = 0;
   nkougo = 0;
   ndangoe = 0;
+  ntandoku = 0;
+  ndouji = 0;
 
   uncounted = [];
   finger_tandoku = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -82,6 +86,8 @@ function postprocess() {
     "nKana": nkana,
     "nKey": nkey,
     "nAction": naction,
+    "nTanda": ntandoku,
+    "nDouji": ndouji,
     "nShift": nshift,
     "nReShift": nreshift,
     "nDouyubi": sum(finger_onaji),
@@ -103,12 +109,17 @@ function postprocess() {
 function incCounter(c) {
   let mc = keyboard.conversion[c]
   // console.log(c);
-  if (mc.type == "sim") {
+  if (mc.type == "sim") { // 同時打鍵
     naction++;
-  } else {
+  } else { // 連続打鍵
     naction += mc.keys.length + mc.shift.length;
   }
-  if (mc.shift.length > 0) {
+  if (mc.keys.length + mc.shift.length == 1) {
+    ntandoku++;
+  } else {
+    ndouji++;
+  }
+  if (mc.shift.length > 0) { // シフトあり
     nshift++;
   }
 

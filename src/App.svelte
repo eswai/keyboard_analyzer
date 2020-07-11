@@ -52,6 +52,8 @@
   let nkey; // 打鍵したキー数
   let nshift; // 打鍵したキー数、連続シフトを考慮
   let nkana; // 入力した文字数（かな）
+  let ntanda;
+  let ndouji;
   let nreshift;
   let naction;
   let ndouyubi;
@@ -106,6 +108,8 @@
       nkana = r.nKana;
       nkey = r.nKey;
       naction = r.nAction;
+      ntanda = r.nTanda;
+      ndouji = r.nDouji;
       nshift = r.nShift;
       nkougo = r.nKougo;
       nreshift = r.nReShift;
@@ -246,6 +250,14 @@
               <Cell><div class="textfield">総アクション数</div></Cell>
               <Cell><div class="numberfield">{naction}</div></Cell>
               <Cell><div class="numberfield"></div></Cell>
+            </Row>
+            <Row>
+              <Cell><div class="textfield">単打鍵数</div></Cell>
+              <Cell><div class="numberfield">{ntanda}</Cell>
+              <Cell><div class="numberfield">{percent(ntanda / naction)}</div></Cell>
+              <Cell><div class="textfield">同時打鍵数</div></Cell>
+              <Cell><div class="numberfield">{ndouji}</Cell>
+              <Cell><div class="numberfield">{percent(ndouji / naction)}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">シフト文字数</div></Cell>
