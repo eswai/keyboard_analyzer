@@ -285,24 +285,32 @@
             <Row>
               <Cell><div class="textfield">
                 <div class="tooltip">総打鍵数
-                  <span class="top">押したキーの数。</span>
+                  <span class="right">押したキーの数。％の母数はかな文字数。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{nkey}</div></Cell>
               <Cell><div class="numberfield">{percent(nkey / nkana)}</div></Cell>
               <Cell><div class="textfield">
                 <div class="tooltip">総アクション数
-                  <span class="top">同時押しを1回とした数。ストローク数。</span>
+                  <span class="top">同時押しを1回とした数。％の母数はかな文字数。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{naction}</div></Cell>
               <Cell><div class="numberfield">{percent(naction / nkana)}</div></Cell>
             </Row>
             <Row>
-              <Cell><div class="textfield">単打鍵数</div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">単打鍵数
+                  <span class="right">％の母数はアクション数。</span>
+                </div>
+              </div></Cell>
               <Cell><div class="numberfield">{ntanda}</Cell>
               <Cell><div class="numberfield">{percent(ntanda / naction)}</div></Cell>
-              <Cell><div class="textfield">同時打鍵数</div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">同時打鍵数
+                  <span class="top">％の母数はアクション数。</span>
+                </div>
+              </div></Cell>
               <Cell><div class="numberfield">{ndouji}</Cell>
               <Cell><div class="numberfield">{percent(ndouji / naction)}</div></Cell>
             </Row>
