@@ -3,6 +3,7 @@
   export let size = 1;
   export let value = 0;
   export let count = 0;
+  export let color = "mono";
 
   let width = 36 * size - 4;
 
@@ -29,16 +30,31 @@
 
   function heatmap(v){
     const scale = 20;
-    if (v > 0) {
-      // let h = (1.0 - Math.log2(v * scale + 1) / Math.log2(scale + 1)) * 100;
-      // let h = (1.0 - v) * 100;
-      // return "hsl(" + h + ", 85%, 60%)";
-      let l = 65 + (1 - Math.log2(v * scale + 1) / Math.log2(scale + 1)) * 35;
-      return "hsl(0, 100%, " + l + "%)";
-    } else {
-      return "white";
+    let l, h;
+    switch (color) {
+    case "mono":
+      if (v > 0) {
+        l = 65 + (1 - Math.log2(v * scale + 1) / Math.log2(scale + 1)) * 35;
+        return "hsl(0, 100%, " + l + "%)";
+            } else {
+        return "white";
+      }
+    case "multi":
+      if (v > 0) {
+        // let h = (1.0 - Math.log2(v * scale + 1) / Math.log2(scale + 1)) * 100;
+        h = (1.0 - v) * 100;
+        return "hsl(" + h + ", 85%, 60%)";
+      } else {
+        return "white";
+      }
+    case "random":
+      if (v > 0) {
+        l = Math.floor(v * 10 % 10);
+        return ["#ffadd6", "#d6adff", "#d6ffad", "#adffd6", "#add6ff", "#adffff", "#adadff", "#ffadff", "#adffad", "#ffffad"][l];
+      } else {
+        return "white";
+      }
     }
-    
   }
 </script>
 

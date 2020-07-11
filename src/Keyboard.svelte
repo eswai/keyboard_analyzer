@@ -1,6 +1,7 @@
 <script>
   import Key from './Key.svelte';
   export let layout;
+  export let designview = false;
 
 </script>
 
@@ -21,7 +22,11 @@
   {#each layout.keys as row}
   <div class="row">
     {#each row as key}
+    {#if designview}
+    <Key legend={key.legend} size={key.size} value={key.legend.length == 0 ? -1 : (key.finger + 1) / 10} color="random" />
+    {:else}
     <Key legend={key.legend} size={key.size} value={key.value} count={key.count}/>
+    {/if}
     {/each}
   </div>
   {/each}

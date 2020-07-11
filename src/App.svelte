@@ -39,7 +39,8 @@
   let selected_kb = "QWERTYローマ字";
   let mykeyboard = keyboards[selected_kb];
   let text = "人類が増えすぎた人口を宇宙に移民させるようになって、既に半世紀が過ぎていた。地球の周りの巨大な人工都市は人類の第二の故郷となり、人々はそこで子を産み、育て、そして死んでいった。";
-  let showkb;
+  let showresult;
+  let showkb = false;
   let kana_only = false;
   let aozora = false;
   let optionDialog;
@@ -73,11 +74,13 @@
 
   function kbchange() {
     remark = keyboards[selected_kb].remark;
+    mykeyboard = keyboards[selected_kb];
+    showkb = true;
   }
 
   function startAnalsys() {
     mykeyboard = keyboards[selected_kb];
-    showkb = false;
+    showresult = false;
 
     kuromoji.builder({
       dicPath: 'dict' // public/dict
@@ -156,7 +159,7 @@
           }
         ]
       };
-      showkb = true;
+      showresult = true;
     
     });
   }
@@ -168,7 +171,7 @@
   <Textfield fullwidth textarea bind:value={text} label="入力テキスト" />
 
   <div class="inputfield">
-    <Select bind:value={selected_kb} label="配列">
+    <Select bind:value={selected_kb} label="配列" >
       {#each Object.keys(keyboards) as k}
       <option>{k}</option>
       {/each}
@@ -206,18 +209,24 @@
         <div class="textfield">
         {remark}
         </div>
+        {#if showkb}
+        <div class="kbd">
+          <Keyboard layout={mykeyboard} designview=true />
+        </div>
+        {/if}
       </Content>
       <Actions>
-        <Button action="accept">
+        <Button action="accept" on:click={() => {showkb=false;}}>
           <Label>閉じる</Label>
         </Button>
       </Actions>
   </Dialog>
-  <Button color="secondary" on:click={() => {kbchange();remarkDialog.open()}}><Label>補足説明</Label></Button>
+  <Button color="secondary" on:click={() => {kbchange();remarkDialog.open();}}><Label>補足説明</Label></Button>
 
   </div>
 
-  {#if showkb == true}
+
+  {#if showresult == true}
 
   <div style="display: flex; flex-direction: column;">
 
@@ -365,7 +374,7 @@
 
   </div>
   {/if}
-  {#if showkb == false}
+  {#if showresult == false}
   <p class="ongoing">分析を実行中...</p>
   {/if}
 
