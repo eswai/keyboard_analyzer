@@ -71,7 +71,7 @@
       {"id": "henk"  , "legend": ["変換"]      , "size": 2.25, "finger": 5},   
       {"id": "space" , "legend": ["Space"]     , "size": 1.25, "finger": 5},   
       {"id": "kana"  , "legend": ["かな"]      , "size": 1,    "finger": 5},   
-      {"id": "altr"  , "legend": ["Alt"]       , "size": 1.25, "finger": 5},    
+      {"id": "altr"  , "legend": ["Alt"]       , "size": 1.25, "finger": 9},    
       {"id": "winr"  , "legend": ["Win"]       , "size": 1.25, "finger": 9},     
       {"id": "ctrlr" , "legend": ["Ctrl"]      , "size": 1.25, "finger": 9}  
     ]

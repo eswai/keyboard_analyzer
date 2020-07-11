@@ -62,17 +62,17 @@
       {"id": "_"     , "legend": ["￥"], "size": 1,  "finger": 9},    
       {"id": "shiftr", "legend": ["Shift"], "size": 1.75, "finger": 9}
     ], [
-      {"id": "ctrl"  , "legend": ["Ctrl"], "size": 1.25, "finger": 0},   
-      {"id": "win"   , "legend": ["Win"], "size": 1.25, "finger": 0},    
-      {"id": "alt"   , "legend": ["Alt"], "size": 1.25, "finger": 4},    
-      {"id": "muhen" , "legend": ["無変換"], "size": 1, "finger": 4},   
-      {"id": "space" , "legend": ["Space"], "size": 3.25, "finger": 4},   
-      {"id": "henk"  , "legend": ["変換"], "size": 1, "finger": 5},   
-      {"id": "kana"  , "legend": ["かな"], "size": 1, "finger": 5},   
-      {"id": "altr"  , "legend": ["Alt"], "size": 1.25, "finger": 5},    
-      {"id": "winr"  , "legend": ["Win"], "size": 1.25, "finger": 5},     
-      {"id": "app"   , "legend": ["App"], "size": 1.25, "finger": 5},     
-      {"id": "ctrlr" , "legend": ["Ctrl"], "size": 1.25, "finger": 9}  
+      {"id": "ctrl"  , "legend": ["Ctrl"]      , "size": 1.25, "finger": 0},   
+      {"id": "win"   , "legend": ["Win"]       , "size": 1.25, "finger": 0},    
+      {"id": "alt"   , "legend": ["Alt"]       , "size": 1.25, "finger": 0},    
+      {"id": "muhen" , "legend": ["無変換"]     , "size": 1, "finger": 4},   
+      {"id": "space" , "legend": ["Space"]     , "size": 3.25, "finger": 4},   
+      {"id": "henk"  , "legend": ["変換"]      , "size": 1, "finger": 5},   
+      {"id": "kana"  , "legend": ["かな"]      , "size": 1, "finger": 5},   
+      {"id": "altr"  , "legend": ["Alt"]       , "size": 1.25, "finger": 8},    
+      {"id": "winr"  , "legend": ["Win"]       , "size": 1.25, "finger": 9},     
+      {"id": "app"   , "legend": ["App"]       , "size": 1.25, "finger": 9},     
+      {"id": "ctrlr" , "legend": ["Ctrl"]      , "size": 1.25, "finger": 9}  
     ]
   ],
   "arpeggio": [
