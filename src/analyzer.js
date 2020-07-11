@@ -125,31 +125,33 @@ function incCounter(c) {
     nkey++;
     keyseq += ck;
 
-    if (ck in keydic && last_key in keydic) {
-      // 同じ指で違うキーを連続して押す
-      if (ck != last_key && keydic[ck].finger == keydic[last_key].finger) {
-        finger_onaji[keydic[ck].finger]++;
-        if (keydic[last_key].row != keydic[ck].row) {
-          ndangoe++;
+    if (mc.type == 'seq' || (mc.type == 'sim' && mc.keys.length == 1)) {
+      if (ck in keydic && last_key in keydic) {
+        // 同じ指で違うキーを連続して押す
+        if (ck != last_key && keydic[ck].finger == keydic[last_key].finger) {
+          finger_onaji[keydic[ck].finger]++;
+          if (keydic[last_key].row != keydic[ck].row) {
+            ndangoe++;
+          }
         }
-      }
-      // アルペジオ
-      for (let i = 0; i < keyboard.arpeggio.length; i++) {
-        let ar = keyboard.arpeggio[i];
-        let k1 = keyboard.keys[ar[0][0]][ar[0][1]];
-        let k2 = keyboard.keys[ar[1][0]][ar[1][1]];
-        if ((k1.id == ck && k2.id == last_key) || (k2.id == ck && k1.id == last_key)) {
-          arpeggio[i]++;
-          // console.log(last_key, ck);
+        // アルペジオ
+        for (let i = 0; i < keyboard.arpeggio.length; i++) {
+          let ar = keyboard.arpeggio[i];
+          let k1 = keyboard.keys[ar[0][0]][ar[0][1]];
+          let k2 = keyboard.keys[ar[1][0]][ar[1][1]];
+          if ((k1.id == ck && k2.id == last_key) || (k2.id == ck && k1.id == last_key)) {
+            arpeggio[i]++;
+            // console.log(last_key, ck);
+          }
         }
-      }
-      // 交互打鍵
-      if (((keydic[ck].finger <= 3 && keydic[last_key].finger >= 6) || (keydic[ck].finger >= 6 && keydic[last_key].finger <= 3))) {
-        nkougo++;
-        if (doute > 1) douteList.push(doute);
-        doute = 1;
-      } else {
-        doute++;
+        // 交互打鍵
+        if (((keydic[ck].finger <= 3 && keydic[last_key].finger >= 6) || (keydic[ck].finger >= 6 && keydic[last_key].finger <= 3))) {
+          nkougo++;
+          if (doute > 1) douteList.push(doute);
+          doute = 1;
+        } else {
+          doute++;
+        }
       }
     }
     last_key = ck;
