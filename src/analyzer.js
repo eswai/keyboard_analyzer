@@ -111,14 +111,16 @@ function incCounter(c) {
   // console.log(c);
   if (mc.type == "sim") { // 同時打鍵
     naction++;
+    if (mc.keys.length + mc.shift.length == 1) {
+      ntandoku++;
+    } else {
+      ndouji++;
+    }
   } else { // 連続打鍵
     naction += mc.keys.length + mc.shift.length;
+    ntandoku += mc.keys.length + mc.shift.length;
   }
-  if (mc.keys.length + mc.shift.length == 1) {
-    ntandoku++;
-  } else {
-    ndouji++;
-  }
+
   if (mc.shift.length > 0) { // シフトあり
     nshift++;
   }
