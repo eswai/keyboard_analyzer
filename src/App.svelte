@@ -270,10 +270,10 @@
             <Row>
               <Cell><div class="textfield">同指連続数</div></Cell>
               <Cell><div class="numberfield">{ndouyubi}</div></Cell>
-              <Cell><div class="numberfield">{percent(ndouyubi / naction)}</div></Cell>
+              <Cell><div class="numberfield">{percent(ndouyubi / (naction - 1))}</div></Cell>
               <Cell><div class="textfield">うち段越え数</div></Cell>
               <Cell><div class="numberfield">{ndangoe}</Cell>
-              <Cell><div class="numberfield">{percent(ndangoe / naction)}</div></Cell>
+              <Cell><div class="numberfield">{percent(ndangoe / (naction - 1))}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">左右交互打鍵数</div></Cell>
