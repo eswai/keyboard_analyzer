@@ -244,10 +244,18 @@
               <Cell><div class="numberfield"></div></Cell>
             </Row>
             <Row>
-              <Cell><div class="textfield">総打鍵数</div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">総打鍵数
+                  <span class="top">押したキーの数。</span>
+                </div>
+              </div></Cell>
               <Cell><div class="numberfield">{nkey}</div></Cell>
               <Cell><div class="numberfield"></div></Cell>
-              <Cell><div class="textfield">総アクション数</div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">総アクション数
+                  <span class="top">同時押しを1回とした数。ストローク数。</span>
+                </div>
+              </div></Cell>
               <Cell><div class="numberfield">{naction}</div></Cell>
               <Cell><div class="numberfield"></div></Cell>
             </Row>
@@ -260,31 +268,60 @@
               <Cell><div class="numberfield">{percent(ndouji / naction)}</div></Cell>
             </Row>
             <Row>
-              <Cell><div class="textfield">シフト文字数</div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">シフト文字数
+                  <span class="right">シフトを押しながら入力した文字数。％の母数はアクション数。</span>
+                  <i></i>
+                </div>
+              </div></Cell>
               <Cell><div class="numberfield">{nshift}</Cell>
-              <Cell><div class="numberfield">{percent(nshift / nkana)}</div></Cell>
-              <Cell><div class="textfield">うち連続シフト数</div></Cell>
+              <Cell><div class="numberfield">{percent(nshift / naction)}</div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">うち連続シフト数
+                  <span class="top">シフトを押っぱなしで連続して入力した文字数。％の母数はアクション数。</span>
+                </div>
+              </div></Cell>
               <Cell><div class="numberfield">{nreshift}</Cell>
-              <Cell><div class="numberfield">{percent(nreshift / nkana)}</div></Cell>
+              <Cell><div class="numberfield">{percent(nreshift / naction)}</div></Cell>
             </Row>
             <Row>
-              <Cell><div class="textfield">同指連続数</div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">同指連続数
+                  <span class="right">単打のみ。％の母数はアクション数-1。</span>
+                </div>
+              </div></Cell>
               <Cell><div class="numberfield">{ndouyubi}</div></Cell>
               <Cell><div class="numberfield">{percent(ndouyubi / (naction - 1))}</div></Cell>
-              <Cell><div class="textfield">うち段越え数</div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">うち段越え数
+                  <span class="top">単打のみ。同じ指で連続して行をまたいで異なるキーを押した数。％の母数はアクション数-1。</span>
+                </div>
+              </div></Cell>
               <Cell><div class="numberfield">{ndangoe}</Cell>
               <Cell><div class="numberfield">{percent(ndangoe / (naction - 1))}</div></Cell>
             </Row>
             <Row>
-              <Cell><div class="textfield">左右交互打鍵数</div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">左右交互打鍵数
+                  <span class="right">単打のみ。親指除く。％の母数はアクション数-1。</span>
+                </div>
+              </div></Cell>
               <Cell><div class="numberfield">{nkougo}</div></Cell>
               <Cell><div class="numberfield">{percent(nkougo / (naction - 1))}</div></Cell>
-              <Cell><div class="textfield">片手連続数の平均</div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">片手連続数の平均
+                  <span class="top">単打のみ。親指除く。％の母数はアクション数-1。</span>
+                </div>
+              </div></Cell>
               <Cell><div class="numberfield">{doute.toFixed(1)}</Cell>
               <Cell><div class="numberfield"></div></Cell>
             </Row>
             <Row>
-              <Cell><div class="textfield">アルペジオ数</div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">アルペジオ数
+                  <span class="right">単打のみ。％の母数はアクション数-1。</span>
+                </div>
+              </div></Cell>
               <Cell><div class="numberfield">{narpeggio}</div></Cell>
               <Cell><div class="numberfield">{percent(narpeggio / (naction - 1))}</div></Cell>
               <Cell><div class="textfield">入力できなかった文字数</div></Cell>
@@ -384,10 +421,62 @@
     min-width: 380px;
     margin: 3px;
   }
-
+  
   @media (min-width: 640px) {
     main {
       max-width: none;
     }
   }
+
+.tooltip {
+    display:inline-block;
+    position:relative;
+    border-bottom:1px dotted #666;
+    text-align:left;
+}
+
+.tooltip .top {
+    min-width: 200px; 
+    max-width: 600px;
+    top:-20px;
+    left:50%;
+    transform:translate(-50%, -100%);
+    padding:10px 20px;
+    color:#FFFFFF;
+    background-color:#444444;
+    font-weight:normal;
+    font-size:11px;
+    border-radius:4px;
+    position:absolute;
+    z-index:99999999;
+    box-sizing:border-box;
+    display:none;
+}
+
+.tooltip:hover .top {
+    display:block;
+}
+
+.tooltip .right {
+    min-width:200px; 
+    top:50%;
+    left:100%;
+    margin-left:20px;
+    transform:translate(0, -50%);
+    padding:10px 20px;
+    color:#FFFFFF;
+    background-color:#444444;
+    font-weight:normal;
+    font-size:11px;
+    border-radius:8px;
+    position:absolute;
+    z-index:99999999;
+    box-sizing:border-box;
+    display:none;
+}
+
+.tooltip:hover .right {
+    display:block;
+}
+
 </style>
