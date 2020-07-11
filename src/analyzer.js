@@ -3,10 +3,6 @@
   let keyseq;
   let keydic;
   let uncounted; // 入力できなかった文字
-
-  let finger_tandoku;
-  let finger_douji;
-  let finger_shifted;
   let finger_onaji;
   let arpeggio;
   let douteList;
@@ -64,10 +60,8 @@ function preprocess() {
   ndouji = 0;
 
   uncounted = [];
-  finger_tandoku = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  finger_douji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  finger_shifted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   finger_onaji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
   arpeggio = new Array(keyboard.arpeggio.length);
   arpeggio.fill(0);
   douteList = [];
@@ -77,6 +71,12 @@ function preprocess() {
   keyseq = ""; // 押したキーの羅列
   doute = 1;
 
+  for (let tk of keyboard.keys.flat()) {
+    tk.count = 0; // 合計
+    tk.tandoku = 0; // 単独
+    tk.douji = 0; // シフトではない同時押し
+    tk.shifted = 0; // シフト入力
+  }
 }
 
 function postprocess() {
@@ -84,11 +84,30 @@ function postprocess() {
   let rdouji = [];
   let rshifted = [];
 
+  let finger_tandoku = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let finger_douji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  let finger_shifted = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  for (let k of keyboard.keys.flat()) {
+    finger_tandoku[k.finger] += k.tandoku;
+    finger_douji[k.finger] += k.douji;
+    finger_shifted[k.finger] += k.shifted;
+  }
+
   for (let kr of keyboard.keys) {
     rtandoku.push(kr.reduce((acc, cur) => acc + cur.tandoku, 0));
     rdouji.push(kr.reduce((acc, cur) => acc + cur.douji, 0));
     rshifted.push(kr.reduce((acc, cur) => acc + cur.shifted, 0));
   }
+
+  // normalize count
+  let maxv = 0;
+  for (let tk of keyboard.keys.flat()) {
+    if (maxv < tk.count) maxv = tk.count;
+  }
+  for (let tk of keyboard.keys.flat()) {
+    tk.value = tk.count / maxv;
+  }
+  keyboard.rev = Math.random();
 
   return {
     "nUncounted": uncounted.length,
@@ -207,13 +226,6 @@ function incCounter(c) {
 function doAnalyze() {
   console.log(text);
 
-  for (let tk of keyboard.keys.flat()) {
-    tk.count = 0; // 合計
-    tk.tandoku = 0; // 単独
-    tk.douji = 0; // シフトではない同時押し
-    tk.shifted = 0; // シフト入力
-  }
-
   for (let i = 0; i < text.length; i++) {
     // console.log(text.charAt(i));
     let ch1 = text.charAt(i);
@@ -233,23 +245,7 @@ function doAnalyze() {
   }
   if (doute > 1) douteList.push(doute);
 
-  for (let k of keyboard.keys.flat()) {
-    finger_tandoku[k.finger] += k.tandoku;
-    finger_douji[k.finger] += k.douji;
-    finger_shifted[k.finger] += k.shifted;
-  }
-
   console.log(keyseq);
-  // normalize count
-  let maxv = 0;
-  for (let tk of keyboard.keys.flat()) {
-    if (maxv < tk.count) maxv = tk.count;
-  }
-  for (let tk of keyboard.keys.flat()) {
-    tk.value = tk.count / maxv;
-  }
-  keyboard.rev = Math.random();
-  // console.log(keyboard)
   console.log(uncounted);
 
   // console.log(finger_count);
