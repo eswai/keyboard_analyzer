@@ -289,14 +289,14 @@
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{nkey}</div></Cell>
-              <Cell><div class="numberfield"></div></Cell>
+              <Cell><div class="numberfield">{percent(nkey / nkana)}</div></Cell>
               <Cell><div class="textfield">
                 <div class="tooltip">総アクション数
                   <span class="top">同時押しを1回とした数。ストローク数。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{naction}</div></Cell>
-              <Cell><div class="numberfield"></div></Cell>
+              <Cell><div class="numberfield">{percent(naction / nkana)}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">単打鍵数</div></Cell>
