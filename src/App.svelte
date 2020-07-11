@@ -278,7 +278,7 @@
             <Row>
               <Cell><div class="textfield">左右交互打鍵数</div></Cell>
               <Cell><div class="numberfield">{nkougo}</div></Cell>
-              <Cell><div class="numberfield">{percent(nkougo / naction)}</div></Cell>
+              <Cell><div class="numberfield">{percent(nkougo / (naction - 1))}</div></Cell>
               <Cell><div class="textfield">片手連続数の平均</div></Cell>
               <Cell><div class="numberfield">{doute.toFixed(1)}</Cell>
               <Cell><div class="numberfield"></div></Cell>
@@ -286,7 +286,7 @@
             <Row>
               <Cell><div class="textfield">アルペジオ数</div></Cell>
               <Cell><div class="numberfield">{narpeggio}</div></Cell>
-              <Cell><div class="numberfield">{percent(narpeggio / naction)}</div></Cell>
+              <Cell><div class="numberfield">{percent(narpeggio / (naction - 1))}</div></Cell>
               <Cell><div class="textfield">入力できなかった文字数</div></Cell>
               <Cell><div class="numberfield">{ul}</div></Cell>
               <Cell><div class="numberfield"></div></Cell>
