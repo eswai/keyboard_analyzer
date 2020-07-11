@@ -71,6 +71,7 @@
   let finger_chart;
   let samefinger_chart;
   let arpeggio_chart;
+  let row_chart;
 
   function percent(v) {
     return (v * 100).toFixed(1) + '%'
@@ -153,6 +154,31 @@
           {
             values: r.finger.onaji
           }
+        ]
+      };
+      arpeggio_chart = {
+        labels: arpeggioLegend,
+        datasets: [
+          {
+            values: r.arpeggio
+          }
+        ]
+      };
+      row_chart = {
+        labels: ["R1", "R2", "R3", "R4", "R5"],
+        datasets: [
+          {
+            name: "単独",
+            values: r.row.tandoku
+          },
+          {
+            name: "同時",
+            values: r.row.douji
+          },
+          {
+            name: "シフト",
+            values: r.row.shift
+          },
         ]
       };
       arpeggio_chart = {
@@ -359,6 +385,13 @@
       <Card style="width: 600px; margin: 3px;" variant="outlined" padded>
         指ごとの打鍵数
         <Chart data={finger_chart} type="bar" height="230" colors ={['light-blue', 'blue', 'purple']} barOptions={{stacked:true, spaceRatio:0.5}}/>
+      </Card>
+    </div>
+
+    <div class="card-container">
+      <Card style="width: 600px; margin: 3px;" variant="outlined" padded>
+        行ごとの打鍵数
+        <Chart data={row_chart} type="bar" height="230" colors ={['light-blue', 'blue', 'purple']} barOptions={{stacked:true, spaceRatio:0.5}}/>
       </Card>
     </div>
 

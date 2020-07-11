@@ -10,7 +10,7 @@
   let finger_onaji;
   let arpeggio;
   let douteList;
-  
+
   let nkey; // 打鍵したキー数
   let nreshift; // 連続シフト
   let nkana; // 入力した文字数（かな）
@@ -51,7 +51,7 @@ function preprocess() {
     for (let k of keyboard.keys[i]) {
       k.row = i;
     }
-  } 
+  }
 
   nkana = text.length;
   nkey = 0;
@@ -80,6 +80,16 @@ function preprocess() {
 }
 
 function postprocess() {
+  let rtandoku = [];
+  let rdouji = [];
+  let rshifted = [];
+
+  for (let kr of keyboard.keys) {
+    rtandoku.push(kr.reduce((acc, cur) => acc + cur.tandoku, 0));
+    rdouji.push(kr.reduce((acc, cur) => acc + cur.douji, 0));
+    rshifted.push(kr.reduce((acc, cur) => acc + cur.shifted, 0));
+  }
+
   return {
     "nUncounted": uncounted.length,
     "uncounted": uncounted,
@@ -100,6 +110,11 @@ function postprocess() {
       "douji": finger_douji,
       "shift": finger_shifted,
       "onaji": finger_onaji
+    },
+    "row": {
+      "tandoku": rtandoku,
+      "douji": rdouji,
+      "shift": rshifted,
     },
     "arpeggio": arpeggio,
     "douteRenzoku": sum(douteList) / douteList.length
@@ -133,7 +148,7 @@ function incCounter(c) {
     } else {
       keydic[ck].tandoku++;
     }
-    
+
     keydic[ck].count++;
     nkey++;
     keyseq += ck;
@@ -198,7 +213,7 @@ function doAnalyze() {
     tk.douji = 0; // シフトではない同時押し
     tk.shifted = 0; // シフト入力
   }
-  
+
   for (let i = 0; i < text.length; i++) {
     // console.log(text.charAt(i));
     let ch1 = text.charAt(i);
@@ -238,7 +253,7 @@ function doAnalyze() {
   console.log(uncounted);
 
   // console.log(finger_count);
-  
+
 }
 
 export function kanaToHira(str) {
