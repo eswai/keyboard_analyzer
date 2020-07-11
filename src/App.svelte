@@ -12,7 +12,9 @@
   import eucalyn from './keyboards/jis_eucalyn.json';
   import shingeta from './keyboards/jis_shingeta.json';
   import asuka from './keyboards/jis_asuka123.json';
-  import wter from './keyboards/jis_wter.json';
+  import wter from './keyboards/ortho_wter.json';
+  import srlby from './keyboards/ortho_srlby.json';
+  import colemak from './keyboards/us_colemak.json';
 
   // Material UI
   import Textfield from '@smui/textfield';
@@ -33,7 +35,9 @@
     "Eucalynローマ字": eucalyn,
     "新下駄": shingeta,
     "飛鳥123": asuka,
-    "自作配列(開発中)": wter
+    "自作配列(開発中)": wter,
+    "SRLBY配列": srlby,
+    "Colemak配列": colemak,
   };
 
   let selected_kb = "QWERTYローマ字";
@@ -160,7 +164,7 @@
         ]
       };
       showresult = true;
-    
+
     });
   }
 </script>
@@ -176,7 +180,7 @@
       <option>{k}</option>
       {/each}
     </Select>
-  
+
   <Button color="secondary" on:click={startAnalsys} variant="outlined"><Label>分析開始</Label></Button>
 
   <Dialog bind:this={optionDialog} aria-labelledby="option-title" aria-describedby="option-content" >
@@ -430,7 +434,7 @@
     min-width: 380px;
     margin: 3px;
   }
-  
+
   @media (min-width: 640px) {
     main {
       max-width: none;
@@ -445,7 +449,7 @@
 }
 
 .tooltip .top {
-    min-width: 200px; 
+    min-width: 200px;
     max-width: 600px;
     top:-20px;
     left:50%;
@@ -467,7 +471,7 @@
 }
 
 .tooltip .right {
-    min-width:200px; 
+    min-width:200px;
     top:50%;
     left:100%;
     margin-left:20px;
