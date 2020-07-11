@@ -125,6 +125,7 @@ function incCounter(c) {
     nkey++;
     keyseq += ck;
 
+    // 連続打鍵、または同時打鍵で単打のとき（シフトでない同時打鍵は除く）
     if (mc.type == 'seq' || (mc.type == 'sim' && mc.keys.length == 1)) {
       if (ck in keydic && last_key in keydic) {
         // 同じ指で違うキーを連続して押す
