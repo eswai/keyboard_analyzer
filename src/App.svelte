@@ -8,6 +8,7 @@
   import romaji from './keyboards/jis_romaji.json';
   import naginata from './keyboards/jis_naginata.json';
   import ortho_naginata from './keyboards/ortho_naginata.json';
+  import kana from './keyboards/jis_kana.json';
   import nicola from './keyboards/jis_nicola.json';
   import eucalyn from './keyboards/jis_eucalyn.json';
   import shingeta from './keyboards/jis_shingeta.json';
@@ -31,6 +32,7 @@
     "QWERTYローマ字" : romaji,
     "薙刀式": naginata,
     "薙刀式 MiniAxe": ortho_naginata,
+    "JISかな": kana,
     "親指シフト": nicola,
     "Eucalynローマ字": eucalyn,
     "新下駄": shingeta,
