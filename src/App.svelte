@@ -16,6 +16,8 @@
   import wter from './keyboards/ortho_wter.json';
   import srlby from './keyboards/ortho_srlby.json';
   import colemak from './keyboards/us_colemak.json';
+  import dvorak from './keyboards/us_dvorak.json';
+  import qgmlwy from './keyboards/us_qgmlwy.json';
 
   // Material UI
   import Textfield from '@smui/textfield';
@@ -34,12 +36,14 @@
     "薙刀式 MiniAxe": ortho_naginata,
     "JISかな": kana,
     "親指シフト": nicola,
-    "Eucalynローマ字": eucalyn,
     "新下駄": shingeta,
     "飛鳥123": asuka,
+    "Eucalynローマ字": eucalyn,
+    "Dvorak": dvorak,
+    "Colemak": colemak,
+    "QGMLWY": qgmlwy,
+    "SRLBY": srlby,
     "自作配列(開発中)": wter,
-    "SRLBY配列": srlby,
-    "Colemak配列": colemak,
   };
 
   let selected_kb = "QWERTYローマ字";
