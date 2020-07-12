@@ -334,14 +334,14 @@
             <Row>
               <Cell><div class="textfield">
                 <div class="tooltip">同指連続数
-                  <span class="right">単打のみ。％の母数はアクション数-1。</span>
+                  <span class="right">％の母数はアクション数-1。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{ndouyubi}</div></Cell>
               <Cell><div class="numberfield">{percent(ndouyubi / (naction - 1))}</div></Cell>
               <Cell><div class="textfield">
                 <div class="tooltip">うち段越え数
-                  <span class="top">単打のみ。同じ指で連続して行をまたいで異なるキーを押した数。％の母数はアクション数-1。</span>
+                  <span class="top">同じ指で連続して行をまたいで異なるキーを押した数。％の母数はアクション数-1。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{ndangoe}</Cell>
@@ -350,14 +350,14 @@
             <Row>
               <Cell><div class="textfield">
                 <div class="tooltip">左右交互打鍵数
-                  <span class="right">単打のみ。親指除く。％の母数はアクション数-1。</span>
+                  <span class="right">親指除く。％の母数はアクション数-1。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{nkougo}</div></Cell>
               <Cell><div class="numberfield">{percent(nkougo / (naction - 1))}</div></Cell>
               <Cell><div class="textfield">
                 <div class="tooltip">片手連続数の平均
-                  <span class="top">単打のみ。親指除く。％の母数はアクション数-1。</span>
+                  <span class="top">親指除く。％の母数はアクション数-1。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{doute.toFixed(1)}</Cell>
@@ -366,7 +366,7 @@
             <Row>
               <Cell><div class="textfield">
                 <div class="tooltip">アルペジオ数
-                  <span class="right">単打のみ。％の母数はアクション数-1。</span>
+                  <span class="right">％の母数はアクション数-1。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{narpeggio}</div></Cell>

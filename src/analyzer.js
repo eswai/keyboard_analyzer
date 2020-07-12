@@ -68,7 +68,7 @@ function preprocess() {
 
   shift_key = []; // 直前に押していたシフトキー
   last_key = ""; // 直前に押していたキー
-  keyseq = ""; // 押したキーの羅列
+  keyseq = []; // 押したキーの羅列
   doute = 1;
 
   for (let tk of keyboard.keys.flat()) {
@@ -140,29 +140,33 @@ function postprocess() {
   };
 }
 
-function incCounter(c) {
-  let mc = keyboard.conversion[c]
-  // console.log(c);
-  if (mc.type == "sim") { // 同時打鍵
+function evaluateKeyCombination(c1, c0) {
+  if (c1.type == "sim") { // 同時打鍵
     naction++;
-    if (mc.keys.length + mc.shift.length == 1) {
+    if (c1.keys.length + c1.shift.length == 1) {
       ntandoku++;
     } else {
       ndouji++;
     }
   } else { // 連続打鍵
-    naction += mc.keys.length + mc.shift.length;
-    ntandoku += mc.keys.length + mc.shift.length;
+    naction += c1.keys.length;
+    ntandoku += c1.keys.length;
+    for (let s of c1.shift) {
+      if (!c0.shift.includes(s)) {
+        naction++;
+        ntandoku++;
+      }
+    }
   }
 
-  if (mc.shift.length > 0) { // シフトあり
+  if (c1.shift.length > 0) { // シフトあり
     nshift++;
   }
 
-  for (let ck of mc.keys) {
-    if (mc.shift.length > 0) {
+  for (let ck of c1.keys) {
+    if (c1.shift.length > 0) {
       keydic[ck].shifted++;
-    } else if (mc.type == 'sim' && mc.keys.length > 1) {
+    } else if (c1.type == 'sim' && c1.keys.length > 1) {
       keydic[ck].douji++;
     } else {
       keydic[ck].tandoku++;
@@ -170,47 +174,47 @@ function incCounter(c) {
 
     keydic[ck].count++;
     nkey++;
-    keyseq += ck;
-
-    // 連続打鍵、または同時打鍵で単打のとき（シフトでない同時打鍵は除く）
-    if (mc.type == 'seq' || (mc.type == 'sim' && mc.keys.length == 1)) {
-      if (ck in keydic && last_key in keydic) {
-        // 同じ指で違うキーを連続して押す
-        if (ck != last_key && keydic[ck].finger == keydic[last_key].finger) {
-          finger_onaji[keydic[ck].finger]++;
-          if (keydic[last_key].row != keydic[ck].row) {
-            ndangoe++;
-          }
-        }
-        // アルペジオ
-        for (let i = 0; i < keyboard.arpeggio.length; i++) {
-          let ar = keyboard.arpeggio[i];
-          let k1 = keyboard.keys[ar[0][0]][ar[0][1]];
-          let k2 = keyboard.keys[ar[1][0]][ar[1][1]];
-          if ((k1.id == ck && k2.id == last_key) || (k2.id == ck && k1.id == last_key)) {
-            arpeggio[i]++;
-            // console.log(last_key, ck);
-          }
-        }
-        // 交互打鍵
-        if (((keydic[ck].finger <= 3 && keydic[last_key].finger >= 6) || (keydic[ck].finger >= 6 && keydic[last_key].finger <= 3))) {
-          nkougo++;
-          if (doute > 1) douteList.push(doute);
-          doute = 1;
-        } else {
-          doute++;
-        }
-      }
-    }
-    last_key = ck;
   }
 
-  if (mc.shift.length == 0) { // シフトキーを押していない
+  // 同じ指で違うキーを連続して押す
+  let c1f = c1.keys.map((a) => keydic[a].finger);
+  let c0f = c0.keys.map((a) => keydic[a].finger);
+
+  let c0un = c0f.filter(function(x, i, self) { // 重複削除
+    return self.indexOf(x) === i;
+  });
+  let c10f = c0un.concat(c1f);
+  let c10is = c10f.filter(function(x, i, self) { // 重複を抜き出す
+    return self.indexOf(x) !== i;
+  });
+  c10is.map(x => finger_onaji[x]++);
+
+  // アルペジオ
+  findArpeggio(c1.keys); // 1アクションの中のアルペジオ
+  if (duplicated(c10f) == 0) { // 同じ指が含まれていない
+    for (let k of c0.keys) { // 2アクション間のアルペジオ
+      let k10 = c1.keys.concat(k);
+      findArpeggio(k10);
+    }
+  }
+
+  // 交互打鍵、同手連続
+  let h1 = hand(c1.keys);
+  let h0 = hand(c0.keys);
+  if ((h1 == "left" && h0 == "left") || (h1 == "right" && h0 == "right")) {
+    doute++;
+  } else if ((h1 == "left" && h0 == "right") || (h1 == "right" && h0 == "left")) {
+    nkougo++;
+    if (doute > 1) douteList.push(doute);
+    doute = 1;
+  }
+
+  if (c1.shift.length == 0) { // シフトキーを押していない
     shift_key = [];
   } else { // シフトキーを押している
-    for (let cs of mc.shift) {
+    for (let cs of c1.shift) {
       // 連続シフト
-      if (mc.renzsft && shift_key.includes(cs)) {
+      if (c1.renzsft && shift_key.includes(cs)) {
         nreshift++;
       } else {
         keydic[cs].count++;
@@ -218,7 +222,7 @@ function incCounter(c) {
         keydic[cs].shifted++;
       }
     }
-    shift_key = mc.shift;
+    shift_key = c1.shift;
   }
 
 }
@@ -228,26 +232,35 @@ function doAnalyze() {
 
   for (let i = 0; i < text.length; i++) {
     // console.log(text.charAt(i));
-    let ch1 = text.charAt(i);
-    let ch2 = text.substr(i, 2);
-    let ch3 = text.substr(i, 3);
-    if (ch3 in keyboard.conversion) {
-      incCounter(ch3);
-      i += 2;
-    } else if (ch2 in keyboard.conversion) {
-      incCounter(ch2);
-      i++;
-    } else if (ch1 in keyboard.conversion) {
-      incCounter(ch1)
-    } else {
-      uncounted.push(ch1);
+    for (let j = 3; j > 0; j--) {
+      let ch = text.substr(i, j);
+      if (ch in keyboard.conversion) {
+        let kc = keyboard.conversion[ch];
+        if (kc.type == "seq") {
+          for (let k of kc.keys) {
+            let a = Object.assign({}, kc);
+            a.keys = [k];
+            keyseq.push(a);
+          }
+        } else {
+          keyseq.push(keyboard.conversion[ch]);
+        }
+        i += j - 1;
+        break;
+      }
     }
+  }
+
+  console.log(keyseq);
+
+  let prev = {"keys": [], "shift":[], "type": "seq", "ime": false};
+  for (let i = 0; i < keyseq.length; i++) {
+    evaluateKeyCombination(keyseq[i], prev);
+    prev = keyseq[i];
   }
   if (doute > 1) douteList.push(doute);
 
-  console.log(keyseq);
   console.log(uncounted);
-
   // console.log(finger_count);
 
 }
@@ -280,3 +293,31 @@ function sum(arr) {
   }
 
 };
+
+function hand(keys) {
+  if (keys.length == 0) {
+    return false;
+  } else if (keys.every((val, i, arr) => keydic[val].finger <= 4)) {
+    return "left";
+  } else if (keys.every((val, i, arr) => keydic[val].finger >= 5)) {
+    return "right";
+  } else {
+    return "both";
+  }
+}
+
+function findArpeggio(keys) {
+  for (let i = 0; i < keyboard.arpeggio.length; i++) {
+    let ar = keyboard.arpeggio[i];
+    let k1 = keyboard.keys[ar[0][0]][ar[0][1]];
+    let k2 = keyboard.keys[ar[1][0]][ar[1][1]];
+    if (keys.includes(k1.id) && keys.includes(k2.id)) {
+      arpeggio[i]++;
+    }
+  }
+}
+
+function duplicated(a){
+  var s = new Set(a);
+  return a.length - s.size;
+}
