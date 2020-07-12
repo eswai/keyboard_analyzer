@@ -13,7 +13,7 @@
   import eucalyn from './keyboards/jis_eucalyn.json';
   import shingeta from './keyboards/jis_shingeta.json';
   import asuka from './keyboards/jis_asuka123.json';
-  import wter from './keyboards/ortho_wter.json';
+  import basekit from './keyboards/ortho_basekit.json';
   import srlby from './keyboards/ortho_srlby.json';
   import colemak from './keyboards/us_colemak.json';
   import dvorak from './keyboards/us_dvorak.json';
@@ -43,7 +43,7 @@
     "Colemak": colemak,
     "QGMLWY": qgmlwy,
     "SRLBY": srlby,
-    "自作配列(開発中)": wter,
+    "BASEKIT配列(開発中)": basekit,
   };
 
   let selected_kb = "QWERTYローマ字";
