@@ -18,6 +18,7 @@
   import colemak from './keyboards/us_colemak.json';
   import dvorak from './keyboards/us_dvorak.json';
   import qgmlwy from './keyboards/us_qgmlwy.json';
+  import usbasekit from './keyboards/us_basekit.json';
 
   // Material UI
   import Textfield from '@smui/textfield';
@@ -43,7 +44,8 @@
     "Colemak": colemak,
     "QGMLWY": qgmlwy,
     "SRLBY": srlby,
-    "BASEKIT配列(開発中)": basekit,
+    "BASEKIT OL(開発中)": basekit,
+    "BASEKIT RS(開発中)": usbasekit,
   };
 
   let selected_kb = "QWERTYローマ字";
