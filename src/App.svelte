@@ -174,7 +174,7 @@
         ]
       };
       row_chart = {
-        labels: ["R1", "R2", "R3", "R4", "R5"],
+        labels: r.row.tandoku.map((v, i, a) => "R" + (i + 1)),
         datasets: [
           {
             name: "単独",
