@@ -144,6 +144,9 @@ function postprocess() {
 }
 
 function evaluateKeyCombination(c1, c0) {
+  let c1ks = c1.keys.concat(c1.shift); // シフトも含めたキー列
+  let c0ks = c0.keys.concat(c0.shift);
+
   if (c1.type == "sim") { // 同時打鍵
     naction++;
     if (c1.keys.length + c1.shift.length == 1) {
@@ -180,8 +183,8 @@ function evaluateKeyCombination(c1, c0) {
   }
 
   // 同じ指で違うキーを連続して押す
-  let c1f = c1.keys.map((a) => keydic[a].finger);
-  let c0f = c0.keys.map((a) => keydic[a].finger);
+  let c1f = c1ks.map((a) => keydic[a].finger);
+  let c0f = c0ks.map((a) => keydic[a].finger);
 
   let c0un = c0f.filter(function(x, i, self) { // 重複削除
     return self.indexOf(x) === i;
@@ -193,17 +196,17 @@ function evaluateKeyCombination(c1, c0) {
   c10is.map(x => finger_onaji[x]++);
 
   // アルペジオ
-  findArpeggio(c1.keys); // 1アクションの中のアルペジオ
+  findArpeggio(c1ks); // 1アクションの中のアルペジオ
   if (duplicated(c10f) == 0) { // 同じ指が含まれていない
-    for (let k of c0.keys) { // 2アクション間のアルペジオ
-      let k10 = c1.keys.concat(k);
+    for (let k of c0ks) { // 2アクション間のアルペジオ
+      let k10 = c1ks.concat(k);
       findArpeggio(k10);
     }
   }
 
   // 交互打鍵、同手連続
-  let h1 = hand(c1.keys);
-  let h0 = hand(c0.keys);
+  let h1 = hand(c1ks);
+  let h0 = hand(c0ks);
   if ((h1 == "left" && h0 == "left") || (h1 == "right" && h0 == "right")) {
     doute++;
   } else if ((h1 == "left" && h0 == "right") || (h1 == "right" && h0 == "left")) {
