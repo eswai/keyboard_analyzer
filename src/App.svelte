@@ -2,7 +2,7 @@
   import Keyboard from './Keyboard.svelte';
   import Chart from 'svelte-frappe-charts';
   import kuromoji from './kuromoji/kuromoji.js';
-  import {kanaToHira, conv_aozora, conv_kana, analyzeKeyboard} from "./analyzer.js";
+  import {kanaToHira, conv_aozora, conv_kana, analyzeKeyboard, hankaku} from "./analyzer.js";
 
   // キー配列
   import romaji from './keyboards/jis_romaji.json';
@@ -92,6 +92,7 @@
   function startAnalsys() {
     mykeyboard = keyboards[selected_kb];
     showresult = false;
+    text = hankaku(text);
 
     kuromoji.builder({
       dicPath: 'dict' // public/dict

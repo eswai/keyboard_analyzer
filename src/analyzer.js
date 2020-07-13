@@ -32,12 +32,15 @@ export function analyzeKeyboard(t, kb) {
   return result;
 }
 
-function preprocess() {
+export function hankaku(s) {
   // 全角英数を半角に変換
-  text = text.replace(/[＂-＇＊-＞＠-ｚ]/g, function(s) {
+  return s.replace(/[＂-＇＊-＞＠-ｚ]/g, function(s) {
+    console.log(String.fromCharCode(s.charCodeAt(0) - 65248))
     return String.fromCharCode(s.charCodeAt(0) - 65248);
   });
+}
 
+function preprocess() {
   // 文字から押したキーへの辞書を作る
   keydic = {};
   for (let mk of keyboard.keys.flat()) {
