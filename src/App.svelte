@@ -94,13 +94,13 @@
   function startAnalsys() {
     mykeyboard = keyboards[selected_kb];
     showresult = false;
-    text = hankaku(text);
+    let htext = hankaku(text);
 
     kuromoji.builder({
       dicPath: 'dict' // public/dict
     }).build((error, tokenizer) => {
       // 形態素解析
-      const parsed = tokenizer.tokenize(text);
+      const parsed = tokenizer.tokenize(htext);
       // console.log(parsed);
       let karray = []; // 変換後のかな文字の配列
       for (let pa of parsed) {
