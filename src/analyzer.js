@@ -183,24 +183,54 @@ function evaluateKeyCombination(c1, c0) {
   }
 
   // 同じ指で違うキーを連続して押す
-  let c1f = c1ks.map((a) => keydic[a].finger);
-  let c0f = c0ks.map((a) => keydic[a].finger);
+  // let c1f = c1.keys.map((a) => keydic[a].finger);
+  // let c0f = c0.keys.map((a) => keydic[a].finger);
+  let c1fs = c1ks.map((a) => keydic[a].finger);
+  let c0fs = c0ks.map((a) => keydic[a].finger);
 
-  let c0un = c0f.filter(function(x, i, self) { // 重複削除
+  let c0un = c0fs.filter(function(x, i, self) { // 重複削除
     return self.indexOf(x) === i;
   });
-  let c10f = c0un.concat(c1f);
-  let c10is = c10f.filter(function(x, i, self) { // 重複を抜き出す
+  let c10fs = c0un.concat(c1fs);
+  let c10is = c10fs.filter(function(x, i, self) { // 重複を抜き出す
     return self.indexOf(x) !== i;
   });
   c10is.map(x => finger_onaji[x]++);
 
   // アルペジオ
-  findArpeggio(c1ks); // 1アクションの中のアルペジオ
-  if (duplicated(c10f) == 0) { // 同じ指が含まれていない
-    for (let k of c0ks) { // 2アクション間のアルペジオ
-      let k10 = c1ks.concat(k);
-      findArpeggio(k10);
+  // 1アクションの中のアルペジオ
+  // 薙刀式　じょ
+  findArpeggio(c1ks);
+
+  // 連続シフトできるとき
+  // シフトキーを除いてはいけない、シフトキーが変わるケースがある
+  // 連続シフトなので同じシフトキー押しっぱなしはいい
+  if (c1.renzsft) {
+    // 薙刀式　あい、ある、がる、のる
+    if (duplicated(c10fs) == 0) { // 同じ指が含まれていない
+      for (let k of c0ks) { // 2アクション間のアルペジオ
+        let k10 = c1ks.concat(k);
+        findArpeggio(k10);
+      }
+    } else {
+      // でも同じ指が同じシフトキーならok
+      // 薙刀式　もの
+      // 薙刀式　がで、はアルペジオだと思うが、濁点はシフトではなく同時押しなので、ここではカウントしない
+      if (c1.shift.length == 1 && c0.shift.length == 1 && c1.shift[0] == c0.shift[0]) {
+        for (let k of c0ks) { // 2アクション間のアルペジオ
+          let k10 = c1ks.concat(k);
+          findArpeggio(k10);
+        }
+      }
+    }
+  // 連続シフトできないとき
+  // 同じシフトキーであっても押し直すので、連続したらアルペジオではない
+  } else {
+    if (duplicated(c10fs) == 0) { // 同じ指が含まれていない
+      for (let k of c0ks) { // 2アクション間のアルペジオ
+        let k10 = c1ks.concat(k);
+        findArpeggio(k10);
+      }
     }
   }
 
