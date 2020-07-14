@@ -238,9 +238,11 @@ function doAnalyze() {
 
   for (let i = 0; i < text.length; i++) {
     // console.log(text.charAt(i));
+    let fuc = true;
     for (let j = 3; j > 0; j--) {
       let ch = text.substr(i, j);
       if (ch in keyboard.conversion) {
+        fuc = false;
         let kc = keyboard.conversion[ch];
         if (kc.type == "seq") {
           for (let k of kc.keys) {
@@ -254,6 +256,9 @@ function doAnalyze() {
         i += j - 1;
         break;
       }
+    }
+    if (fuc) {
+      uncounted.push(text.substr(i, 1));
     }
   }
 
