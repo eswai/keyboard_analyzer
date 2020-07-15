@@ -294,7 +294,7 @@
             <Row>
               <Cell><div class="textfield">
                 <div class="tooltip">総打鍵数
-                  <span class="right">押したキーの数。％の母数はかな文字数。</span>
+                  <span class="right">押したキーの数。連続シフトは1打鍵。％の母数はかな文字数。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{nkey}</div></Cell>
@@ -359,7 +359,7 @@
             <Row>
               <Cell><div class="textfield">
                 <div class="tooltip">左右交互打鍵数
-                  <span class="right">親指除く。％の母数はアクション数-1。</span>
+                  <span class="right">親指含む。％の母数はアクション数-1。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{nkougo}</div></Cell>
