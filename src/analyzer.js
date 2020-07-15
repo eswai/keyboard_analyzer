@@ -216,7 +216,8 @@ function evaluateKeyCombination(c1, c0) {
       // でも同じ指が同じシフトキーならok
       // 薙刀式　もの
       // 薙刀式　がで、はアルペジオだと思うが、濁点はシフトではなく同時押しなので、ここではカウントしない
-      if (c1.shift.length == 1 && c0.shift.length == 1 && c1.shift[0] == c0.shift[0]) {
+      // シフトキー以外が同じ指打鍵のケースを排除できていない
+      if (c1.shift.sort().join() == c0.shift.sort().join()) {
         for (let k of c0ks) { // 2アクション間のアルペジオ
           let k10 = c1ks.concat(k);
           findArpeggio(k10);
