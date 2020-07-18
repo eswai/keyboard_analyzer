@@ -158,7 +158,7 @@ function postprocess() {
     },
     "arpeggio": arpeggio,
     "douteRenzoku": sum(douteList) / douteList.length,
-    "keys": keyseq.map((x) => x.shift.concat(x.keys)).flat(),
+    "keys": keyseq.map((x) => x.shift.map((y) => "<" + y + ">").concat(x.keys)).flat(),
   };
 }
 
