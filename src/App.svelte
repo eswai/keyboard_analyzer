@@ -51,6 +51,8 @@
   let selected_kb = "QWERTYローマ字";
   let mykeyboard = keyboards[selected_kb];
   let text = "人類が増えすぎた人口を宇宙に移民させるようになって、既に半世紀が過ぎていた。地球の周りの巨大な人工都市は人類の第二の故郷となり、人々はそこで子を産み、育て、そして死んでいった。";
+  let ktext = "";
+  let keyseq = "";
   let showresult;
   let showkb = false;
   let kana_only = false;
@@ -113,7 +115,7 @@
         }
       }
 
-      let ktext = karray.join("");
+      ktext = karray.join("");
       if (kana_only) {
         ktext = conv_kana(ktext);
       }
@@ -137,6 +139,7 @@
       ndangoe = r.nDangoe;
       doute = r.douteRenzoku;
       ul = r.nUncounted;
+      keyseq = r.keys.join("");
 
       let arpeggioLegend = mykeyboard.arpeggio.map(function(a){
         return mykeyboard.keys[a[0][0]][a[0][1]].legend[0] + mykeyboard.keys[a[1][0]][a[1][1]].legend[0];
@@ -268,6 +271,13 @@
 
 
   {#if showresult == true}
+
+  <div class="card-container">
+      <Textfield textarea bind:value={ktext} label="かな文字" />
+  </div>
+  <div class="card-container">
+      <Textfield textarea bind:value={keyseq} label="キー打鍵列" />
+  </div>
 
   <div style="display: flex; flex-direction: column;">
 
