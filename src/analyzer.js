@@ -33,11 +33,29 @@ export function analyzeKeyboard(t, kb) {
 }
 
 export function hankaku(s) {
+  // 全角を半角に変換
+  let hs = s.replace(/[！-～]/g,
+    function(v) {
+      return String.fromCharCode(v.charCodeAt(0) - 0xFEE0);
+    }
+  );
+
+  return hs.replace(/”/g, "\"")
+    .replace(/’/g, "'")
+    .replace(/‘/g, "`")
+    .replace(/￥/g, "\\")
+    .replace(/　/g, " ")
+    .replace(/〜/g, "~");
+}
+
+export function eisuHankaku(s) {
   // 全角英数を半角に変換
-  return s.replace(/[＂-＇＊-＞＠-ｚ]/g, function(s) {
-    console.log(String.fromCharCode(s.charCodeAt(0) - 65248))
-    return String.fromCharCode(s.charCodeAt(0) - 65248);
-  });
+  let hs = s.replace(/[Ａ-Ｚａ-ｚ０-９]/g,
+    function(v) {
+      return String.fromCharCode(v.charCodeAt(0) - 0xFEE0);
+    }
+  );
+  return hs;
 }
 
 function preprocess() {
@@ -267,6 +285,7 @@ function evaluateKeyCombination(c1, c0) {
 function doAnalyze() {
   console.log(text);
 
+  // キー打鍵列へ変換する
   for (let i = 0; i < text.length; i++) {
     // console.log(text.charAt(i));
     let fuc = true;
@@ -288,6 +307,28 @@ function doAnalyze() {
         break;
       }
     }
+    if (fuc) {
+      for (let j = 3; j > 0; j--) {
+        let ch = text.substr(i, j);
+        ch = hankaku(ch);
+        if (ch in keyboard.conversion) {
+          fuc = false;
+          let kc = keyboard.conversion[ch];
+          if (kc.type == "seq") {
+            for (let k of kc.keys) {
+              let a = Object.assign({}, kc);
+              a.keys = [k];
+              keyseq.push(a);
+            }
+          } else {
+            keyseq.push(keyboard.conversion[ch]);
+          }
+          i += j - 1;
+          break;
+        }
+      }
+    }
+
     if (fuc) {
       uncounted.push(text.substr(i, 1));
     }

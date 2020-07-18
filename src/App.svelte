@@ -2,7 +2,7 @@
   import Keyboard from './Keyboard.svelte';
   import Chart from 'svelte-frappe-charts';
   import kuromoji from './kuromoji/kuromoji.js';
-  import {kanaToHira, conv_aozora, conv_kana, analyzeKeyboard, hankaku} from "./analyzer.js";
+  import {kanaToHira, conv_aozora, conv_kana, analyzeKeyboard, hankaku, eisuHankaku} from "./analyzer.js";
 
   // キー配列
   import romaji from './keyboards/jis_romaji.json';
@@ -94,7 +94,7 @@
   function startAnalsys() {
     mykeyboard = keyboards[selected_kb];
     showresult = false;
-    let htext = hankaku(text);
+    let htext = eisuHankaku(text);
 
     kuromoji.builder({
       dicPath: 'dict' // public/dict
@@ -104,7 +104,9 @@
       // console.log(parsed);
       let karray = []; // 変換後のかな文字の配列
       for (let pa of parsed) {
-        if (pa.reading) { // 漢字、カナ
+        if (pa.pos == "記号") {
+          karray.push(pa.basic_form);
+        } else if (pa.reading) { // 漢字、カナ
           karray.push(kanaToHira(pa.reading));
         } else { // 英数字
           karray.push(kanaToHira(pa.surface_form));
