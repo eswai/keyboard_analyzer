@@ -272,14 +272,14 @@
 
   {#if showresult == true}
 
-  <div class="card-container">
-      <Textfield textarea bind:value={ktext} label="かな文字" />
-  </div>
-  <div class="card-container">
-      <Textfield textarea bind:value={keyseq} label="キー打鍵列" />
-  </div>
-
   <div style="display: flex; flex-direction: column;">
+
+    <div class="card-container" >
+        <Textfield textarea bind:value={ktext} label="かな文字" />
+    </div>
+    <div class="card-container" >
+        <Textfield textarea bind:value={keyseq} label="キー打鍵列" />
+    </div>
 
     <div class="card-container">
       <Card variant="outlined">
