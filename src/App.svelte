@@ -81,6 +81,7 @@
   let narpeggio;
   let nkougo; // 交互打鍵
   let doute;
+  let nhome;
 
   // 出力グラフ
   let finger_chart;
@@ -145,6 +146,7 @@
       ndangoe = r.nDangoe;
       doute = r.douteRenzoku;
       ul = r.nUncounted;
+      nhome = r.nHome;
       keyseq = r.keys.join("");
 
       let arpeggioLegend = mykeyboard.arpeggio.map(function(a){
@@ -354,8 +356,8 @@
                   <span class="top">％の母数は総打鍵数。</span>
                 </div>
               </div></Cell>
-              <Cell><div class="numberfield">{0}</Cell>
-              <Cell><div class="numberfield">{percent(0 / ntype)}</div></Cell>
+              <Cell><div class="numberfield">{nhome}</Cell>
+              <Cell><div class="numberfield">{percent(nhome / ntype)}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">

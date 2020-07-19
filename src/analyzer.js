@@ -17,6 +17,7 @@
   let ndangoe;
   let ntandoku;
   let ndouji;
+  let nhome;
 
   let last_key; // 直前に押したキー
   let shift_key;
@@ -81,6 +82,7 @@ function preprocess() {
   ndangoe = 0;
   ntandoku = 0;
   ndouji = 0;
+  nhome = 0;
 
   uncounted = [];
   finger_onaji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -147,6 +149,7 @@ function postprocess() {
     "nDangoe": ndangoe,
     "nKougo": nkougo,
     "nArpeggio": sum(arpeggio),
+    "nHome": nhome,
     "keyboard": keyboard,
     "finger": {
       "tandoku": finger_tandoku,
@@ -352,8 +355,12 @@ function doAnalyze() {
   for (let i = 0; i < keyseq.length; i++) {
     evaluateKeyCombination(keyseq[i], prev);
     prev = keyseq[i];
-    keyseq[i].keys.map((x) => nkey.add(x));
-    keyseq[i].shift.map((x) => nkey.add(x));
+    keyseq[i].keys.concat(keyseq[i].shift).map(function(x) {
+      nkey.add(x);
+      if (keydic[x].home) {
+        nhome++;
+      }
+    });
   }
   if (doute > 1) douteList.push(doute);
 

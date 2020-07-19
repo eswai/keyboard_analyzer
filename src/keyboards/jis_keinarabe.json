@@ -35,16 +35,16 @@
       {"id": "enter" , "legend": ["Enter"]     , "size": 1.5,  "finger": 9}
     ], [
       {"id": "caps"  , "legend": ["Caps Lock"] , "size": 1.75, "finger": 0},
-      {"id": "a"     , "legend": ["n"]         , "size": 1,    "finger": 0},
-      {"id": "s"     , "legend": ["t"]         , "size": 1,    "finger": 1},
-      {"id": "d"     , "legend": ["s"]         , "size": 1,    "finger": 2},
-      {"id": "f"     , "legend": ["k"]         , "size": 1,    "finger": 3},
+      {"id": "a"     , "legend": ["n"]         , "size": 1,    "finger": 0, "home": true},
+      {"id": "s"     , "legend": ["t"]         , "size": 1,    "finger": 1, "home": true},
+      {"id": "d"     , "legend": ["s"]         , "size": 1,    "finger": 2, "home": true},
+      {"id": "f"     , "legend": ["k"]         , "size": 1,    "finger": 3, "home": true},
       {"id": "g"     , "legend": ["、"]         , "size": 1,    "finger": 3},
       {"id": "h"     , "legend": ["yu"]         , "size": 1,    "finger": 6},
-      {"id": "j"     , "legend": ["a"]         , "size": 1,    "finger": 6},
-      {"id": "k"     , "legend": ["i"]         , "size": 1,    "finger": 7},
-      {"id": "l"     , "legend": ["e"]         , "size": 1,    "finger": 8},
-      {"id": ";"     , "legend": ["ん"]    , "size": 1,    "finger": 9},
+      {"id": "j"     , "legend": ["a"]         , "size": 1,    "finger": 6, "home": true},
+      {"id": "k"     , "legend": ["i"]         , "size": 1,    "finger": 7, "home": true},
+      {"id": "l"     , "legend": ["e"]         , "size": 1,    "finger": 8, "home": true},
+      {"id": ";"     , "legend": ["ん"]    , "size": 1,    "finger": 9, "home": true},
       {"id": ":"     , "legend": ["BS"]    , "size": 1,    "finger": 9},
       {"id": "]"     , "legend": ["」"]    , "size": 1,    "finger": 9}
     ], [
@@ -66,7 +66,7 @@
       {"id": "win"   , "legend": ["Win"]       , "size": 1.25, "finger": 0},
       {"id": "alt"   , "legend": ["Alt"]       , "size": 1.25, "finger": 0},
       {"id": "muhen" , "legend": ["無変換"]     , "size": 1, "finger": 4},
-      {"id": "space" , "legend": ["Space"]     , "size": 3.25, "finger": 4},
+      {"id": "space" , "legend": ["Space"]     , "size": 3.25, "finger": 4, "home": true},
       {"id": "henk"  , "legend": ["変換"]      , "size": 1, "finger": 5},
       {"id": "kana"  , "legend": ["かな"]      , "size": 1, "finger": 5},
       {"id": "altr"  , "legend": ["Alt"]       , "size": 1.25, "finger": 8},
