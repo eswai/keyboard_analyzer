@@ -177,24 +177,20 @@ function evaluateKeyCombination(c1, c0) {
 
   if (c1.type == "sim") { // 同時打鍵
     naction++;
-    if (c1.keys.length + c1.shift.length == 1) {
+    if (c1.shift.length > 0) {
+      nshift++;
+    } else if (c1.keys.length == 1) { // 単独押し
       ntandoku++;
     } else {
       ndouji++;
     }
-  } else { // 連続打鍵
+  } else { // 順次打鍵seq
     naction += c1.keys.length;
-    ntandoku += c1.keys.length;
-    for (let s of c1.shift) {
-      if (!c0.shift.includes(s)) {
-        naction++;
-        ntandoku++;
-      }
+    if (c1.shift.length > 0) {
+      nshift++;
+    } else if (c1.keys.length == 1) { // 単独押し
+      ntandoku++;
     }
-  }
-
-  if (c1.shift.length > 0) { // シフトあり
-    nshift++;
   }
 
   for (let ck of c1.keys) {
@@ -205,9 +201,24 @@ function evaluateKeyCombination(c1, c0) {
     } else {
       keydic[ck].tandoku++;
     }
-
     keydic[ck].count++;
     ntype++;
+  }
+
+  if (c1.shift.length == 0) { // シフトキーを押していない
+    shift_key = [];
+  } else { // シフトキーを押している
+    for (let cs of c1.shift) {
+      // 連続シフト
+      if (c1.renzsft && shift_key.includes(cs)) {
+        nreshift++;
+      } else {
+        keydic[cs].count++;
+        ntype++;
+        keydic[cs].shifted++;
+      }
+    }
+    shift_key = c1.shift;
   }
 
   // 同じ指で違うキーを連続して押す
@@ -280,22 +291,6 @@ function evaluateKeyCombination(c1, c0) {
     nkougo++;
     if (doute > 1) douteList.push(doute);
     doute = 1;
-  }
-
-  if (c1.shift.length == 0) { // シフトキーを押していない
-    shift_key = [];
-  } else { // シフトキーを押している
-    for (let cs of c1.shift) {
-      // 連続シフト
-      if (c1.renzsft && shift_key.includes(cs)) {
-        nreshift++;
-      } else {
-        keydic[cs].count++;
-        ntype++;
-        keydic[cs].shifted++;
-      }
-    }
-    shift_key = c1.shift;
   }
 
 }
