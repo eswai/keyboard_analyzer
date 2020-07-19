@@ -36,6 +36,22 @@ test('QWERTY', () => {
   expect(r.nHomeNS).toBe(4);
 });
 
+test('QWERTY', () => {
+  let r = analyzeKeyboard("これでじゅうぶんだとおもいますが、", romaji);
+
+  expect(r.nKey).toBe(16);
+  expect(r.nAction).toBe(27);
+  expect(r.nTanda).toBe(27);
+  expect(r.nDouji).toBe(0);
+  expect(r.nShift).toBe(0);
+  expect(r.nKougo).toBe(10);
+  expect(r.nReShift).toBe(0);
+  expect(r.nArpeggio).toBe(2);
+  expect(r.nDouyubi).toBe(4);
+  expect(r.nDangoe).toBe(0);
+  expect(r.nHome).toBe(8);
+  expect(r.nHomeNS).toBe(8);
+});
 
 test('新下駄', () => {
   let r = analyzeKeyboard("さっぽろでちーむにごうりゅうする。", shingeta);
@@ -43,6 +59,14 @@ test('新下駄', () => {
   expect(r.nAction).toBe(16);
   expect(r.nShift).toBe(6);
   expect(r.nKougo).toBe(3);
+});
+
+test('新下駄', () => {
+  let r = analyzeKeyboard("これでじゅうぶんだとおもいますが、", shingeta);
+  expect(r.nType).toBe(21);
+  expect(r.nAction).toBe(16);
+  expect(r.nShift).toBe(5);
+  expect(r.nKougo).toBe(4);
 });
 
 test('親指シフト', () => {
@@ -53,12 +77,28 @@ test('親指シフト', () => {
   expect(r.nKougo).toBe(5);
 });
 
+test('親指シフト', () => {
+  let r = analyzeKeyboard("これでじゅうぶんだとおもいますが、", nicola);
+  expect(r.nType).toBe(27);
+  expect(r.nAction).toBe(17);
+  expect(r.nShift).toBe(10);
+  expect(r.nKougo).toBe(3);
+});
+
 test('飛鳥', () => {
   let r = analyzeKeyboard("さっぽろでちーむにごうりゅうする。", asuka);
   expect(r.nType).toBe(22);
   expect(r.nAction).toBe(17);
   expect(r.nShift).toBe(7);
   expect(r.nKougo).toBe(6);
+});
+
+test('飛鳥', () => {
+  let r = analyzeKeyboard("これでじゅうぶんだとおもいますが、", asuka);
+  expect(r.nType).toBe(22);
+  expect(r.nAction).toBe(17);
+  expect(r.nShift).toBe(10);
+  expect(r.nKougo).toBe(5);
 });
 
 test('薙刀式', () => {
