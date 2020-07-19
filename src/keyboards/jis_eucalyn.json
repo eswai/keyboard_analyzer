@@ -389,6 +389,11 @@
       "っぶ": {"keys": ["b", "b", "u"], "shift":[], "type": "seq", "ime": true},
       "っべ": {"keys": ["b", "b", "e"], "shift":[], "type": "seq", "ime": true},
       "っぼ": {"keys": ["b", "b", "o"], "shift":[], "type": "seq", "ime": true},
+      "っぱ": {"keys": ["p", "p", "a"], "shift":[], "type": "seq", "ime": true},
+      "っぴ": {"keys": ["p", "p", "i"], "shift":[], "type": "seq", "ime": true},
+      "っぷ": {"keys": ["p", "p", "u"], "shift":[], "type": "seq", "ime": true},
+      "っぺ": {"keys": ["p", "p", "e"], "shift":[], "type": "seq", "ime": true},
+      "っぽ": {"keys": ["p", "p", "o"], "shift":[], "type": "seq", "ime": true},
 
       "んあ": {"keys": ["n", "n", "a"],      "shift":[], "type": "seq", "ime": true},
       "んい": {"keys": ["n", "n", "i"],      "shift":[], "type": "seq", "ime": true},
