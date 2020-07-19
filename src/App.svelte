@@ -363,14 +363,14 @@
             </Row>
             <Row>
               <Cell><div class="textfield">
-                <div class="tooltip">ホームポジション打件数
+                <div class="tooltip">ホームポジション打鍵数
                   <span class="top">％の母数は総打鍵数。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{nhome}</Cell>
               <Cell><div class="numberfield">{percent(nhome / ntype)}</div></Cell>
               <Cell><div class="textfield">
-                <div class="tooltip">H.P.打件数(除くシフト)
+                <div class="tooltip">H.P.打鍵数(除くシフト)
                   <span class="top">％の母数は総打鍵数-シフト数。</span>
                 </div>
               </div></Cell>
