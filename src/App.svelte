@@ -19,6 +19,7 @@
   import dvorak from './keyboards/us_dvorak.json';
   import qgmlwy from './keyboards/us_qgmlwy.json';
   import usbasekit from './keyboards/us_basekit.json';
+  import shinjis from './keyboards/jis_shinjis.json';
 
   // Material UI
   import Textfield from '@smui/textfield';
@@ -36,6 +37,7 @@
     "薙刀式": naginata,
     "薙刀式 MiniAxe": ortho_naginata,
     "JISかな": kana,
+    "新JIS": shinjis,
     "親指シフト": nicola,
     "新下駄": shingeta,
     "飛鳥123": asuka,
