@@ -62,7 +62,7 @@
 <div class={csskey} style="width: {width}px; background-color:{heatmap(value)};">
   {#each legend as a}
   {#if home}
-  <div style="font-weight: 900;">{a}</div>
+  <div style="font-weight: bold;">{a}</div>
   {:else}
   <div>{a}</div>
   {/if}
