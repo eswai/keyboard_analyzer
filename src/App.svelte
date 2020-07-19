@@ -20,6 +20,7 @@
   import qgmlwy from './keyboards/us_qgmlwy.json';
   import usbasekit from './keyboards/us_basekit.json';
   import shinjis from './keyboards/jis_shinjis.json';
+  import keinarabe from './keyboards/jis_keinarabe.json';
 
   // Material UI
   import Textfield from '@smui/textfield';
@@ -41,6 +42,7 @@
     "親指シフト": nicola,
     "新下駄": shingeta,
     "飛鳥123": asuka,
+    "けいならべ": keinarabe,
     "Eucalynローマ字": eucalyn,
     "Dvorak": dvorak,
     "Colemak": colemak,
