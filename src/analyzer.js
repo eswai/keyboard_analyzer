@@ -204,17 +204,17 @@ function evaluateKeyCombination(c1, c0) {
   // 同じ指で違うキーを連続して押す
   // let c1f = c1.keys.map((a) => keydic[a].finger);
   // let c0f = c0.keys.map((a) => keydic[a].finger);
-  let c1fs = c1ks.map((a) => keydic[a].finger);
-  let c0fs = c0ks.map((a) => keydic[a].finger);
 
-  let c0un = c0fs.filter(function(x, i, self) { // 重複削除
+  // 同じキーを除外する
+  let c10un = c1ks.concat(c0ks).filter(function(x, i, self) { // 重複削除
     return self.indexOf(x) === i;
   });
-  let c10fs = c0un.concat(c1fs);
-  let c10is = c10fs.filter(function(x, i, self) { // 重複を抜き出す
+  let c10unf = c10un.map((a) => keydic[a].finger);
+
+  let c10douy = c10unf.filter(function(x, i, self) { // 重複を抜き出す
     return self.indexOf(x) !== i;
   });
-  c10is.map(x => finger_onaji[x]++);
+  c10douy.map(x => finger_onaji[x]++);
 
   // アルペジオ
   // 1アクションの中のアルペジオ
@@ -224,6 +224,14 @@ function evaluateKeyCombination(c1, c0) {
   // 連続シフトできるとき
   // シフトキーを除いてはいけない、シフトキーが変わるケースがある
   // 連続シフトなので同じシフトキー押しっぱなしはいい
+  let c1fs = c1ks.map((a) => keydic[a].finger);
+  let c0fs = c0ks.map((a) => keydic[a].finger);
+
+  let c0un = c0fs.filter(function(x, i, self) { // 重複削除
+    return self.indexOf(x) === i;
+  });
+  let c10fs = c0un.concat(c1fs);
+
   if (c1.renzsft) {
     // 薙刀式　あい、ある、がる、のる
     if (duplicated(c10fs) == 0) { // 同じ指が含まれていない
