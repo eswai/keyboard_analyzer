@@ -337,6 +337,7 @@
     "「": {"keys": ["d"], "shift":["lower"], "type": "seq", "ime": true},
     "」": {"keys": ["x"], "shift":["lower"], "type": "seq", "ime": true},
     "　": {"keys": ["space"], "shift":[], "type": "seq", "ime": true},
+    "・": {"keys": ["/", "space"], "shift":[], "type": "seq", "ime": true},
     "？": {"keys": ["/"], "shift":["shift"], "type": "seq", "ime": true},
     "！": {"keys": ["1"], "shift":["shift"], "type": "seq", "ime": true},
 

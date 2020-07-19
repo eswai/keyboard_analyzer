@@ -332,6 +332,7 @@
     "「": {"keys": ["c", "v", "j"], "shift":[], "type": "sim", "ime": true},
     "」": {"keys": ["c", "v", "m"], "shift":[], "type": "sim", "ime": true},
     "　": {"keys": ["space"], "shift":[], "type": "sim", "ime": true},
+    "・": {"keys": ["/"], "shift":[], "type": "seq", "ime": true},
     "？": {"keys": ["f", "m", ","], "shift":[], "type": "sim", "ime": true},
     "！": {"keys": ["d", "m", ","], "shift":[], "type": "sim", "ime": true}
 

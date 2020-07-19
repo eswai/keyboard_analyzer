@@ -340,6 +340,7 @@
     "［": {"keys": ["["], "shift":[], "type": "seq", "ime": true},
     "］": {"keys": ["]"], "shift":[], "type": "seq", "ime": true},
     "　": {"keys": ["space"], "shift":[], "type": "seq", "ime": true},
+    "・": {"keys": ["/", "space"], "shift":[], "type": "seq", "ime": true},
     "？": {"keys": ["/"], "shift":["shift"], "type": "seq", "ime": true},
     "！": {"keys": ["1"], "shift":["shift"], "type": "seq", "ime": true},
 
