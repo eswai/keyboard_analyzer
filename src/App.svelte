@@ -114,7 +114,7 @@
       let karray = []; // 変換後のかな文字の配列
       for (let pa of parsed) {
         if (pa.pos == "記号") {
-          karray.push(pa.basic_form);
+          karray.push(pa.surface_form);
         } else if (pa.reading) { // 漢字、カナ
           karray.push(kanaToHira(pa.reading));
         } else { // 英数字
