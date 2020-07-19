@@ -4,6 +4,7 @@
   export let value = 0;
   export let count = 0;
   export let color = "mono";
+  export let home = false;
 
   let width = 36 * size - 4;
 
@@ -60,7 +61,11 @@
 
 <div class={csskey} style="width: {width}px; background-color:{heatmap(value)};">
   {#each legend as a}
+  {#if home}
+  <div style="font-weight: 900;">{a}</div>
+  {:else}
   <div>{a}</div>
+  {/if}
   {/each}
   {#if count > 0}
   <div class={csscnt}>{count}</div>
