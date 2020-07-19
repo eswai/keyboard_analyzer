@@ -7,7 +7,8 @@
   let arpeggio;
   let douteList;
 
-  let nkey; // 打鍵したキー数
+  let ntype; // 打鍵したキー数
+  let nkey;
   let nreshift; // 連続シフト
   let nkana; // 入力した文字数（かな）
   let naction;
@@ -71,7 +72,8 @@ function preprocess() {
   }
 
   nkana = text.length;
-  nkey = 0;
+  ntype = 0;
+  nkey = new Set();
   nshift = 0;
   nreshift = 0;
   naction = 0;
@@ -134,7 +136,8 @@ function postprocess() {
     "nUncounted": uncounted.length,
     "uncounted": uncounted,
     "nKana": nkana,
-    "nKey": nkey,
+    "nType": ntype,
+    "nKey": nkey.size,
     "nAction": naction,
     "nTanda": ntandoku,
     "nDouji": ndouji,
@@ -198,7 +201,7 @@ function evaluateKeyCombination(c1, c0) {
     }
 
     keydic[ck].count++;
-    nkey++;
+    ntype++;
   }
 
   // 同じ指で違うキーを連続して押す
@@ -282,7 +285,7 @@ function evaluateKeyCombination(c1, c0) {
         nreshift++;
       } else {
         keydic[cs].count++;
-        nkey++;
+        ntype++;
         keydic[cs].shifted++;
       }
     }
@@ -349,6 +352,8 @@ function doAnalyze() {
   for (let i = 0; i < keyseq.length; i++) {
     evaluateKeyCombination(keyseq[i], prev);
     prev = keyseq[i];
+    keyseq[i].keys.map((x) => nkey.add(x));
+    keyseq[i].shift.map((x) => nkey.add(x));
   }
   if (doute > 1) douteList.push(doute);
 

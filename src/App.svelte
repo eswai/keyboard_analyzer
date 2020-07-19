@@ -68,7 +68,8 @@
   // 出力UI
   let ul; // 入力できなかった文字数
   let ntext; // 入力した文字数
-  let nkey; // 打鍵したキー数
+  let ntype; // 打鍵したキー数
+  let nkey;
   let nshift; // 打鍵したキー数、連続シフトを考慮
   let nkana; // 入力した文字数（かな）
   let ntanda;
@@ -131,6 +132,7 @@
 
       ntext = text.length;
       nkana = r.nKana;
+      ntype = r.nType;
       nkey = r.nKey;
       naction = r.nAction;
       ntanda = r.nTanda;
@@ -313,8 +315,8 @@
                   <span class="right">押したキーの数。連続シフトは1打鍵。％の母数はかな文字数。</span>
                 </div>
               </div></Cell>
-              <Cell><div class="numberfield">{nkey}</div></Cell>
-              <Cell><div class="numberfield">{percent(nkey / nkana)}</div></Cell>
+              <Cell><div class="numberfield">{ntype}</div></Cell>
+              <Cell><div class="numberfield">{percent(ntype / nkana)}</div></Cell>
               <Cell><div class="textfield">
                 <div class="tooltip">総アクション数
                   <span class="top">同時押しを1回とした数。％の母数はかな文字数。</span>
@@ -338,6 +340,22 @@
               </div></Cell>
               <Cell><div class="numberfield">{ndouji}</Cell>
               <Cell><div class="numberfield">{percent(ndouji / naction)}</div></Cell>
+            </Row>
+            <Row>
+              <Cell><div class="textfield">
+                <div class="tooltip">使用したキー数
+                  <span class="right">％の母数はアクション数。</span>
+                </div>
+              </div></Cell>
+              <Cell><div class="numberfield">{nkey}</Cell>
+              <Cell><div class="numberfield"></div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">ホームポジション打件数
+                  <span class="top">％の母数は総打鍵数。</span>
+                </div>
+              </div></Cell>
+              <Cell><div class="numberfield">{0}</Cell>
+              <Cell><div class="numberfield">{percent(0 / ntype)}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">
