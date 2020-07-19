@@ -82,6 +82,7 @@
   let nkougo; // 交互打鍵
   let doute;
   let nhome;
+  let nhomeNS;
 
   // 出力グラフ
   let finger_chart;
@@ -147,6 +148,7 @@
       doute = r.douteRenzoku;
       ul = r.nUncounted;
       nhome = r.nHome;
+      nhomeNS = r.nHomeNS;
       keyseq = r.keys.join("");
 
       let arpeggioLegend = mykeyboard.arpeggio.map(function(a){
@@ -352,12 +354,28 @@
               <Cell><div class="numberfield">{nkey}</Cell>
               <Cell><div class="numberfield"></div></Cell>
               <Cell><div class="textfield">
+                <div class="tooltip">
+                  <span class="top"></span>
+                </div>
+              </div></Cell>
+              <Cell><div class="numberfield"></Cell>
+              <Cell><div class="numberfield"></div></Cell>
+            </Row>
+            <Row>
+              <Cell><div class="textfield">
                 <div class="tooltip">ホームポジション打件数
                   <span class="top">％の母数は総打鍵数。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{nhome}</Cell>
               <Cell><div class="numberfield">{percent(nhome / ntype)}</div></Cell>
+              <Cell><div class="textfield">
+                <div class="tooltip">H.P.打件数(除くシフト)
+                  <span class="top">％の母数は総打鍵数-シフト数。</span>
+                </div>
+              </div></Cell>
+              <Cell><div class="numberfield">{nhomeNS}</Cell>
+              <Cell><div class="numberfield">{percent(nhomeNS / (ntype - nshift))}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">

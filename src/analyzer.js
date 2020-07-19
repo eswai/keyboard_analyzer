@@ -18,6 +18,7 @@
   let ntandoku;
   let ndouji;
   let nhome;
+  let nhomeNS; // シフトを除くホームポジション打件数
 
   let last_key; // 直前に押したキー
   let shift_key;
@@ -83,6 +84,7 @@ function preprocess() {
   ntandoku = 0;
   ndouji = 0;
   nhome = 0;
+  nhomeNS = 0;
 
   uncounted = [];
   finger_onaji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -150,6 +152,7 @@ function postprocess() {
     "nKougo": nkougo,
     "nArpeggio": sum(arpeggio),
     "nHome": nhome,
+    "nHomeNS": nhomeNS,
     "keyboard": keyboard,
     "finger": {
       "tandoku": finger_tandoku,
@@ -359,6 +362,11 @@ function doAnalyze() {
       nkey.add(x);
       if (keydic[x].home) {
         nhome++;
+      }
+    });
+    keyseq[i].keys.map(function(x) {
+      if (keydic[x].home) {
+        nhomeNS++;
       }
     });
   }
