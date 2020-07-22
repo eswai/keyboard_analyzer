@@ -160,8 +160,8 @@ function postprocess() {
       "shift": finger_shifted,
       "onaji": finger_onaji
     },
-    "left": sum(finger_tandoku.slice(0, 4)) + sum(finger_shifted.slice(0, 4)) + sum(finger_douji.slice(0, 4)),
-    "right": sum(finger_tandoku.slice(5, 9)) + sum(finger_shifted.slice(5, 9)) + sum(finger_douji.slice(5, 9)),
+    "left": sum(finger_tandoku.slice(0, 5)) + sum(finger_shifted.slice(0, 5)) + sum(finger_douji.slice(0, 5)),
+    "right": sum(finger_tandoku.slice(5, 10)) + sum(finger_shifted.slice(5, 10)) + sum(finger_douji.slice(5, 10)),
     "row": {
       "tandoku": rtandoku,
       "douji": rdouji,
