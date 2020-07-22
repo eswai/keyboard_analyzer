@@ -83,6 +83,8 @@
   let doute;
   let nhome;
   let nhomeNS;
+  let left;
+  let right;
 
   // 出力グラフ
   let finger_chart;
@@ -90,8 +92,8 @@
   let arpeggio_chart;
   let row_chart;
 
-  function percent(v) {
-    return (v * 100).toFixed(1) + '%'
+  function percent(v, n) {
+    return (v * 100).toFixed(n) + '%'
   }
 
   function kbchange() {
@@ -149,6 +151,8 @@
       ul = r.nUncounted;
       nhome = r.nHome;
       nhomeNS = r.nHomeNS;
+      left = r.left;
+      right = r.right;
       keyseq = r.keys.join("");
 
       let arpeggioLegend = mykeyboard.arpeggio.map(function(a){
@@ -320,14 +324,14 @@
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{ntype}</div></Cell>
-              <Cell><div class="numberfield">{percent(ntype / nkana)}</div></Cell>
+              <Cell><div class="numberfield">{percent(ntype / nkana, 1)}</div></Cell>
               <Cell><div class="textfield">
                 <div class="tooltip">総アクション数
                   <span class="top">同時押しを1回とした数。％の母数はかな文字数。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{naction}</div></Cell>
-              <Cell><div class="numberfield">{percent(naction / nkana)}</div></Cell>
+              <Cell><div class="numberfield">{percent(naction / nkana, 1)}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">
@@ -336,14 +340,14 @@
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{ntanda}</Cell>
-              <Cell><div class="numberfield">{percent(ntanda / naction)}</div></Cell>
+              <Cell><div class="numberfield">{percent(ntanda / naction, 1)}</div></Cell>
               <Cell><div class="textfield">
                 <div class="tooltip">同時打鍵数
                   <span class="top">％の母数はアクション数。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{ndouji}</Cell>
-              <Cell><div class="numberfield">{percent(ndouji / naction)}</div></Cell>
+              <Cell><div class="numberfield">{percent(ndouji / naction, 1)}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">
@@ -354,12 +358,10 @@
               <Cell><div class="numberfield">{nkey}</Cell>
               <Cell><div class="numberfield"></div></Cell>
               <Cell><div class="textfield">
-                <div class="tooltip">
-                  <span class="top"></span>
-                </div>
+                左手:右手
               </div></Cell>
-              <Cell><div class="numberfield"></Cell>
-              <Cell><div class="numberfield"></div></Cell>
+              <Cell><div class="numberfield">{left}:{right}</Cell>
+              <Cell><div class="numberfield">{percent(left/ntype, 0)}:{percent(right/ntype, 0)}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">
@@ -368,14 +370,14 @@
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{nhome}</Cell>
-              <Cell><div class="numberfield">{percent(nhome / ntype)}</div></Cell>
+              <Cell><div class="numberfield">{percent(nhome / ntype, 1)}</div></Cell>
               <Cell><div class="textfield">
                 <div class="tooltip">H.P.打鍵数(除くシフト)
                   <span class="top">％の母数は総打鍵数-シフト数。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{nhomeNS}</Cell>
-              <Cell><div class="numberfield">{percent(nhomeNS / (ntype - nshift))}</div></Cell>
+              <Cell><div class="numberfield">{percent(nhomeNS / (ntype - nshift), 1)}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">
@@ -385,14 +387,14 @@
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{nshift}</Cell>
-              <Cell><div class="numberfield">{percent(nshift / naction)}</div></Cell>
+              <Cell><div class="numberfield">{percent(nshift / naction, 1)}</div></Cell>
               <Cell><div class="textfield">
                 <div class="tooltip">うち連続シフト数
                   <span class="top">シフトを押っぱなしで連続して入力した文字数。％の母数はアクション数。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{nreshift}</Cell>
-              <Cell><div class="numberfield">{percent(nreshift / naction)}</div></Cell>
+              <Cell><div class="numberfield">{percent(nreshift / naction, 1)}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">
@@ -401,14 +403,14 @@
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{ndouyubi}</div></Cell>
-              <Cell><div class="numberfield">{percent(ndouyubi / (naction - 1))}</div></Cell>
+              <Cell><div class="numberfield">{percent(ndouyubi / (naction - 1), 1)}</div></Cell>
               <Cell><div class="textfield">
                 <div class="tooltip">うち段越え数
                   <span class="top">同じ指で連続して行をまたいで異なるキーを押した数。％の母数はアクション数-1。</span>
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{ndangoe}</Cell>
-              <Cell><div class="numberfield">{percent(ndangoe / (naction - 1))}</div></Cell>
+              <Cell><div class="numberfield">{percent(ndangoe / (naction - 1), 1)}</div></Cell>
             </Row>
             <Row>
               <Cell><div class="textfield">
@@ -417,7 +419,7 @@
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{nkougo}</div></Cell>
-              <Cell><div class="numberfield">{percent(nkougo / (naction - 1))}</div></Cell>
+              <Cell><div class="numberfield">{percent(nkougo / (naction - 1), 1)}</div></Cell>
               <Cell><div class="textfield">
                 <div class="tooltip">片手連続数の平均
                   <span class="top">親指除く。％の母数はアクション数-1。</span>
@@ -433,7 +435,7 @@
                 </div>
               </div></Cell>
               <Cell><div class="numberfield">{narpeggio}</div></Cell>
-              <Cell><div class="numberfield">{percent(narpeggio / (naction - 1))}</div></Cell>
+              <Cell><div class="numberfield">{percent(narpeggio / (naction - 1), 1)}</div></Cell>
               <Cell><div class="textfield">入力できなかった文字数</div></Cell>
               <Cell><div class="numberfield">{ul}</div></Cell>
               <Cell><div class="numberfield"></div></Cell>
