@@ -313,7 +313,7 @@
     "ふゅ": {"keys": ["f", "y", "u"], "shift":[], "type": "seq", "ime": true},
     "うぃ": {"keys": ["w", "i"], "shift":[], "type": "seq", "ime": true},
     "うぇ": {"keys": ["w", "e"], "shift":[], "type": "seq", "ime": true},
-    "うぉ": {"keys": ["w", "o"], "shift":[], "type": "seq", "ime": true},
+    "うぉ": {"keys": ["w", "h", "o"], "shift":[], "type": "seq", "ime": true},
     "ゔぁ": {"keys": ["v", "a"], "shift":[], "type": "seq", "ime": true},
     "ゔぃ": {"keys": ["v", "i"], "shift":[], "type": "seq", "ime": true},
     "ゔぇ": {"keys": ["v", "e"], "shift":[], "type": "seq", "ime": true},
@@ -323,6 +323,9 @@
     "つぃ": {"keys": ["t", "s", "i"], "shift":[], "type": "seq", "ime": true},
     "つぇ": {"keys": ["t", "s", "e"], "shift":[], "type": "seq", "ime": true},
     "つぉ": {"keys": ["t", "s", "o"], "shift":[], "type": "seq", "ime": true},
+    "くぁ": {"keys": ["q", "a"], "shift":[], "type": "seq", "ime": true},
+    "とぅ": {"keys": ["t", "w", "u"], "shift":[], "type": "seq", "ime": true},
+    "どぅ": {"keys": ["d", "w", "u"], "shift":[], "type": "seq", "ime": true},
 
     "ゃ": {"keys": ["x", "y", "a"], "shift":[], "type": "seq", "ime": true},
     "ゅ": {"keys": ["x", "y", "u"], "shift":[], "type": "seq", "ime": true},
