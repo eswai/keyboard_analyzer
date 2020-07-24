@@ -319,6 +319,9 @@
     "つぇ": {"keys": ["t", "s", "e"], "shift":[], "type": "seq", "ime": true},
     "つぉ": {"keys": ["t", "s", "o"], "shift":[], "type": "seq", "ime": true},
     "くぁ": {"keys": ["q", "a"], "shift":[], "type": "seq", "ime": true},
+    "くぃ": {"keys": ["q", "i"], "shift":[], "type": "seq", "ime": true},
+    "くぇ": {"keys": ["q", "e"], "shift":[], "type": "seq", "ime": true},
+    "くぉ": {"keys": ["q", "o"], "shift":[], "type": "seq", "ime": true},
     "とぅ": {"keys": ["t", "w", "u"], "shift":[], "type": "seq", "ime": true},
     "どぅ": {"keys": ["d", "w", "u"], "shift":[], "type": "seq", "ime": true},
 
