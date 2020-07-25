@@ -14,7 +14,7 @@
   import shingeta from './keyboards/jis_shingeta.json';
   import asuka from './keyboards/jis_asuka123.json';
   import basekit from './keyboards/ortho_basekit.json';
-  import srlby from './keyboards/ortho_srlby.json';
+  import colevrak from './keyboards/ortho_colevrak.json';
   import colemak from './keyboards/us_colemak.json';
   import dvorak from './keyboards/us_dvorak.json';
   import qgmlwy from './keyboards/us_qgmlwy.json';
@@ -47,7 +47,7 @@
     "Dvorak": dvorak,
     "Colemak": colemak,
     "QGMLWY": qgmlwy,
-    "SRLBY": srlby,
+    "Colevrak(開発中)": colevrak,
     "BASEKIT OL(開発中)": basekit,
     "BASEKIT RS(開発中)": usbasekit,
   };
