@@ -21,13 +21,13 @@
       {"id": "r"     , "legend": ["R"]         , "size": 1, "finger": 1},
       {"id": "o"     , "legend": ["O"]         , "size": 1, "finger": 2},
       {"id": "u"     , "legend": ["U"]         , "size": 1, "finger": 3},
-      {"id": ","     , "legend": [","]         , "size": 1, "finger": 3},
-      {"id": "."     , "legend": ["."]         , "size": 1, "finger": 6},
+      {"id": ","     , "legend": [",", "<"]         , "size": 1, "finger": 3},
+      {"id": "."     , "legend": [".", ">"]         , "size": 1, "finger": 6},
       {"id": "bs"    , "legend": ["BS"]        , "size": 1, "finger": 6},
       {"id": "l"     , "legend": ["L"]         , "size": 1, "finger": 7},
       {"id": "f"     , "legend": ["F"]         , "size": 1, "finger": 8},
       {"id": "p"     , "legend": ["P"]    , "size": 1, "finger": 9},
-      {"id": "/"     , "legend": ["/"]   , "size": 1, "finger": 9}
+      {"id": "/"     , "legend": ["/", "?"]   , "size": 1, "finger": 9}
     ], [
       {"id": "tab"   , "legend": ["Tab"]       , "size": 1, "finger": 0},
       {"id": "d"     , "legend": ["D"]         , "size": 1, "finger": 0, "home": true},
@@ -35,12 +35,12 @@
       {"id": "a"     , "legend": ["A"]         , "size": 1, "finger": 2, "home": true},
       {"id": "i"     , "legend": ["I"]         , "size": 1, "finger": 3, "home": true},
       {"id": "g"     , "legend": ["G"]         , "size": 1, "finger": 3},
-      {"id": "'"     , "legend": ["'"]         , "size": 1, "finger": 6},
+      {"id": "'"     , "legend": ["'", "\""]         , "size": 1, "finger": 6},
       {"id": "e"     , "legend": ["E"]         , "size": 1, "finger": 6, "home": true},
       {"id": "h"     , "legend": ["H"]         , "size": 1, "finger": 7, "home": true},
       {"id": "t"     , "legend": ["T"]         , "size": 1, "finger": 8, "home": true},
       {"id": "k"     , "legend": ["K"]         , "size": 1, "finger": 9, "home": true},
-      {"id": ";"     , "legend": [";"]    , "size": 1, "finger": 9}
+      {"id": ";"     , "legend": [";", ":"]    , "size": 1, "finger": 9}
     ], [
       {"id": "shift" , "legend": ["Shift"]     , "size": 1, "finger": 0},
       {"id": "b"     , "legend": ["B"]         , "size": 1, "finger": 0},
