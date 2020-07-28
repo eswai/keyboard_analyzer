@@ -6,11 +6,11 @@
   export let color = "mono";
   export let home = false;
 
-  let width = 36 * size - 4;
+  $: width = 36 * size - 4;
 
   let csskey;
   let csscnt;
-  switch (legend.length) {
+  $: switch (legend.length) {
     case 0:
       csskey = "keynone";
       csscnt = "cnt1led";
