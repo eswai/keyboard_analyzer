@@ -249,7 +249,11 @@
       {/each}
     </Select>
 
+  {#if showresult == "loading"}
+  <Button color="secondary" on:click={startAnalsys} variant="outlined" disabled><Label>分析開始</Label></Button>
+  {:else}
   <Button color="secondary" on:click={startAnalsys} variant="outlined"><Label>分析開始</Label></Button>
+  {/if}
 
   <Dialog bind:this={optionDialog} aria-labelledby="option-title" aria-describedby="option-content" >
       <Title id="option-title">分析オプション</Title>
