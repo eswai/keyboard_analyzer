@@ -1,4 +1,5 @@
 <script>
+  import {onMount} from 'svelte';
   import Keyboard from './Keyboard.svelte';
   import Chart from 'svelte-frappe-charts';
   import kuromoji from './kuromoji/kuromoji.js';
@@ -52,13 +53,14 @@
     "BASEKIT RS(開発中)": usbasekit,
   };
 
+  let tokenizer;
+
   let selected_kb = "QWERTYローマ字";
   let mykeyboard = keyboards[selected_kb];
   let text = "人類が増えすぎた人口を宇宙に移民させるようになって、既に半世紀が過ぎていた。地球の周りの巨大な人工都市は人類の第二の故郷となり、人々はそこで子を産み、育て、そして死んでいった。";
   let ktext = "";
   let keyseq = "";
-  let showresult;
-  let showkb = false;
+  let showresult = "loading";
   let kana_only = false;
   let aozora = false;
   let optionDialog;
@@ -92,6 +94,18 @@
   let arpeggio_chart;
   let row_chart;
 
+  // 辞書をロード
+  onMount(() => {
+    kuromoji.builder(
+        {dicPath: 'dict'} // public/dict
+      ).build((error, _tokenizer) => {
+        tokenizer = _tokenizer;
+        showresult = "ready";
+        }
+      );
+    }
+  );
+
   function percent(v, n) {
     return (v * 100).toFixed(n) + '%'
   }
@@ -99,127 +113,122 @@
   function kbchange() {
     remark = keyboards[selected_kb].remark;
     mykeyboard = keyboards[selected_kb];
-    showkb = true;
   }
 
   function startAnalsys() {
+    showresult = "running";
+
     mykeyboard = keyboards[selected_kb];
-    showresult = false;
     let htext = eisuHankaku(text);
 
-    kuromoji.builder({
-      dicPath: 'dict' // public/dict
-    }).build((error, tokenizer) => {
-      // 形態素解析
-      const parsed = tokenizer.tokenize(htext);
-      // console.log(parsed);
-      let karray = []; // 変換後のかな文字の配列
-      for (let pa of parsed) {
-        if (pa.pos == "記号") {
-          karray.push(pa.surface_form);
-        } else if (pa.reading) { // 漢字、カナ
-          karray.push(kanaToHira(pa.reading));
-        } else { // 英数字
-          karray.push(kanaToHira(pa.surface_form));
+    // 形態素解析
+    const parsed = tokenizer.tokenize(htext);
+    // console.log(parsed);
+    let karray = []; // 変換後のかな文字の配列
+    for (let pa of parsed) {
+      if (pa.pos == "記号") {
+        karray.push(pa.surface_form);
+      } else if (pa.reading) { // 漢字、カナ
+        karray.push(kanaToHira(pa.reading));
+      } else { // 英数字
+        karray.push(kanaToHira(pa.surface_form));
+      }
+    }
+
+    ktext = karray.join("");
+    if (kana_only) {
+      ktext = conv_kana(ktext);
+    }
+    if (aozora) {
+      ktext = conv_aozora(ktext);
+    }
+
+    let r = analyzeKeyboard(ktext, mykeyboard);
+
+    ntext = text.length;
+    nkana = r.nKana;
+    ntype = r.nType;
+    nkey = r.nKey;
+    naction = r.nAction;
+    ntanda = r.nTanda;
+    ndouji = r.nDouji;
+    nshift = r.nShift;
+    nkougo = r.nKougo;
+    nreshift = r.nReShift;
+    narpeggio = r.nArpeggio;
+    ndouyubi = r.nDouyubi;
+    ndangoe = r.nDangoe;
+    doute = r.douteRenzoku;
+    ul = r.nUncounted;
+    nhome = r.nHome;
+    nhomeNS = r.nHomeNS;
+    left = r.left;
+    right = r.right;
+    keyseq = r.keys.join("");
+
+    let arpeggioLegend = mykeyboard.arpeggio.map(function(a){
+      return mykeyboard.keys[a[0][0]][a[0][1]].legend[0] + mykeyboard.keys[a[1][0]][a[1][1]].legend[0];
+    })
+
+    finger_chart = {
+      labels: ['左小', '左薬', '左中', '左人', '左親', '右親', '右人', '右中', '右薬', '右小'],
+      datasets: [
+        {
+          name: "単独",
+          values: r.finger.tandoku
+        },
+        {
+          name: "同時",
+          values: r.finger.douji
+        },
+        {
+          name: "シフト",
+          values: r.finger.shift
+        },
+      ]
+    };
+    samefinger_chart = {
+      labels: ['左小', '左薬', '左中', '左人', '左親', '右親', '右人', '右中', '右薬', '右小'],
+      datasets: [
+        {
+          values: r.finger.onaji
         }
-      }
-
-      ktext = karray.join("");
-      if (kana_only) {
-        ktext = conv_kana(ktext);
-      }
-      if (aozora) {
-        ktext = conv_aozora(ktext);
-      }
-
-      let r = analyzeKeyboard(ktext, mykeyboard);
-
-      ntext = text.length;
-      nkana = r.nKana;
-      ntype = r.nType;
-      nkey = r.nKey;
-      naction = r.nAction;
-      ntanda = r.nTanda;
-      ndouji = r.nDouji;
-      nshift = r.nShift;
-      nkougo = r.nKougo;
-      nreshift = r.nReShift;
-      narpeggio = r.nArpeggio;
-      ndouyubi = r.nDouyubi;
-      ndangoe = r.nDangoe;
-      doute = r.douteRenzoku;
-      ul = r.nUncounted;
-      nhome = r.nHome;
-      nhomeNS = r.nHomeNS;
-      left = r.left;
-      right = r.right;
-      keyseq = r.keys.join("");
-
-      let arpeggioLegend = mykeyboard.arpeggio.map(function(a){
-        return mykeyboard.keys[a[0][0]][a[0][1]].legend[0] + mykeyboard.keys[a[1][0]][a[1][1]].legend[0];
-      })
-
-      finger_chart = {
-        labels: ['左小', '左薬', '左中', '左人', '左親', '右親', '右人', '右中', '右薬', '右小'],
-        datasets: [
-          {
-            name: "単独",
-            values: r.finger.tandoku
-          },
-          {
-            name: "同時",
-            values: r.finger.douji
-          },
-          {
-            name: "シフト",
-            values: r.finger.shift
-          },
-        ]
-      };
-      samefinger_chart = {
-        labels: ['左小', '左薬', '左中', '左人', '左親', '右親', '右人', '右中', '右薬', '右小'],
-        datasets: [
-          {
-            values: r.finger.onaji
-          }
-        ]
-      };
-      arpeggio_chart = {
-        labels: arpeggioLegend,
-        datasets: [
-          {
-            values: r.arpeggio
-          }
-        ]
-      };
-      row_chart = {
-        labels: r.row.tandoku.map((v, i, a) => "R" + (i + 1)),
-        datasets: [
-          {
-            name: "単独",
-            values: r.row.tandoku
-          },
-          {
-            name: "同時",
-            values: r.row.douji
-          },
-          {
-            name: "シフト",
-            values: r.row.shift
-          },
-        ]
-      };
-      arpeggio_chart = {
-        labels: arpeggioLegend,
-        datasets: [
-          {
-            values: r.arpeggio
-          }
-        ]
-      };
-      showresult = true;
-
-    });
+      ]
+    };
+    arpeggio_chart = {
+      labels: arpeggioLegend,
+      datasets: [
+        {
+          values: r.arpeggio
+        }
+      ]
+    };
+    row_chart = {
+      labels: r.row.tandoku.map((v, i, a) => "R" + (i + 1)),
+      datasets: [
+        {
+          name: "単独",
+          values: r.row.tandoku
+        },
+        {
+          name: "同時",
+          values: r.row.douji
+        },
+        {
+          name: "シフト",
+          values: r.row.shift
+        },
+      ]
+    };
+    arpeggio_chart = {
+      labels: arpeggioLegend,
+      datasets: [
+        {
+          values: r.arpeggio
+        }
+      ]
+    };
+    showresult = "finished";
   }
 </script>
 
@@ -267,14 +276,12 @@
         <div class="textfield">
         {remark}
         </div>
-        {#if showkb}
         <div class="kbd">
           <Keyboard layout={mykeyboard} designview=true />
         </div>
-        {/if}
       </Content>
       <Actions>
-        <Button action="accept" on:click={() => {showkb=false;}}>
+        <Button action="accept">
           <Label>閉じる</Label>
         </Button>
       </Actions>
@@ -284,7 +291,7 @@
   </div>
 
 
-  {#if showresult == true}
+  {#if showresult == "finished"}
 
   <div style="display: flex; flex-direction: column;">
 
@@ -484,8 +491,13 @@
 
   </div>
   {/if}
-  {#if showresult == false}
-  <p class="ongoing">分析を実行中...</p>
+
+  {#if showresult == "loading"}
+  <p class="ongoing">辞書をロード中</p>
+  {/if}
+
+  {#if showresult == "running"}
+  <p class="ongoing">解析中</p>
   {/if}
 
 </main>
