@@ -120,10 +120,20 @@ function postprocess() {
     finger_shifted[k.finger] += k.shifted;
   }
 
+  // 左手
   for (let kr of keyboard.keys) {
-    rtandoku.push(kr.reduce((acc, cur) => acc + cur.tandoku, 0));
-    rdouji.push(kr.reduce((acc, cur) => acc + cur.douji, 0));
-    rshifted.push(kr.reduce((acc, cur) => acc + cur.shifted, 0));
+    rtandoku.push(kr.reduce((acc, cur) => cur.finger <= 4 ? acc + cur.tandoku : acc, 0));
+    rdouji.push(kr.reduce((acc, cur) => cur.finger <= 4 ? acc + cur.douji : acc, 0));
+    rshifted.push(kr.reduce((acc, cur) => cur.finger <= 4 ? acc + cur.shifted : acc, 0));
+  }
+  rtandoku.reverse();
+  rdouji.reverse();
+  rshifted.reverse();
+  // 右手
+  for (let kr of keyboard.keys) {
+    rtandoku.push(kr.reduce((acc, cur) => cur.finger >= 5 ? acc + cur.tandoku : acc, 0));
+    rdouji.push(kr.reduce((acc, cur) => cur.finger >= 5 ? acc + cur.douji : acc, 0));
+    rshifted.push(kr.reduce((acc, cur) => cur.finger >= 5 ? acc + cur.shifted : acc, 0));
   }
 
   // normalize count

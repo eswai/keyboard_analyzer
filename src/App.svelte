@@ -204,7 +204,7 @@
       ]
     };
     row_chart = {
-      labels: r.row.tandoku.map((v, i, a) => "R" + (i + 1)),
+      labels: r.row.tandoku.map((v, i, a) => i < r.row.tandoku.length / 2 ? "左R" + (r.row.tandoku.length / 2 - i) : "右R" + (i - r.row.tandoku.length / 2 + 1)),
       datasets: [
         {
           name: "単独",
@@ -479,7 +479,7 @@
 
     <div class="card-container">
       <Card style="width: 600px; margin: 3px;" variant="outlined" padded>
-        行ごとの打鍵数
+        行ごとの打鍵数 (R1が最上段)
         <Chart data={row_chart} type="bar" height="230" colors ={['light-blue', 'blue', 'purple']} barOptions={{stacked:true, spaceRatio:0.5}}/>
       </Card>
     </div>
