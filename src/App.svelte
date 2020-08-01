@@ -62,6 +62,7 @@
   let keyseq = "";
   let showresult = "loading";
   let kana_only = false;
+  let skip_conv = false;
   let aozora = false;
   let optionDialog;
   let remarkDialog;
@@ -122,25 +123,30 @@
     let htext = eisuHankaku(text);
 
     // 形態素解析
-    const parsed = tokenizer.tokenize(htext);
-    // console.log(parsed);
-    let karray = []; // 変換後のかな文字の配列
-    for (let pa of parsed) {
-      if (pa.pos == "記号") {
-        karray.push(pa.surface_form);
-      } else if (pa.reading) { // 漢字、カナ
-        karray.push(kanaToHira(pa.reading));
-      } else { // 英数字
-        karray.push(kanaToHira(pa.surface_form));
-      }
-    }
+    if (skip_conv) {
+      ktext = htext;
+    } else {
+      let parsed = tokenizer.tokenize(htext);
 
-    ktext = karray.join("");
-    if (kana_only) {
-      ktext = conv_kana(ktext);
-    }
-    if (aozora) {
-      ktext = conv_aozora(ktext);
+      // console.log(parsed);
+      let karray = []; // 変換後のかな文字の配列
+      for (let pa of parsed) {
+        if (pa.pos == "記号") {
+          karray.push(pa.surface_form);
+        } else if (pa.reading) { // 漢字、カナ
+          karray.push(kanaToHira(pa.reading));
+        } else { // 英数字
+          karray.push(kanaToHira(pa.surface_form));
+        }
+      }
+
+      ktext = karray.join("");
+      if (kana_only) {
+        ktext = conv_kana(ktext);
+      }
+      if (aozora) {
+        ktext = conv_aozora(ktext);
+      }
     }
 
     let r = analyzeKeyboard(ktext, mykeyboard);
@@ -258,6 +264,12 @@
   <Dialog bind:this={optionDialog} aria-labelledby="option-title" aria-describedby="option-content" >
       <Title id="option-title">分析オプション</Title>
       <Content id="option-content">
+        <div class="optionfield">
+          <FormField>
+            <Checkbox bind:checked={skip_conv} />
+            <span slot="label">漢字をカナ変換しない (形態素解析をバイパス)</span>
+          </FormField>
+        </div>
         <div class="optionfield">
           <FormField>
             <Checkbox bind:checked={kana_only} />
