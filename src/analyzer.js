@@ -440,3 +440,23 @@ function duplicated(a){
   var s = new Set(a);
   return a.length - s.size;
 }
+
+export function numKanji(t){
+  if (t) {
+    let m = t.match(/[々〇〻\u3400-\u9FFF\uF900-\uFAFF]|[\uD840-\uD87F][\uDC00-\uDFFF]/g);
+    if (m) {
+      return m.reduce((acc, val) => acc + val.length, 0);
+    }
+  }
+  return 0;
+}
+
+export function numEisu(t){
+  if (t) {
+    let m = t.match(/[Ａ-Ｚａ-ｚ０-９！”＃＄％＆’（）＝～｜‘｛＋＊｝＜＞？＿－＾￥＠「；：」、。・!-~]/g);
+    if (m) {
+      return m.reduce((acc, val) => acc + val.length, 0);
+    }
+  }
+  return 0;
+}

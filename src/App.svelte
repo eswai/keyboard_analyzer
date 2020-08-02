@@ -3,7 +3,7 @@
   import Keyboard from './Keyboard.svelte';
   import Chart from 'svelte-frappe-charts';
   import kuromoji from './kuromoji/kuromoji.js';
-  import {kanaToHira, conv_aozora, conv_kana, analyzeKeyboard, hankaku, eisuHankaku} from "./analyzer.js";
+  import {numEisu, numKanji, kanaToHira, conv_aozora, conv_kana, analyzeKeyboard, hankaku, eisuHankaku} from "./analyzer.js";
 
   // キー配列
   import romaji from './keyboards/jis_romaji.json';
@@ -25,6 +25,7 @@
 
   // Material UI
   import Textfield from '@smui/textfield';
+  import HelperText from '@smui/textfield/helper-text/index';
   import Button, {Label} from '@smui/button';
   import Dialog, {Title, Content, Actions, InitialFocus} from '@smui/dialog';
   import Checkbox from '@smui/checkbox';
@@ -67,10 +68,14 @@
   let optionDialog;
   let remarkDialog;
   let remark = "";
+  // let nkanji = 0;
+  $: ntext = text.length;
+  $: nkanji = numKanji(text);
+  $: neisu = numEisu(text);
 
   // 出力UI
   let ul; // 入力できなかった文字数
-  let ntext; // 入力した文字数
+  // let ntext; // 入力した文字数
   let ntype; // 打鍵したキー数
   let nkey;
   let nshift; // 打鍵したキー数、連続シフトを考慮
@@ -151,7 +156,6 @@
 
     let r = analyzeKeyboard(ktext, mykeyboard);
 
-    ntext = text.length;
     nkana = r.nKana;
     ntype = r.nType;
     nkey = r.nKey;
@@ -236,6 +240,8 @@
     };
     showresult = "finished";
   }
+
+
 </script>
 
 
@@ -246,7 +252,9 @@
 
   <h1>keyboard layout analyzer</h1>
 
-  <Textfield fullwidth textarea bind:value={text} label="入力テキスト" />
+  <!-- <Textfield fullwidth textarea bind:value={text} label="入力テキスト ({ntext}文字、漢字{nkanji}文字、英数字{neisu})" /> -->
+  <Textfield fullwidth textarea bind:value={text} label="入力テキスト" input$aria-controls="helper-text-fullwidth-textarea" input$aria-describedby="helper-text-fullwidth-textarea" />
+  <HelperText id="helper-text-fullwidth-textarea">{ntext}文字、漢字{nkanji}文字、英数記号{neisu}</HelperText>
 
   <div class="inputfield">
     <Select bind:value={selected_kb} label="配列" >
