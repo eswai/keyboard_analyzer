@@ -184,7 +184,7 @@ function postprocess() {
       "shift": rshifted,
     },
     "arpeggio": arpeggio,
-    "douteRenzoku": sum(douteList) / douteList.length,
+    "douteRenzoku": douteList.length > 0 ? sum(douteList) / douteList.length : 0,
     "keys": keyseq.map((x) => x.shift.map((y) => "<" + y + ">").concat(x.keys)).flat(),
   };
 }
