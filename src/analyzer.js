@@ -3,7 +3,9 @@
   let keyseq;
   let keydic;
   let uncounted; // 入力できなかった文字
-  let finger_onaji;
+  let finger_onaji1;
+  let finger_onaji2;
+  let finger_onaji3;
   let arpeggio;
   let douteList;
 
@@ -87,7 +89,9 @@ function preprocess() {
   nhomeNS = 0;
 
   uncounted = [];
-  finger_onaji = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  finger_onaji1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  finger_onaji2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  finger_onaji3 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
   arpeggio = new Array(keyboard.arpeggio.length);
   arpeggio.fill(0);
@@ -157,8 +161,8 @@ function postprocess() {
     "nDouji": ndouji,
     "nShift": nshift,
     "nReShift": nreshift,
-    "nDouyubi": sum(finger_onaji),
-    "nDangoe": ndangoe,
+    "nDouyubi": sum(finger_onaji1) + sum(finger_onaji2) + sum(finger_onaji3),
+    "nDangoe": sum(finger_onaji2) + sum(finger_onaji3),
     "nKougo": nkougo,
     "nArpeggio": sum(arpeggio),
     "nHome": nhome,
@@ -168,7 +172,9 @@ function postprocess() {
       "tandoku": finger_tandoku,
       "douji": finger_douji,
       "shift": finger_shifted,
-      "onaji": finger_onaji
+      "onaji1": finger_onaji1,
+      "onaji2": finger_onaji2,
+      "onaji3": finger_onaji3,
     },
     "left": sum(finger_tandoku.slice(0, 5)) + sum(finger_shifted.slice(0, 5)) + sum(finger_douji.slice(0, 5)),
     "right": sum(finger_tandoku.slice(5, 10)) + sum(finger_shifted.slice(5, 10)) + sum(finger_douji.slice(5, 10)),
@@ -238,15 +244,37 @@ function evaluateKeyCombination(c1, c0) {
   // let c0f = c0.keys.map((a) => keydic[a].finger);
 
   // 同じキーを除外する
-  let c10un = c1ks.concat(c0ks).filter(function(x, i, self) { // 重複削除
-    return self.indexOf(x) === i;
-  });
-  let c10unf = c10un.map((a) => keydic[a].finger);
+  // let c10un = c1ks.concat(c0ks).filter(function(x, i, self) { // 重複削除
+  //   return self.indexOf(x) === i;
+  // });
+  // let c10unf = c10un.map((a) => keydic[a].finger);
 
-  let c10douy = c10unf.filter(function(x, i, self) { // 重複を抜き出す
-    return self.indexOf(x) !== i;
-  });
-  c10douy.map(x => finger_onaji[x]++);
+  // let c10douy = c10unf.filter(function(x, i, self) { // 重複を抜き出す
+  //   return self.indexOf(x) !== i;
+  // });
+  // c10douy.map(x => finger_onaji[x]++);
+  for (let k1i of c1.keys) {
+    for (let k0i of c0.keys) {
+      let k0 = keydic[k0i];
+      let k1 = keydic[k1i];
+      if (k0.id != k1.id && k0.finger == k1.finger) {
+        switch (k0.row - k1.row) {
+          case -1:
+          case 0:
+          case 1:
+            finger_onaji1[k1.finger]++;
+            break;
+          case -2:
+          case 2:
+            finger_onaji2[k1.finger]++;
+            break;
+          default:
+            finger_onaji3[k1.finger]++;
+            break;
+        }
+      }
+    }
+  }
 
   // アルペジオ
   // 1アクションの中のアルペジオ

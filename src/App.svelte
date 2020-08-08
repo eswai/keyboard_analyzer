@@ -201,8 +201,17 @@
       labels: ['左小', '左薬', '左中', '左人', '左親', '右親', '右人', '右中', '右薬', '右小'],
       datasets: [
         {
-          values: r.finger.onaji
-        }
+          name: "段超えなし",
+          values: r.finger.onaji1
+        },
+        {
+          name: "1段飛ばし",
+          values: r.finger.onaji2
+        },
+        {
+          name: "2段飛ばし以上",
+          values: r.finger.onaji3
+        },
       ]
     };
     arpeggio_chart = {
@@ -507,7 +516,7 @@
     <div class="card-container">
       <Card style="width: 600px; margin: 3px;" variant="outlined" padded>
         同じ指で連続して違うキーを打鍵した数
-        <Chart data={samefinger_chart} type="bar" height="200" valuesOverPoints="1" colors ={['light-blue']} barOptions={{spaceRatio:0.5}} />
+        <Chart data={samefinger_chart} type="bar" height="200" colors ={['light-blue', 'blue', 'purple']} barOptions={{stacked:true, spaceRatio:0.5}}/>
       </Card>
     </div>
 
