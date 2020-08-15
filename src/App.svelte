@@ -22,6 +22,7 @@
   import usbasekit from './keyboards/us_basekit.json';
   import shinjis from './keyboards/jis_shinjis.json';
   import keinarabe from './keyboards/jis_keinarabe.json';
+  import tsuki from './keyboards/jis_tsuki.json';
 
   // Material UI
   import Textfield from '@smui/textfield';
@@ -44,6 +45,7 @@
     "親指シフト": nicola,
     "新下駄": shingeta,
     "飛鳥123": asuka,
+    "月配列2-263": tsuki,
     "けいならべ": keinarabe,
     "Eucalynローマ字": eucalyn,
     "Dvorak": dvorak,
