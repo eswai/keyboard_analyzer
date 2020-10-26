@@ -157,7 +157,7 @@
     "}": {"keys": ["x"], "shift":["raise"], "type":"seq", "renzsft": true},
     "~": {"keys": ["q"], "shift":["raise"], "type":"seq", "renzsft": true},
     "\n": {"keys": ["v", "m"], "shift":[], "type":"seq"},
-    "\t": {"keys": [""], "shift":[], "type":"seq"},
+    "\t": {"keys": ["a"], "shift":["lower"], "type":"seq"},
 
     "IME ON": {"keys": ["h", "j"], "shift":[], "type": "sim"},
     "IME OFF": {"keys": ["f", "g"], "shift":[], "type": "sim"},

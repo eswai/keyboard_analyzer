@@ -1,6 +1,6 @@
 {
   "name": "薙刀式",
-  "remark": "V12究極版。センターシフトをシフト、濁音半濁音小書き拗音外来音は、すべてシフトでない同時押し。QPは小指押し。",
+  "remark": "V13完成版。センターシフトをシフト、濁音半濁音小書き拗音外来音は、すべてシフトでない同時押し。QPは小指押し。",
   "keys": [
     [
       {"id": "q"     , "legend": ["小"]         , "size": 1, "finger": 0},
@@ -157,7 +157,7 @@
     "}": {"keys": ["x"], "shift":["raise"], "type":"seq", "renzsft": true},
     "~": {"keys": ["q"], "shift":["raise"], "type":"seq", "renzsft": true},
     "\n": {"keys": ["v", "m"], "shift":[], "type":"seq"},
-    "\t": {"keys": [""], "shift":[], "type":"seq"},
+    "\t": {"keys": ["a"], "shift":["lower"], "type":"seq"},
 
     "IME ON": {"keys": ["h", "j"], "shift":[], "type": "sim"},
     "IME OFF": {"keys": ["f", "g"], "shift":[], "type": "sim"},
