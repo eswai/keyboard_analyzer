@@ -27,7 +27,7 @@
 
   // Material UI
   import Textfield from '@smui/textfield';
-  import HelperText from '@smui/textfield/helper-text/index';
+  import HelperText from '@smui/textfield/helper-text';
   import Button, {Label} from '@smui/button';
   import Dialog, {Title, Content, Actions, InitialFocus} from '@smui/dialog';
   import Checkbox from '@smui/checkbox';
