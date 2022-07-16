@@ -266,8 +266,9 @@
   <h1>keyboard layout analyzer</h1>
 
   <!-- <Textfield fullwidth textarea bind:value={text} label="入力テキスト ({ntext}文字、漢字{nkanji}文字、英数字{neisu})" /> -->
-  <Textfield fullwidth textarea bind:value={text} label="入力テキスト" input$aria-controls="helper-text-fullwidth-textarea" input$aria-describedby="helper-text-fullwidth-textarea" />
-  <HelperText id="helper-text-fullwidth-textarea">{ntext}文字、漢字{nkanji}文字、英数記号{neisu}</HelperText>
+  <Textfield style="width: 100%;" helperLine$style="width: 100%;" textarea bind:value={text} label="入力テキスト" >
+  <HelperText slot="helper">{ntext}文字、漢字{nkanji}文字、英数記号{neisu}</HelperText>
+  </Textfield>
 
   <div class="inputfield">
     <Select bind:value={selected_kb} label="配列" >
