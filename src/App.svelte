@@ -272,7 +272,7 @@
   <div class="inputfield">
     <Select bind:value={selected_kb} label="配列" >
       {#each Object.keys(keyboards) as k}
-      <option>{k}</option>
+        <Option value={k}>{k}</Option>
       {/each}
     </Select>
 
