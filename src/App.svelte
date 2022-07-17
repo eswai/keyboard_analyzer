@@ -71,8 +71,8 @@
   let kana_only = false;
   let skip_conv = false;
   let aozora = false;
-  let optionDialog;
-  let remarkDialog;
+  let optionDialog = false;
+  let remarkDialog = false;
   let remark = "";
   // let nkanji = 0;
   $: ntext = text.length;
@@ -285,7 +285,7 @@
   <Button color="secondary" on:click={startAnalsys} variant="outlined"><Label>分析開始</Label></Button>
   {/if}
 
-  <Dialog bind:this={optionDialog} aria-labelledby="option-title" aria-describedby="option-content" >
+  <Dialog bind:open={optionDialog} aria-labelledby="option-title" aria-describedby="option-content" >
       <Title id="option-title">分析オプション</Title>
       <Content id="option-content">
         <div class="optionfield">
@@ -313,9 +313,9 @@
         </Button>
       </Actions>
   </Dialog>
-  <Button color="secondary" on:click={() => optionDialog.open()}><Label>オプション選択</Label></Button>
+  <Button color="secondary" on:click={() => (optionDialog = true)}><Label>オプション選択</Label></Button>
 
-  <Dialog bind:this={remarkDialog} aria-labelledby="remark-title" aria-describedby="remark-content" >
+  <Dialog bind:open={remarkDialog} aria-labelledby="remark-title" aria-describedby="remark-content" >
       <Title id="remark-title">{selected_kb}</Title>
       <Content id="remark-content">
         <div class="textfield">
@@ -331,7 +331,7 @@
         </Button>
       </Actions>
   </Dialog>
-  <Button color="secondary" on:click={() => {kbchange();remarkDialog.open();}}><Label>補足説明</Label></Button>
+  <Button color="secondary" on:click={() => {kbchange();remarkDialog = true;}}><Label>補足説明</Label></Button>
 
   </div>
 
