@@ -30,7 +30,7 @@
       {"id": "'"     , "legend": ["'"]         , "size": 1, "finger": 9}
     ], [
       {"id": "tab"   , "legend": ["Tab"]       , "size": 1, "finger": 0},
-      {"id": "b"     , "legend": ["B"]         , "size": 1, "finger": 0, "home": true},
+      {"id": "w"     , "legend": ["W"]         , "size": 1, "finger": 0, "home": true},
       {"id": "i"     , "legend": ["I"]         , "size": 1, "finger": 1, "home": true},
       {"id": "s"     , "legend": ["S"]         , "size": 1, "finger": 2, "home": true},
       {"id": "a"     , "legend": ["A"]         , "size": 1, "finger": 3, "home": true},
@@ -39,7 +39,7 @@
       {"id": "e"     , "legend": ["E"]         , "size": 1, "finger": 6, "home": true},
       {"id": "t"     , "legend": ["T"]         , "size": 1, "finger": 7, "home": true},
       {"id": "h"     , "legend": ["H"]         , "size": 1, "finger": 8, "home": true},
-      {"id": "w"     , "legend": ["W"]         , "size": 1, "finger": 9, "home": true},
+      {"id": "b"     , "legend": ["B"]         , "size": 1, "finger": 9, "home": true},
       {"id": ";"     , "legend": [";", ":"]    , "size": 1, "finger": 9}
     ], [
       {"id": "shift" , "legend": ["Shift"]     , "size": 1, "finger": 0},
