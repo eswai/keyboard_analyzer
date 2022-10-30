@@ -17,7 +17,8 @@
   import eucalyn from './keyboards/jis_eucalyn.json';
   import shingeta from './keyboards/jis_shingeta.json';
   import asuka from './keyboards/jis_asuka123.json';
-  import basekit from './keyboards/ortho_basekit.json';
+  import arensito from './keyboards/ortho_arensito.json';
+  import isa from './keyboards/ortho_isa.json';
   import colevrak from './keyboards/ortho_colevrak.json';
   import colemak from './keyboards/us_colemak.json';
   import dvorak from './keyboards/us_dvorak.json';
@@ -58,7 +59,8 @@
     "Colemak": colemak,
     "QGMLWY": qgmlwy,
     "Colevrak": colevrak,
-    "BASEKIT OL": basekit,
+    "Arensito": arensito,
+    "ISA": isa,
     "BASEKIT RS": usbasekit,
   };
 
