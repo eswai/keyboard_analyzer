@@ -27,6 +27,7 @@
   import shinjis from './keyboards/jis_shinjis.json';
   import keinarabe from './keyboards/jis_keinarabe.json';
   import tsuki from './keyboards/jis_tsuki.json';
+  import shingetsu from './keyboards/us_shingetsu.json';
 
   // Material UI
   import Textfield from '@smui/textfield';
@@ -53,6 +54,7 @@
     "新下駄": shingeta,
     "飛鳥123": asuka,
     "月配列2-263": tsuki,
+    "新月配列": shingetsu,
     "けいならべ": keinarabe,
     "Eucalynローマ字": eucalyn,
     "Dvorak": dvorak,
