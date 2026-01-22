@@ -46,9 +46,9 @@ struct Args {
     #[arg(short, long, default_value = "best_layout.json")]
     output: PathBuf,
 
-    /// Enable GPU acceleration (requires compatible GPU)
+    /// Disable GPU acceleration (GPU is used by default if available)
     #[arg(long, default_value_t = false)]
-    gpu: bool,
+    no_gpu: bool,
 
     /// Number of parallel threads (0 = auto)
     #[arg(short, long, default_value_t = 0)]
@@ -103,20 +103,26 @@ const SHIFT_B_VERTICAL: f64 = 29.0;
 
 // Evaluation weights
 // Multiplicative core weights (these form geometric mean)
-const WEIGHT_ROW_SKIP: f64 = 1.4;        // 1段飛ばしの少なさ (乗算コア)
-const WEIGHT_SAME_FINGER: f64 = 1.0;     // 同指連続率の低さ (乗算コア)
-const WEIGHT_ALTERNATING: f64 = 0.6;     // 左右交互打鍵率 (乗算コア)
-const WEIGHT_TOTAL_KEYSTROKES: f64 = 1.2; // 総打鍵数の少なさ (乗算コア)
-const WEIGHT_ROLL: f64 = 1.1;            // ロール率の高さ (乗算コア) - 2/3gram運指
-const WEIGHT_REDIRECT_LOW: f64 = 1.1;    // リダイレクト少なさ (乗算コア) - 3gram運指
+// ============================================================================
+// Core Metrics (乗算・幾何平均) - 低スコアが全体を大きく下げる必須条件
+// ============================================================================
+const WEIGHT_ROW_SKIP: f64 = 1.4;        // 段飛ばし少: 同指で2段以上跳ぶのを避ける
+const WEIGHT_SAME_FINGER: f64 = 1.0;     // 同指連続低: 同じ指の連打を避ける (SFB)
+const WEIGHT_TOTAL_KEYSTROKES: f64 = 1.2; // 総打鍵少: 打鍵コスト(距離・負担)を最小化
+const WEIGHT_REDIRECT_LOW: f64 = 1.1;    // リダイレクト少: 同手3連打で方向転換を避ける
+const WEIGHT_COLEMAK_SIMILARITY: f64 = 0.3; // Colemak類似: 母音・子音の配置パターン
+const WEIGHT_HOME_POSITION: f64 = 0.3;   // ホームポジ率: ホーム段の使用率
+const WEIGHT_SINGLE_KEY: f64 = 0.4;      // 単打鍵率: シフト無しで打てる文字の割合
 
-// Additive bonus weights
-const WEIGHT_HOME_POSITION: f64 = 8.0;   // ホームポジション率 (重要)
-const WEIGHT_SINGLE_KEY: f64 = 3.0;      // 単打鍵数の多さ
-const WEIGHT_SHIFT_CHARS: f64 = 2.0;     // シフト文字数の少なさ
-const WEIGHT_COLEMAK_SIMILARITY: f64 = 6.0; // Colemak類似性 (重要: ん・い位置)
-const WEIGHT_TSUKI_SIMILARITY: f64 = 1.0;   // 月配列類似性
-const WEIGHT_MEMORABILITY: f64 = 1.0;    // 覚えやすさ
+// ============================================================================
+// Bonus Metrics (加算) - 高スコアでボーナス、低くてもペナルティ小
+// ============================================================================
+const WEIGHT_ALTERNATING: f64 = 7.0;     // 左右交互: 左右の手を交互に使う
+const WEIGHT_TSUKI_SIMILARITY: f64 = 4.0;   // 月配列類似: 日本語に最適化された配置
+const WEIGHT_ROLL: f64 = 5.0;            // ロール率: 同手で流れるような連打
+const WEIGHT_INROLL: f64 = 5.0;          // インロール: 外→内への流れ (pinky→index)
+const WEIGHT_ARPEGGIO: f64 = 5.0;        // アルペジオ: 隣接指の連続 (ピアノ的)
+const WEIGHT_MEMORABILITY: f64 = 1.0;    // 覚えやすさ: 母音/子音のレイヤー一貫性
 
 // ============================================================================
 // Character Frequency Data
@@ -219,6 +225,10 @@ pub struct EvaluationScores {
     pub roll: f64,
     /// Redirect rate: direction change on same hand - lower is better (stored as 100 - redirect%)
     pub redirect_low: f64,
+    /// Inroll rate: outside-to-inside rolls (pinky→index direction) - higher is better
+    pub inroll: f64,
+    /// Arpeggio rate: adjacent finger sequences - higher is better  
+    pub arpeggio: f64,
 }
 
 /// Key position
@@ -741,40 +751,44 @@ impl Evaluator {
     pub fn evaluate(&self, layout: &mut Layout) -> f64 {
         let scores = self.compute_scores(layout);
         
-        // Core metrics: multiplicative (geometric mean with weights)
-        // Low score in any core metric heavily penalizes total
-        // Convert scores to 0-1 range for multiplication
+        // ============================================================
+        // Core Metrics (乗算・幾何平均): 低スコアが全体を大きく下げる
+        // ============================================================
         let row_skip_norm = (scores.row_skip / 100.0).max(0.01);
         let same_finger_norm = (scores.same_finger / 100.0).max(0.01);
-        let alternating_norm = (scores.alternating / 100.0).max(0.01);
         let total_keystrokes_norm = (scores.total_keystrokes / 100.0).max(0.01);
-        let roll_norm = (scores.roll / 100.0).max(0.01);
         let redirect_low_norm = (scores.redirect_low / 100.0).max(0.01);
+        let colemak_norm = (scores.colemak_similarity / 100.0).max(0.01);
+        let home_norm = (scores.home_position / 100.0).max(0.01);
+        let single_key_norm = (scores.single_key / 100.0).max(0.01);
         
-        // Weighted geometric mean with all 6 core metrics
-        let total_weight = WEIGHT_ROW_SKIP + WEIGHT_SAME_FINGER + WEIGHT_ALTERNATING 
-            + WEIGHT_TOTAL_KEYSTROKES + WEIGHT_ROLL + WEIGHT_REDIRECT_LOW;
+        // Weighted geometric mean: (a^w1 * b^w2 * ...)^(1/sum_w)
+        let total_weight = WEIGHT_ROW_SKIP + WEIGHT_SAME_FINGER + WEIGHT_TOTAL_KEYSTROKES 
+            + WEIGHT_REDIRECT_LOW + WEIGHT_COLEMAK_SIMILARITY + WEIGHT_HOME_POSITION
+            + WEIGHT_SINGLE_KEY;
         let core_product = 
             row_skip_norm.powf(WEIGHT_ROW_SKIP) *
             same_finger_norm.powf(WEIGHT_SAME_FINGER) *
-            alternating_norm.powf(WEIGHT_ALTERNATING) *
             total_keystrokes_norm.powf(WEIGHT_TOTAL_KEYSTROKES) *
-            roll_norm.powf(WEIGHT_ROLL) *
-            redirect_low_norm.powf(WEIGHT_REDIRECT_LOW);
+            redirect_low_norm.powf(WEIGHT_REDIRECT_LOW) *
+            colemak_norm.powf(WEIGHT_COLEMAK_SIMILARITY) *
+            home_norm.powf(WEIGHT_HOME_POSITION) *
+            single_key_norm.powf(WEIGHT_SINGLE_KEY);
         let core_multiplier = core_product.powf(1.0 / total_weight) * 100.0;
         
-        // Additive bonus: weighted sum of other metrics
+        // ============================================================
+        // Bonus Metrics (加算): 高スコアでボーナス、低くてもペナルティ小
+        // ============================================================
         let additive_bonus = 
-            scores.home_position * WEIGHT_HOME_POSITION +
-            scores.single_key * WEIGHT_SINGLE_KEY +
-            scores.shift_chars * WEIGHT_SHIFT_CHARS +
-            scores.colemak_similarity * WEIGHT_COLEMAK_SIMILARITY +
+            scores.alternating * WEIGHT_ALTERNATING +
             scores.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY +
-            scores.memorability * WEIGHT_MEMORABILITY;
+            scores.roll * WEIGHT_ROLL +
+            scores.memorability * WEIGHT_MEMORABILITY +
+            scores.inroll * WEIGHT_INROLL +
+            scores.arpeggio * WEIGHT_ARPEGGIO;
         
         // Final fitness: core × (1 + bonus/scale)
-        // This ensures core metrics are critical, bonus enhances
-        let bonus_scale = 2100.0; // Adjusted: total_keystrokes moved to core
+        let bonus_scale = 2700.0; // Adjusted: single_key to Core, shift_chars removed
         let fitness = core_multiplier * (1.0 + additive_bonus / bonus_scale);
         
         layout.scores = scores;
@@ -851,9 +865,11 @@ impl Evaluator {
         
         let _bigram_total = self.corpus.bigram_freq.values().sum::<usize>() as f64;
         
-        // Process trigrams for roll/redirect analysis
+        // Process trigrams for roll/redirect/inroll/arpeggio analysis
         let mut roll_count = 0.0;
         let mut redirect_count = 0.0;
+        let mut inroll_count = 0.0;
+        let mut arpeggio_count = 0.0;
         let mut trigram_counted = 0.0;
         
         for ((c1, c2, c3), &count) in &self.corpus.trigram_freq {
@@ -874,39 +890,50 @@ impl Evaluator {
                 
                 // Same hand for all three keys
                 if hand1 == hand2 && hand2 == hand3 {
-                    // Check if it's a roll (continuous direction) or redirect (direction change)
                     // Finger index: 0=pinky, 1=ring, 2=middle, 3=index (for each hand)
-                    let dir1 = finger2 as i32 - finger1 as i32; // direction from 1st to 2nd
-                    let dir2 = finger3 as i32 - finger2 as i32; // direction from 2nd to 3rd
+                    let dir1 = finger2 as i32 - finger1 as i32;
+                    let dir2 = finger3 as i32 - finger2 as i32;
                     
                     if finger1 != finger2 && finger2 != finger3 && finger1 != finger3 {
                         if (dir1 > 0 && dir2 > 0) || (dir1 < 0 && dir2 < 0) {
-                            // Same direction = roll (inward or outward)
+                            // Same direction = roll
                             roll_count += count_f;
+                            
+                            // Inroll: outside to inside (pinky→index = positive direction)
+                            if dir1 > 0 && dir2 > 0 {
+                                inroll_count += count_f;
+                            }
+                            
+                            // Arpeggio: all adjacent fingers
+                            if dir1.abs() == 1 && dir2.abs() == 1 {
+                                arpeggio_count += count_f;
+                            }
                         } else if (dir1 > 0 && dir2 < 0) || (dir1 < 0 && dir2 > 0) {
-                            // Direction change = redirect
                             redirect_count += count_f;
                         }
                     }
                 } else if hand1 != hand2 && hand2 != hand3 {
-                    // Alternating pattern (1-2 different, 2-3 different means 1 and 3 same hand)
-                    // This is handled by alternating metric already
+                    // Alternating pattern - handled by alternating metric
                 } else {
-                    // Two keys on same hand = potential roll
-                    // Check for 2-key rolls (bigram on same hand)
+                    // Two keys on same hand = potential roll/arpeggio
                     if hand1 == hand2 && finger1 != finger2 {
-                        // First two on same hand, different fingers
                         let dir = finger2 as i32 - finger1 as i32;
                         if dir.abs() == 1 {
-                            // Adjacent fingers = smooth roll
-                            roll_count += count_f * 0.5; // Half weight for 2-key
+                            roll_count += count_f * 0.5;
+                            arpeggio_count += count_f * 0.5;
+                            if dir > 0 {
+                                inroll_count += count_f * 0.5;
+                            }
                         }
                     }
                     if hand2 == hand3 && finger2 != finger3 {
-                        // Last two on same hand, different fingers
                         let dir = finger3 as i32 - finger2 as i32;
                         if dir.abs() == 1 {
                             roll_count += count_f * 0.5;
+                            arpeggio_count += count_f * 0.5;
+                            if dir > 0 {
+                                inroll_count += count_f * 0.5;
+                            }
                         }
                     }
                 }
@@ -973,6 +1000,16 @@ impl Evaluator {
             // リダイレクト少なさ (3gram運指): lower redirect is better, so 100 - redirect%
             redirect_low: if trigram_counted > 0.0 {
                 100.0 * (1.0 - redirect_count / trigram_counted) * coverage
+            } else { 0.0 },
+            
+            // インロール率 (外→内): higher is better
+            inroll: if trigram_counted > 0.0 {
+                100.0 * inroll_count / trigram_counted * coverage
+            } else { 0.0 },
+            
+            // アルペジオ率 (隣接指連続): higher is better
+            arpeggio: if trigram_counted > 0.0 {
+                100.0 * arpeggio_count / trigram_counted * coverage
             } else { 0.0 },
         }
     }
@@ -1085,10 +1122,13 @@ impl Evaluator {
         }
     }
     
-    /// Calculate roll and redirect rates from trigrams (for GPU hybrid mode)
-    pub fn calc_trigram_scores(&self, layout: &Layout) -> (f64, f64) {
+    /// Calculate trigram-based scores: roll, redirect, inroll, arpeggio
+    /// Returns (roll, redirect_low, inroll, arpeggio)
+    pub fn calc_trigram_scores(&self, layout: &Layout) -> (f64, f64, f64, f64) {
         let mut roll_count = 0.0;
         let mut redirect_count = 0.0;
+        let mut inroll_count = 0.0;   // Outside to inside (pinky→index direction)
+        let mut arpeggio_count = 0.0; // Adjacent finger sequences
         let mut trigram_counted = 0.0;
         
         for ((c1, c2, c3), &count) in &self.corpus.trigram_freq {
@@ -1114,23 +1154,44 @@ impl Evaluator {
                     
                     if finger1 != finger2 && finger2 != finger3 && finger1 != finger3 {
                         if (dir1 > 0 && dir2 > 0) || (dir1 < 0 && dir2 < 0) {
+                            // Roll: same direction
                             roll_count += count_f;
+                            
+                            // Inroll: outside to inside
+                            // Left hand: finger increases = inward (pinky=0 → index=3)
+                            // Right hand: finger increases = inward (pinky=0 → index=3)
+                            if dir1 > 0 && dir2 > 0 {
+                                inroll_count += count_f;
+                            }
+                            
+                            // Arpeggio: all adjacent fingers
+                            if dir1.abs() == 1 && dir2.abs() == 1 {
+                                arpeggio_count += count_f;
+                            }
                         } else if (dir1 > 0 && dir2 < 0) || (dir1 < 0 && dir2 > 0) {
                             redirect_count += count_f;
                         }
                     }
                 } else if !(hand1 != hand2 && hand2 != hand3) {
-                    // Two keys on same hand = potential roll
+                    // Two keys on same hand = potential roll/arpeggio
                     if hand1 == hand2 && finger1 != finger2 {
                         let dir = finger2 as i32 - finger1 as i32;
                         if dir.abs() == 1 {
                             roll_count += count_f * 0.5;
+                            arpeggio_count += count_f * 0.5;
+                            if dir > 0 {
+                                inroll_count += count_f * 0.5;
+                            }
                         }
                     }
                     if hand2 == hand3 && finger2 != finger3 {
                         let dir = finger3 as i32 - finger2 as i32;
                         if dir.abs() == 1 {
                             roll_count += count_f * 0.5;
+                            arpeggio_count += count_f * 0.5;
+                            if dir > 0 {
+                                inroll_count += count_f * 0.5;
+                            }
                         }
                     }
                 }
@@ -1145,7 +1206,15 @@ impl Evaluator {
             100.0 * (1.0 - redirect_count / trigram_counted)
         } else { 100.0 };
         
-        (roll, redirect_low)
+        let inroll = if trigram_counted > 0.0 {
+            100.0 * inroll_count / trigram_counted
+        } else { 0.0 };
+        
+        let arpeggio = if trigram_counted > 0.0 {
+            100.0 * arpeggio_count / trigram_counted
+        } else { 0.0 };
+        
+        (roll, redirect_low, inroll, arpeggio)
     }
 }
 
@@ -1485,6 +1554,9 @@ fn convert_gpu_result_to_scores(
     let total_chars = result.total_chars as f64;
     let bigram_total = result.bigram_total as f64;
     
+    // CPU calculation for trigrams (GPU hybrid mode)
+    let (roll, redirect_low, inroll, arpeggio) = evaluator.calc_trigram_scores(layout);
+    
     EvaluationScores {
         row_skip: if bigram_total > 0.0 {
             100.0 * (1.0 - result.row_skips as f64 / bigram_total)
@@ -1520,49 +1592,48 @@ fn convert_gpu_result_to_scores(
             100.0 * result.alternating as f64 / bigram_total
         } else { 0.0 },
         
-        // Roll/Redirect: CPU calculation for trigrams (GPU hybrid)
-        roll: {
-            let (roll, _) = evaluator.calc_trigram_scores(layout);
-            roll
-        },
-        redirect_low: {
-            let (_, redirect_low) = evaluator.calc_trigram_scores(layout);
-            redirect_low
-        },
+        // Trigram metrics from CPU calculation
+        roll,
+        redirect_low,
+        inroll,
+        arpeggio,
     }
 }
 
 /// Compute weighted fitness from scores using hybrid multiplicative-additive approach
 fn compute_weighted_fitness(scores: &EvaluationScores) -> f64 {
-    // Core metrics: multiplicative (geometric mean with weights)
+    // Core metrics
     let row_skip_norm = (scores.row_skip / 100.0).max(0.01);
     let same_finger_norm = (scores.same_finger / 100.0).max(0.01);
-    let alternating_norm = (scores.alternating / 100.0).max(0.01);
     let total_keystrokes_norm = (scores.total_keystrokes / 100.0).max(0.01);
-    let roll_norm = (scores.roll / 100.0).max(0.01);
     let redirect_low_norm = (scores.redirect_low / 100.0).max(0.01);
+    let colemak_norm = (scores.colemak_similarity / 100.0).max(0.01);
+    let home_norm = (scores.home_position / 100.0).max(0.01);
+    let single_key_norm = (scores.single_key / 100.0).max(0.01);
     
-    let total_weight = WEIGHT_ROW_SKIP + WEIGHT_SAME_FINGER + WEIGHT_ALTERNATING 
-        + WEIGHT_TOTAL_KEYSTROKES + WEIGHT_ROLL + WEIGHT_REDIRECT_LOW;
+    let total_weight = WEIGHT_ROW_SKIP + WEIGHT_SAME_FINGER + WEIGHT_TOTAL_KEYSTROKES 
+        + WEIGHT_REDIRECT_LOW + WEIGHT_COLEMAK_SIMILARITY + WEIGHT_HOME_POSITION
+        + WEIGHT_SINGLE_KEY;
     let core_product = 
         row_skip_norm.powf(WEIGHT_ROW_SKIP) *
         same_finger_norm.powf(WEIGHT_SAME_FINGER) *
-        alternating_norm.powf(WEIGHT_ALTERNATING) *
         total_keystrokes_norm.powf(WEIGHT_TOTAL_KEYSTROKES) *
-        roll_norm.powf(WEIGHT_ROLL) *
-        redirect_low_norm.powf(WEIGHT_REDIRECT_LOW);
+        redirect_low_norm.powf(WEIGHT_REDIRECT_LOW) *
+        colemak_norm.powf(WEIGHT_COLEMAK_SIMILARITY) *
+        home_norm.powf(WEIGHT_HOME_POSITION) *
+        single_key_norm.powf(WEIGHT_SINGLE_KEY);
     let core_multiplier = core_product.powf(1.0 / total_weight) * 100.0;
     
-    // Additive bonus
+    // Bonus metrics
     let additive_bonus = 
-        scores.home_position * WEIGHT_HOME_POSITION +
-        scores.single_key * WEIGHT_SINGLE_KEY +
-        scores.shift_chars * WEIGHT_SHIFT_CHARS +
-        scores.colemak_similarity * WEIGHT_COLEMAK_SIMILARITY +
+        scores.alternating * WEIGHT_ALTERNATING +
         scores.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY +
-        scores.memorability * WEIGHT_MEMORABILITY;
+        scores.roll * WEIGHT_ROLL +
+        scores.memorability * WEIGHT_MEMORABILITY +
+        scores.inroll * WEIGHT_INROLL +
+        scores.arpeggio * WEIGHT_ARPEGGIO;
     
-    let bonus_scale = 2100.0;
+    let bonus_scale = 2700.0;
     core_multiplier * (1.0 + additive_bonus / bonus_scale)
 }
 
@@ -1627,7 +1698,7 @@ fn main() {
     println!("  Mutation Rate: {:.2}", args.mutation_rate);
     println!("  Elite Count: {}", args.elite);
     println!("  Seed: {} (reproducible)", args.seed);
-    println!("  GPU Acceleration: {}", if args.gpu { "Requested" } else { "Disabled (CPU mode)" });
+    println!("  GPU Acceleration: {}", if args.no_gpu { "Disabled (CPU mode)" } else { "Auto (hybrid mode)" });
     println!();
     
     // Load corpus
@@ -1640,8 +1711,8 @@ fn main() {
         .count();
     println!("Loaded corpus: {} bytes, {} hiragana characters", corpus_text.len(), hiragana_count);
     
-    // Use GPU-accelerated GA if requested
-    if args.gpu {
+    // Use GPU-accelerated GA by default (hybrid mode with CPU trigram)
+    if !args.no_gpu {
         run_gpu_ga(&args, &corpus_text);
     } else {
         run_cpu_ga(&args, &corpus_text);
@@ -1730,38 +1801,42 @@ fn print_progress(gen: usize, layout: &Layout, fitness: f64) {
     println!("\n\nGeneration {}: Best Fitness = {:.4}", gen, fitness);
     let s = &layout.scores;
     
-    // Compute core multiplier (includes all 6 core metrics)
+    // Compute core multiplier
     let row_skip_norm = (s.row_skip / 100.0).max(0.01);
     let same_finger_norm = (s.same_finger / 100.0).max(0.01);
-    let alternating_norm = (s.alternating / 100.0).max(0.01);
     let total_keystrokes_norm = (s.total_keystrokes / 100.0).max(0.01);
-    let roll_norm = (s.roll / 100.0).max(0.01);
     let redirect_low_norm = (s.redirect_low / 100.0).max(0.01);
-    let total_weight = WEIGHT_ROW_SKIP + WEIGHT_SAME_FINGER + WEIGHT_ALTERNATING 
-        + WEIGHT_TOTAL_KEYSTROKES + WEIGHT_ROLL + WEIGHT_REDIRECT_LOW;
+    let colemak_norm = (s.colemak_similarity / 100.0).max(0.01);
+    let home_norm = (s.home_position / 100.0).max(0.01);
+    let single_key_norm = (s.single_key / 100.0).max(0.01);
+    let total_weight = WEIGHT_ROW_SKIP + WEIGHT_SAME_FINGER + WEIGHT_TOTAL_KEYSTROKES 
+        + WEIGHT_REDIRECT_LOW + WEIGHT_COLEMAK_SIMILARITY + WEIGHT_HOME_POSITION
+        + WEIGHT_SINGLE_KEY;
     let core_product = row_skip_norm.powf(WEIGHT_ROW_SKIP) 
         * same_finger_norm.powf(WEIGHT_SAME_FINGER) 
-        * alternating_norm.powf(WEIGHT_ALTERNATING) 
         * total_keystrokes_norm.powf(WEIGHT_TOTAL_KEYSTROKES)
-        * roll_norm.powf(WEIGHT_ROLL)
-        * redirect_low_norm.powf(WEIGHT_REDIRECT_LOW);
+        * redirect_low_norm.powf(WEIGHT_REDIRECT_LOW)
+        * colemak_norm.powf(WEIGHT_COLEMAK_SIMILARITY)
+        * home_norm.powf(WEIGHT_HOME_POSITION)
+        * single_key_norm.powf(WEIGHT_SINGLE_KEY);
     let core_multiplier = core_product.powf(1.0 / total_weight) * 100.0;
     
-    println!("Core (乗算): {:.2}", core_multiplier);
-    println!("  1段飛ばし少: {:.2}% ^{}", s.row_skip, WEIGHT_ROW_SKIP);
-    println!("  同指連続低: {:.2}% ^{}", s.same_finger, WEIGHT_SAME_FINGER);
-    println!("  左右交互:   {:.2}% ^{}", s.alternating, WEIGHT_ALTERNATING);
-    println!("  総打鍵少:   {:.2}% ^{}", s.total_keystrokes, WEIGHT_TOTAL_KEYSTROKES);
-    println!("  ロール率:   {:.2}% ^{}", s.roll, WEIGHT_ROLL);
-    println!("  リダイレクト少: {:.2}% ^{}", s.redirect_low, WEIGHT_REDIRECT_LOW);
+    println!("Core (乗算・必須): {:.2}", core_multiplier);
+    println!("  段飛ばし少(2g同指): {:.2}% ^{}", s.row_skip, WEIGHT_ROW_SKIP);
+    println!("  同指連続低(2g SFB): {:.2}% ^{}", s.same_finger, WEIGHT_SAME_FINGER);
+    println!("  総打鍵コスト少:   {:.2}% ^{}", s.total_keystrokes, WEIGHT_TOTAL_KEYSTROKES);
+    println!("  リダイレクト少(3g): {:.2}% ^{}", s.redirect_low, WEIGHT_REDIRECT_LOW);
+    println!("  Colemak類似:       {:.2}% ^{}", s.colemak_similarity, WEIGHT_COLEMAK_SIMILARITY);
+    println!("  ホームポジ率:     {:.2}% ^{}", s.home_position, WEIGHT_HOME_POSITION);
+    println!("  単打鍵率:         {:.2}% ^{}", s.single_key, WEIGHT_SINGLE_KEY);
     
-    println!("Bonus (加算):");
-    println!("  ホームポジ: {:.2} x {} = {:.2}", s.home_position, WEIGHT_HOME_POSITION, s.home_position * WEIGHT_HOME_POSITION);
-    println!("  単打鍵多:   {:.2} x {} = {:.2}", s.single_key, WEIGHT_SINGLE_KEY, s.single_key * WEIGHT_SINGLE_KEY);
-    println!("  シフト少:   {:.2} x {} = {:.2}", s.shift_chars, WEIGHT_SHIFT_CHARS, s.shift_chars * WEIGHT_SHIFT_CHARS);
-    println!("  Colemak類似: {:.2} x {} = {:.2}", s.colemak_similarity, WEIGHT_COLEMAK_SIMILARITY, s.colemak_similarity * WEIGHT_COLEMAK_SIMILARITY);
-    println!("  月類似:     {:.2} x {} = {:.2}", s.tsuki_similarity, WEIGHT_TSUKI_SIMILARITY, s.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY);
-    println!("  覚えやすさ: {:.2} x {} = {:.2}", s.memorability, WEIGHT_MEMORABILITY, s.memorability * WEIGHT_MEMORABILITY);
+    println!("Bonus (加算・奨励):");
+    println!("  左右交互(2g):   {:.2} x {} = {:.2}", s.alternating, WEIGHT_ALTERNATING, s.alternating * WEIGHT_ALTERNATING);
+    println!("  月配列類似:     {:.2} x {} = {:.2}", s.tsuki_similarity, WEIGHT_TSUKI_SIMILARITY, s.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY);
+    println!("  ロール率(3g):   {:.2} x {} = {:.2}", s.roll, WEIGHT_ROLL, s.roll * WEIGHT_ROLL);
+    println!("  覚えやすさ:     {:.2} x {} = {:.2}", s.memorability, WEIGHT_MEMORABILITY, s.memorability * WEIGHT_MEMORABILITY);
+    println!("  インロール(3g): {:.2} x {} = {:.2}", s.inroll, WEIGHT_INROLL, s.inroll * WEIGHT_INROLL);
+    println!("  アルペジオ(3g): {:.2} x {} = {:.2}", s.arpeggio, WEIGHT_ARPEGGIO, s.arpeggio * WEIGHT_ARPEGGIO);
 }
 
 fn print_final_results(layout: &Layout, fitness: f64, args: &Args) {
@@ -1775,61 +1850,65 @@ fn print_final_results(layout: &Layout, fitness: f64, args: &Args) {
     
     let s = &layout.scores;
     
-    // Compute core multiplier for display (includes all 6 core metrics)
+    // Compute core multiplier for display
     let row_skip_norm = (s.row_skip / 100.0).max(0.01);
     let same_finger_norm = (s.same_finger / 100.0).max(0.01);
-    let alternating_norm = (s.alternating / 100.0).max(0.01);
     let total_keystrokes_norm = (s.total_keystrokes / 100.0).max(0.01);
-    let roll_norm = (s.roll / 100.0).max(0.01);
     let redirect_low_norm = (s.redirect_low / 100.0).max(0.01);
-    let total_core_weight = WEIGHT_ROW_SKIP + WEIGHT_SAME_FINGER + WEIGHT_ALTERNATING 
-        + WEIGHT_TOTAL_KEYSTROKES + WEIGHT_ROLL + WEIGHT_REDIRECT_LOW;
+    let colemak_norm = (s.colemak_similarity / 100.0).max(0.01);
+    let home_norm = (s.home_position / 100.0).max(0.01);
+    let single_key_norm = (s.single_key / 100.0).max(0.01);
+    let total_core_weight = WEIGHT_ROW_SKIP + WEIGHT_SAME_FINGER + WEIGHT_TOTAL_KEYSTROKES 
+        + WEIGHT_REDIRECT_LOW + WEIGHT_COLEMAK_SIMILARITY + WEIGHT_HOME_POSITION
+        + WEIGHT_SINGLE_KEY;
     let core_product = row_skip_norm.powf(WEIGHT_ROW_SKIP) 
         * same_finger_norm.powf(WEIGHT_SAME_FINGER) 
-        * alternating_norm.powf(WEIGHT_ALTERNATING) 
         * total_keystrokes_norm.powf(WEIGHT_TOTAL_KEYSTROKES)
-        * roll_norm.powf(WEIGHT_ROLL)
-        * redirect_low_norm.powf(WEIGHT_REDIRECT_LOW);
+        * redirect_low_norm.powf(WEIGHT_REDIRECT_LOW)
+        * colemak_norm.powf(WEIGHT_COLEMAK_SIMILARITY)
+        * home_norm.powf(WEIGHT_HOME_POSITION)
+        * single_key_norm.powf(WEIGHT_SINGLE_KEY);
     let core_multiplier = core_product.powf(1.0 / total_core_weight) * 100.0;
     
     let additive_bonus = 
-        s.home_position * WEIGHT_HOME_POSITION +
-        s.single_key * WEIGHT_SINGLE_KEY +
-        s.shift_chars * WEIGHT_SHIFT_CHARS +
-        s.colemak_similarity * WEIGHT_COLEMAK_SIMILARITY +
+        s.alternating * WEIGHT_ALTERNATING +
         s.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY +
-        s.memorability * WEIGHT_MEMORABILITY;
+        s.roll * WEIGHT_ROLL +
+        s.memorability * WEIGHT_MEMORABILITY +
+        s.inroll * WEIGHT_INROLL +
+        s.arpeggio * WEIGHT_ARPEGGIO;
     
-    println!("\n=== Scoring Formula: Core × (1 + Bonus/2100) ===");
-    println!("\nCore Metrics (乗算・幾何平均):");
-    println!("┌─────────────────────┬────────┬────────┐");
-    println!("│ Metric              │ Score  │ Weight │");
-    println!("├─────────────────────┼────────┼────────┤");
-    println!("│ 1段飛ばし少なさ    │ {:6.2}%│ ^{:.1}  │", s.row_skip, WEIGHT_ROW_SKIP);
-    println!("│ 同指連続率低さ     │ {:6.2}%│ ^{:.1}  │", s.same_finger, WEIGHT_SAME_FINGER);
-    println!("│ 左右交互打鍵率     │ {:6.2}%│ ^{:.1}  │", s.alternating, WEIGHT_ALTERNATING);
-    println!("│ 総打鍵数少なさ     │ {:6.2}%│ ^{:.1}  │", s.total_keystrokes, WEIGHT_TOTAL_KEYSTROKES);
-    println!("│ ロール率           │ {:6.2}%│ ^{:.1}  │", s.roll, WEIGHT_ROLL);
-    println!("│ リダイレクト少     │ {:6.2}%│ ^{:.1}  │", s.redirect_low, WEIGHT_REDIRECT_LOW);
-    println!("├─────────────────────┼────────┼────────┤");
-    println!("│ Core Multiplier     │ {:6.2} │        │", core_multiplier);
-    println!("└─────────────────────┴────────┴────────┘");
+    println!("\n=== Scoring: Core × (1 + Bonus/2700) ===");
+    println!("\nCore Metrics (乗算・幾何平均) - 低スコアは致命的:");
+    println!("┌───────────────────────────┬────────┬────────┐");
+    println!("│ Metric                    │ Score  │ Weight │");
+    println!("├───────────────────────────┼────────┼────────┤");
+    println!("│ 段飛ばし少 (2g同指跳躍)  │ {:6.2}%│ ^{:.1}  │", s.row_skip, WEIGHT_ROW_SKIP);
+    println!("│ 同指連続低 (2g SFB回避)  │ {:6.2}%│ ^{:.1}  │", s.same_finger, WEIGHT_SAME_FINGER);
+    println!("│ 総打鍵コスト少 (距離負担)│ {:6.2}%│ ^{:.1}  │", s.total_keystrokes, WEIGHT_TOTAL_KEYSTROKES);
+    println!("│ リダイレクト少 (3g方向)  │ {:6.2}%│ ^{:.1}  │", s.redirect_low, WEIGHT_REDIRECT_LOW);
+    println!("│ Colemak類似 (母音子音配置)│ {:6.2}%│ ^{:.1}  │", s.colemak_similarity, WEIGHT_COLEMAK_SIMILARITY);
+    println!("│ ホームポジ率 (中段使用)  │ {:6.2}%│ ^{:.1}  │", s.home_position, WEIGHT_HOME_POSITION);
+    println!("│ 単打鍵率 (シフト無し)    │ {:6.2}%│ ^{:.1}  │", s.single_key, WEIGHT_SINGLE_KEY);
+    println!("├───────────────────────────┼────────┼────────┤");
+    println!("│ Core Multiplier           │ {:6.2} │        │", core_multiplier);
+    println!("└───────────────────────────┴────────┴────────┘");
     
-    println!("\nBonus Metrics (加算):");
-    println!("┌─────────────────────┬────────┬────────┬──────────┐");
-    println!("│ Metric              │ Score  │ Weight │ Weighted │");
-    println!("├─────────────────────┼────────┼────────┼──────────┤");
-    println!("│ ホームポジション率 │ {:6.2} │ {:6.1} │ {:8.2} │", s.home_position, WEIGHT_HOME_POSITION, s.home_position * WEIGHT_HOME_POSITION);
-    println!("│ 単打鍵数多さ       │ {:6.2} │ {:6.1} │ {:8.2} │", s.single_key, WEIGHT_SINGLE_KEY, s.single_key * WEIGHT_SINGLE_KEY);
-    println!("│ シフト文字少なさ   │ {:6.2} │ {:6.1} │ {:8.2} │", s.shift_chars, WEIGHT_SHIFT_CHARS, s.shift_chars * WEIGHT_SHIFT_CHARS);
-    println!("│ Colemak類似性      │ {:6.2} │ {:6.1} │ {:8.2} │", s.colemak_similarity, WEIGHT_COLEMAK_SIMILARITY, s.colemak_similarity * WEIGHT_COLEMAK_SIMILARITY);
-    println!("│ 月配列類似性       │ {:6.2} │ {:6.1} │ {:8.2} │", s.tsuki_similarity, WEIGHT_TSUKI_SIMILARITY, s.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY);
-    println!("│ 覚えやすさ         │ {:6.2} │ {:6.1} │ {:8.2} │", s.memorability, WEIGHT_MEMORABILITY, s.memorability * WEIGHT_MEMORABILITY);
-    println!("├─────────────────────┼────────┼────────┼──────────┤");
-    println!("│ Bonus Total         │        │        │ {:8.2} │", additive_bonus);
-    println!("└─────────────────────┴────────┴────────┴──────────┘");
+    println!("\nBonus Metrics (加算) - 高スコアで加点:");
+    println!("┌───────────────────────────┬────────┬────────┬──────────┐");
+    println!("│ Metric                    │ Score  │ Weight │ Weighted │");
+    println!("├───────────────────────────┼────────┼────────┼──────────┤");
+    println!("│ 左右交互 (2g手の切替)    │ {:6.2} │ {:6.1} │ {:8.2} │", s.alternating, WEIGHT_ALTERNATING, s.alternating * WEIGHT_ALTERNATING);
+    println!("│ 月配列類似 (日本語最適)  │ {:6.2} │ {:6.1} │ {:8.2} │", s.tsuki_similarity, WEIGHT_TSUKI_SIMILARITY, s.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY);
+    println!("│ ロール率 (3g同手の流れ)  │ {:6.2} │ {:6.1} │ {:8.2} │", s.roll, WEIGHT_ROLL, s.roll * WEIGHT_ROLL);
+    println!("│ 覚えやすさ (レイヤー一貫)│ {:6.2} │ {:6.1} │ {:8.2} │", s.memorability, WEIGHT_MEMORABILITY, s.memorability * WEIGHT_MEMORABILITY);
+    println!("│ インロール (3g外→内)    │ {:6.2} │ {:6.1} │ {:8.2} │", s.inroll, WEIGHT_INROLL, s.inroll * WEIGHT_INROLL);
+    println!("│ アルペジオ (3g隣接指)    │ {:6.2} │ {:6.1} │ {:8.2} │", s.arpeggio, WEIGHT_ARPEGGIO, s.arpeggio * WEIGHT_ARPEGGIO);
+    println!("├───────────────────────────┼────────┼────────┼──────────┤");
+    println!("│ Bonus Total               │        │        │ {:8.2} │", additive_bonus);
+    println!("└───────────────────────────┴────────┴────────┴──────────┘");
     
-    println!("\nFinal: {:.2} × (1 + {:.2}/2100) = {:.2}", core_multiplier, additive_bonus, fitness);
+    println!("\nFinal: {:.2} × (1 + {:.2}/2700) = {:.2}", core_multiplier, additive_bonus, fitness);
     
     // Save to file
     let s = &layout.scores;
@@ -1850,6 +1929,8 @@ fn print_final_results(layout: &Layout, fitness: f64, args: &Args) {
             "alternating": s.alternating,
             "roll": s.roll,
             "redirect_low": s.redirect_low,
+            "inroll": s.inroll,
+            "arpeggio": s.arpeggio,
         },
         "layers": {
             "no_shift": layout.layers[0],
