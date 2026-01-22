@@ -12,6 +12,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::fs;
 use std::path::PathBuf;
+use std::sync::Arc;
 use unicode_normalization::UnicodeNormalization;
 
 /// Command line arguments
@@ -101,28 +102,29 @@ const SHIFT_B_OUTER: f64 = 9.0;
 const SHIFT_A_VERTICAL: f64 = 31.0;
 const SHIFT_B_VERTICAL: f64 = 29.0;
 
-// Evaluation weights
-// Multiplicative core weights (these form geometric mean)
+// ============================================================================
+// Evaluation Weights - ユーザー指定の優先度に基づく重み付け
 // ============================================================================
 // Core Metrics (乗算・幾何平均) - 低スコアが全体を大きく下げる必須条件
+// 優先度7→1を指数1.8→0.7に変換 (formula: 0.3 + (priority-1)*0.25)
 // ============================================================================
-const WEIGHT_ROW_SKIP: f64 = 1.4;        // 段飛ばし少: 同指で2段以上跳ぶのを避ける
-const WEIGHT_SAME_FINGER: f64 = 1.0;     // 同指連続低: 同じ指の連打を避ける (SFB)
-const WEIGHT_TOTAL_KEYSTROKES: f64 = 1.2; // 総打鍵少: 打鍵コスト(距離・負担)を最小化
-const WEIGHT_REDIRECT_LOW: f64 = 1.1;    // リダイレクト少: 同手3連打で方向転換を避ける
-const WEIGHT_COLEMAK_SIMILARITY: f64 = 0.3; // Colemak類似: 母音・子音の配置パターン
-const WEIGHT_HOME_POSITION: f64 = 0.3;   // ホームポジ率: ホーム段の使用率
-const WEIGHT_SINGLE_KEY: f64 = 0.4;      // 単打鍵率: シフト無しで打てる文字の割合
+const WEIGHT_SAME_FINGER: f64 = 1.8;      // 優先度7: 同指連続率の低さ - 最も疲労に直結
+const WEIGHT_ROW_SKIP: f64 = 1.55;        // 優先度6: 段越え（1段飛ばし）の少なさ
+const WEIGHT_HOME_POSITION: f64 = 1.3;    // 優先度5: ホームポジション率の高さ
+const WEIGHT_TOTAL_KEYSTROKES: f64 = 1.05; // 優先度4: 総打鍵数の少なさ
+const WEIGHT_ALTERNATING: f64 = 0.8;      // 優先度3: 左右交互打鍵率の高さ
+const WEIGHT_SINGLE_KEY: f64 = 0.7;       // 優先度2: 単打鍵率の高さ (シフト使用率の低さ)
 
 // ============================================================================
 // Bonus Metrics (加算) - 高スコアでボーナス、低くてもペナルティ小
 // ============================================================================
-const WEIGHT_ALTERNATING: f64 = 7.0;     // 左右交互: 左右の手を交互に使う
+const WEIGHT_REDIRECT_LOW: f64 = 5.0;     // リダイレクト少: 同手3連打で方向転換を避ける
+const WEIGHT_COLEMAK_SIMILARITY: f64 = 5.0; // Colemak類似: 母音・子音の配置パターン
 const WEIGHT_TSUKI_SIMILARITY: f64 = 4.0;   // 月配列類似: 日本語に最適化された配置
 const WEIGHT_ROLL: f64 = 5.0;            // ロール率: 同手で流れるような連打
 const WEIGHT_INROLL: f64 = 5.0;          // インロール: 外→内への流れ (pinky→index)
 const WEIGHT_ARPEGGIO: f64 = 5.0;        // アルペジオ: 隣接指の連続 (ピアノ的)
-const WEIGHT_MEMORABILITY: f64 = 1.0;    // 覚えやすさ: 母音/子音のレイヤー一貫性
+const WEIGHT_MEMORABILITY: f64 = 2.0;    // 覚えやすさ: 母音/子音のレイヤー一貫性
 
 // ============================================================================
 // Character Frequency Data
@@ -269,6 +271,7 @@ impl KeyPos {
 
 /// Character frequency counter from corpus
 #[derive(Debug)]
+#[derive(Clone)]
 pub struct CorpusStats {
     pub char_freq: HashMap<char, usize>,
     pub bigram_freq: HashMap<(char, char), usize>,
@@ -309,6 +312,7 @@ impl CorpusStats {
 }
 
 /// Tsuki (月) layout reference for similarity comparison
+#[derive(Clone)]
 pub struct TsukiLayout {
     pub char_positions: HashMap<char, KeyPos>,
 }
@@ -732,6 +736,7 @@ impl Layout {
 // Fitness Evaluation
 // ============================================================================
 
+#[derive(Clone)]
 pub struct Evaluator {
     pub corpus: CorpusStats,
     pub tsuki: TsukiLayout,
@@ -753,26 +758,24 @@ impl Evaluator {
         
         // ============================================================
         // Core Metrics (乗算・幾何平均): 低スコアが全体を大きく下げる
+        // 優先度7→1: 同指連続, 段飛ばし, ホームポジ, 総打鍵, 左右交互, 単打鍵
         // ============================================================
-        let row_skip_norm = (scores.row_skip / 100.0).max(0.01);
         let same_finger_norm = (scores.same_finger / 100.0).max(0.01);
-        let total_keystrokes_norm = (scores.total_keystrokes / 100.0).max(0.01);
-        let redirect_low_norm = (scores.redirect_low / 100.0).max(0.01);
-        let colemak_norm = (scores.colemak_similarity / 100.0).max(0.01);
+        let row_skip_norm = (scores.row_skip / 100.0).max(0.01);
         let home_norm = (scores.home_position / 100.0).max(0.01);
+        let total_keystrokes_norm = (scores.total_keystrokes / 100.0).max(0.01);
+        let alternating_norm = (scores.alternating / 100.0).max(0.01);
         let single_key_norm = (scores.single_key / 100.0).max(0.01);
         
         // Weighted geometric mean: (a^w1 * b^w2 * ...)^(1/sum_w)
-        let total_weight = WEIGHT_ROW_SKIP + WEIGHT_SAME_FINGER + WEIGHT_TOTAL_KEYSTROKES 
-            + WEIGHT_REDIRECT_LOW + WEIGHT_COLEMAK_SIMILARITY + WEIGHT_HOME_POSITION
-            + WEIGHT_SINGLE_KEY;
+        let total_weight = WEIGHT_SAME_FINGER + WEIGHT_ROW_SKIP + WEIGHT_HOME_POSITION
+            + WEIGHT_TOTAL_KEYSTROKES + WEIGHT_ALTERNATING + WEIGHT_SINGLE_KEY;
         let core_product = 
-            row_skip_norm.powf(WEIGHT_ROW_SKIP) *
             same_finger_norm.powf(WEIGHT_SAME_FINGER) *
-            total_keystrokes_norm.powf(WEIGHT_TOTAL_KEYSTROKES) *
-            redirect_low_norm.powf(WEIGHT_REDIRECT_LOW) *
-            colemak_norm.powf(WEIGHT_COLEMAK_SIMILARITY) *
+            row_skip_norm.powf(WEIGHT_ROW_SKIP) *
             home_norm.powf(WEIGHT_HOME_POSITION) *
+            total_keystrokes_norm.powf(WEIGHT_TOTAL_KEYSTROKES) *
+            alternating_norm.powf(WEIGHT_ALTERNATING) *
             single_key_norm.powf(WEIGHT_SINGLE_KEY);
         let core_multiplier = core_product.powf(1.0 / total_weight) * 100.0;
         
@@ -780,15 +783,16 @@ impl Evaluator {
         // Bonus Metrics (加算): 高スコアでボーナス、低くてもペナルティ小
         // ============================================================
         let additive_bonus = 
-            scores.alternating * WEIGHT_ALTERNATING +
+            scores.redirect_low * WEIGHT_REDIRECT_LOW +
+            scores.colemak_similarity * WEIGHT_COLEMAK_SIMILARITY +
             scores.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY +
             scores.roll * WEIGHT_ROLL +
-            scores.memorability * WEIGHT_MEMORABILITY +
             scores.inroll * WEIGHT_INROLL +
-            scores.arpeggio * WEIGHT_ARPEGGIO;
+            scores.arpeggio * WEIGHT_ARPEGGIO +
+            scores.memorability * WEIGHT_MEMORABILITY;
         
         // Final fitness: core × (1 + bonus/scale)
-        let bonus_scale = 2700.0; // Adjusted: single_key to Core, shift_chars removed
+        let bonus_scale = 3100.0; // Redirect(5) + Colemak(5) + Tsuki(4) + Roll(5) + Inroll(5) + Arpeggio(5) + Memo(2) = 31
         let fitness = core_multiplier * (1.0 + additive_bonus / bonus_scale);
         
         layout.scores = scores;
@@ -1264,21 +1268,11 @@ impl GeneticAlgorithm {
     
     /// Run one generation
     pub fn evolve(&mut self, mutation_rate: f64, elite_count: usize) {
-        // Evaluate all individuals
+        // Parallel evaluation - clone evaluator for each thread
+        let evaluator = self.evaluator.clone();
         self.population.par_iter_mut().for_each(|layout| {
-            let mut eval = Evaluator::new(""); // Will be replaced
-            eval.corpus = CorpusStats {
-                char_freq: HashMap::new(),
-                bigram_freq: HashMap::new(),
-                trigram_freq: HashMap::new(),
-                total_chars: 0,
-            };
+            evaluator.evaluate(layout);
         });
-        
-        // Sequential evaluation (for now, can be parallelized)
-        for layout in &mut self.population {
-            self.evaluator.evaluate(layout);
-        }
         
         // Sort by fitness (descending)
         self.population.sort_by(|a, b| b.fitness.partial_cmp(&a.fitness).unwrap());
@@ -1480,16 +1474,10 @@ impl GpuGeneticAlgorithm {
             }
         } else {
             // CPU evaluation (parallel)
+            let evaluator = self.evaluator.clone();
             self.population.par_iter_mut().for_each(|layout| {
-                let evaluator = Evaluator::new("");
-                // Note: This is a workaround since we can't share the evaluator easily
-                // In production, you'd want to use thread-local storage or Arc
+                evaluator.evaluate(layout);
             });
-            
-            // Sequential evaluation for correctness
-            for layout in &mut self.population {
-                self.evaluator.evaluate(layout);
-            }
         }
     }
     
@@ -1602,38 +1590,36 @@ fn convert_gpu_result_to_scores(
 
 /// Compute weighted fitness from scores using hybrid multiplicative-additive approach
 fn compute_weighted_fitness(scores: &EvaluationScores) -> f64 {
-    // Core metrics
-    let row_skip_norm = (scores.row_skip / 100.0).max(0.01);
+    // Core metrics (優先度7→1: 同指連続, 段飛ばし, ホームポジ, 総打鍵, 左右交互, 単打鍵)
     let same_finger_norm = (scores.same_finger / 100.0).max(0.01);
-    let total_keystrokes_norm = (scores.total_keystrokes / 100.0).max(0.01);
-    let redirect_low_norm = (scores.redirect_low / 100.0).max(0.01);
-    let colemak_norm = (scores.colemak_similarity / 100.0).max(0.01);
+    let row_skip_norm = (scores.row_skip / 100.0).max(0.01);
     let home_norm = (scores.home_position / 100.0).max(0.01);
+    let total_keystrokes_norm = (scores.total_keystrokes / 100.0).max(0.01);
+    let alternating_norm = (scores.alternating / 100.0).max(0.01);
     let single_key_norm = (scores.single_key / 100.0).max(0.01);
     
-    let total_weight = WEIGHT_ROW_SKIP + WEIGHT_SAME_FINGER + WEIGHT_TOTAL_KEYSTROKES 
-        + WEIGHT_REDIRECT_LOW + WEIGHT_COLEMAK_SIMILARITY + WEIGHT_HOME_POSITION
-        + WEIGHT_SINGLE_KEY;
+    let total_weight = WEIGHT_SAME_FINGER + WEIGHT_ROW_SKIP + WEIGHT_HOME_POSITION
+        + WEIGHT_TOTAL_KEYSTROKES + WEIGHT_ALTERNATING + WEIGHT_SINGLE_KEY;
     let core_product = 
-        row_skip_norm.powf(WEIGHT_ROW_SKIP) *
         same_finger_norm.powf(WEIGHT_SAME_FINGER) *
-        total_keystrokes_norm.powf(WEIGHT_TOTAL_KEYSTROKES) *
-        redirect_low_norm.powf(WEIGHT_REDIRECT_LOW) *
-        colemak_norm.powf(WEIGHT_COLEMAK_SIMILARITY) *
+        row_skip_norm.powf(WEIGHT_ROW_SKIP) *
         home_norm.powf(WEIGHT_HOME_POSITION) *
+        total_keystrokes_norm.powf(WEIGHT_TOTAL_KEYSTROKES) *
+        alternating_norm.powf(WEIGHT_ALTERNATING) *
         single_key_norm.powf(WEIGHT_SINGLE_KEY);
     let core_multiplier = core_product.powf(1.0 / total_weight) * 100.0;
     
     // Bonus metrics
     let additive_bonus = 
-        scores.alternating * WEIGHT_ALTERNATING +
+        scores.redirect_low * WEIGHT_REDIRECT_LOW +
+        scores.colemak_similarity * WEIGHT_COLEMAK_SIMILARITY +
         scores.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY +
         scores.roll * WEIGHT_ROLL +
-        scores.memorability * WEIGHT_MEMORABILITY +
         scores.inroll * WEIGHT_INROLL +
-        scores.arpeggio * WEIGHT_ARPEGGIO;
+        scores.arpeggio * WEIGHT_ARPEGGIO +
+        scores.memorability * WEIGHT_MEMORABILITY;
     
-    let bonus_scale = 2700.0;
+    let bonus_scale = 3100.0;
     core_multiplier * (1.0 + additive_bonus / bonus_scale)
 }
 
@@ -1801,42 +1787,50 @@ fn print_progress(gen: usize, layout: &Layout, fitness: f64) {
     println!("\n\nGeneration {}: Best Fitness = {:.4}", gen, fitness);
     let s = &layout.scores;
     
-    // Compute core multiplier
-    let row_skip_norm = (s.row_skip / 100.0).max(0.01);
+    // Compute core multiplier (優先度7→1: 同指連続, 段飛ばし, ホームポジ, 総打鍵, 左右交互, 単打鍵)
     let same_finger_norm = (s.same_finger / 100.0).max(0.01);
-    let total_keystrokes_norm = (s.total_keystrokes / 100.0).max(0.01);
-    let redirect_low_norm = (s.redirect_low / 100.0).max(0.01);
-    let colemak_norm = (s.colemak_similarity / 100.0).max(0.01);
+    let row_skip_norm = (s.row_skip / 100.0).max(0.01);
     let home_norm = (s.home_position / 100.0).max(0.01);
+    let total_keystrokes_norm = (s.total_keystrokes / 100.0).max(0.01);
+    let alternating_norm = (s.alternating / 100.0).max(0.01);
     let single_key_norm = (s.single_key / 100.0).max(0.01);
-    let total_weight = WEIGHT_ROW_SKIP + WEIGHT_SAME_FINGER + WEIGHT_TOTAL_KEYSTROKES 
-        + WEIGHT_REDIRECT_LOW + WEIGHT_COLEMAK_SIMILARITY + WEIGHT_HOME_POSITION
-        + WEIGHT_SINGLE_KEY;
-    let core_product = row_skip_norm.powf(WEIGHT_ROW_SKIP) 
-        * same_finger_norm.powf(WEIGHT_SAME_FINGER) 
-        * total_keystrokes_norm.powf(WEIGHT_TOTAL_KEYSTROKES)
-        * redirect_low_norm.powf(WEIGHT_REDIRECT_LOW)
-        * colemak_norm.powf(WEIGHT_COLEMAK_SIMILARITY)
+    let total_weight = WEIGHT_SAME_FINGER + WEIGHT_ROW_SKIP + WEIGHT_HOME_POSITION
+        + WEIGHT_TOTAL_KEYSTROKES + WEIGHT_ALTERNATING + WEIGHT_SINGLE_KEY;
+    let core_product = same_finger_norm.powf(WEIGHT_SAME_FINGER)
+        * row_skip_norm.powf(WEIGHT_ROW_SKIP)
         * home_norm.powf(WEIGHT_HOME_POSITION)
+        * total_keystrokes_norm.powf(WEIGHT_TOTAL_KEYSTROKES)
+        * alternating_norm.powf(WEIGHT_ALTERNATING)
         * single_key_norm.powf(WEIGHT_SINGLE_KEY);
     let core_multiplier = core_product.powf(1.0 / total_weight) * 100.0;
     
-    println!("Core (乗算・必須): {:.2}", core_multiplier);
-    println!("  段飛ばし少(2g同指): {:.2}% ^{}", s.row_skip, WEIGHT_ROW_SKIP);
-    println!("  同指連続低(2g SFB): {:.2}% ^{}", s.same_finger, WEIGHT_SAME_FINGER);
-    println!("  総打鍵コスト少:   {:.2}% ^{}", s.total_keystrokes, WEIGHT_TOTAL_KEYSTROKES);
-    println!("  リダイレクト少(3g): {:.2}% ^{}", s.redirect_low, WEIGHT_REDIRECT_LOW);
-    println!("  Colemak類似:       {:.2}% ^{}", s.colemak_similarity, WEIGHT_COLEMAK_SIMILARITY);
-    println!("  ホームポジ率:     {:.2}% ^{}", s.home_position, WEIGHT_HOME_POSITION);
-    println!("  単打鍵率:         {:.2}% ^{}", s.single_key, WEIGHT_SINGLE_KEY);
+    let additive_bonus = 
+        s.redirect_low * WEIGHT_REDIRECT_LOW +
+        s.colemak_similarity * WEIGHT_COLEMAK_SIMILARITY +
+        s.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY +
+        s.roll * WEIGHT_ROLL +
+        s.inroll * WEIGHT_INROLL +
+        s.arpeggio * WEIGHT_ARPEGGIO +
+        s.memorability * WEIGHT_MEMORABILITY;
     
-    println!("Bonus (加算・奨励):");
-    println!("  左右交互(2g):   {:.2} x {} = {:.2}", s.alternating, WEIGHT_ALTERNATING, s.alternating * WEIGHT_ALTERNATING);
-    println!("  月配列類似:     {:.2} x {} = {:.2}", s.tsuki_similarity, WEIGHT_TSUKI_SIMILARITY, s.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY);
-    println!("  ロール率(3g):   {:.2} x {} = {:.2}", s.roll, WEIGHT_ROLL, s.roll * WEIGHT_ROLL);
-    println!("  覚えやすさ:     {:.2} x {} = {:.2}", s.memorability, WEIGHT_MEMORABILITY, s.memorability * WEIGHT_MEMORABILITY);
-    println!("  インロール(3g): {:.2} x {} = {:.2}", s.inroll, WEIGHT_INROLL, s.inroll * WEIGHT_INROLL);
-    println!("  アルペジオ(3g): {:.2} x {} = {:.2}", s.arpeggio, WEIGHT_ARPEGGIO, s.arpeggio * WEIGHT_ARPEGGIO);
+    println!("\nFitness = Core × (1 + Bonus/3100)");
+    println!("        = {:.2} × (1 + {:.2}/3100) = {:.4}", core_multiplier, additive_bonus, fitness);
+    println!("\nCore (乗算・優先度7→1): {:.2}", core_multiplier);
+    println!("  同指連続低(2g SFB): {:.2}% ^{:.2} [優先7]", s.same_finger, WEIGHT_SAME_FINGER);
+    println!("  段飛ばし少(2g同指): {:.2}% ^{:.2} [優先6]", s.row_skip, WEIGHT_ROW_SKIP);
+    println!("  ホームポジ率:       {:.2}% ^{:.2} [優先5]", s.home_position, WEIGHT_HOME_POSITION);
+    println!("  総打鍵コスト少:     {:.2}% ^{:.2} [優先4]", s.total_keystrokes, WEIGHT_TOTAL_KEYSTROKES);
+    println!("  左右交互(2g):       {:.2}% ^{:.2} [優先3]", s.alternating, WEIGHT_ALTERNATING);
+    println!("  単打鍵率:           {:.2}% ^{:.2} [優先2]", s.single_key, WEIGHT_SINGLE_KEY);
+    
+    println!("Bonus (加算・奨励): {:.2}", additive_bonus);
+    println!("  リダイレクト少(3g): {:.2} x {} = {:.2}", s.redirect_low, WEIGHT_REDIRECT_LOW, s.redirect_low * WEIGHT_REDIRECT_LOW);
+    println!("  Colemak類似:        {:.2} x {} = {:.2}", s.colemak_similarity, WEIGHT_COLEMAK_SIMILARITY, s.colemak_similarity * WEIGHT_COLEMAK_SIMILARITY);
+    println!("  月配列類似:         {:.2} x {} = {:.2}", s.tsuki_similarity, WEIGHT_TSUKI_SIMILARITY, s.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY);
+    println!("  ロール率(3g):       {:.2} x {} = {:.2}", s.roll, WEIGHT_ROLL, s.roll * WEIGHT_ROLL);
+    println!("  インロール(3g):     {:.2} x {} = {:.2}", s.inroll, WEIGHT_INROLL, s.inroll * WEIGHT_INROLL);
+    println!("  アルペジオ(3g):     {:.2} x {} = {:.2}", s.arpeggio, WEIGHT_ARPEGGIO, s.arpeggio * WEIGHT_ARPEGGIO);
+    println!("  覚えやすさ:         {:.2} x {} = {:.2}", s.memorability, WEIGHT_MEMORABILITY, s.memorability * WEIGHT_MEMORABILITY);
 }
 
 fn print_final_results(layout: &Layout, fitness: f64, args: &Args) {
@@ -1850,65 +1844,63 @@ fn print_final_results(layout: &Layout, fitness: f64, args: &Args) {
     
     let s = &layout.scores;
     
-    // Compute core multiplier for display
-    let row_skip_norm = (s.row_skip / 100.0).max(0.01);
+    // Compute core multiplier for display (優先度7→1: 同指連続, 段飛ばし, ホームポジ, 総打鍵, 左右交互, 単打鍵)
     let same_finger_norm = (s.same_finger / 100.0).max(0.01);
-    let total_keystrokes_norm = (s.total_keystrokes / 100.0).max(0.01);
-    let redirect_low_norm = (s.redirect_low / 100.0).max(0.01);
-    let colemak_norm = (s.colemak_similarity / 100.0).max(0.01);
+    let row_skip_norm = (s.row_skip / 100.0).max(0.01);
     let home_norm = (s.home_position / 100.0).max(0.01);
+    let total_keystrokes_norm = (s.total_keystrokes / 100.0).max(0.01);
+    let alternating_norm = (s.alternating / 100.0).max(0.01);
     let single_key_norm = (s.single_key / 100.0).max(0.01);
-    let total_core_weight = WEIGHT_ROW_SKIP + WEIGHT_SAME_FINGER + WEIGHT_TOTAL_KEYSTROKES 
-        + WEIGHT_REDIRECT_LOW + WEIGHT_COLEMAK_SIMILARITY + WEIGHT_HOME_POSITION
-        + WEIGHT_SINGLE_KEY;
-    let core_product = row_skip_norm.powf(WEIGHT_ROW_SKIP) 
-        * same_finger_norm.powf(WEIGHT_SAME_FINGER) 
-        * total_keystrokes_norm.powf(WEIGHT_TOTAL_KEYSTROKES)
-        * redirect_low_norm.powf(WEIGHT_REDIRECT_LOW)
-        * colemak_norm.powf(WEIGHT_COLEMAK_SIMILARITY)
+    let total_core_weight = WEIGHT_SAME_FINGER + WEIGHT_ROW_SKIP + WEIGHT_HOME_POSITION
+        + WEIGHT_TOTAL_KEYSTROKES + WEIGHT_ALTERNATING + WEIGHT_SINGLE_KEY;
+    let core_product = same_finger_norm.powf(WEIGHT_SAME_FINGER)
+        * row_skip_norm.powf(WEIGHT_ROW_SKIP)
         * home_norm.powf(WEIGHT_HOME_POSITION)
+        * total_keystrokes_norm.powf(WEIGHT_TOTAL_KEYSTROKES)
+        * alternating_norm.powf(WEIGHT_ALTERNATING)
         * single_key_norm.powf(WEIGHT_SINGLE_KEY);
     let core_multiplier = core_product.powf(1.0 / total_core_weight) * 100.0;
     
     let additive_bonus = 
-        s.alternating * WEIGHT_ALTERNATING +
+        s.redirect_low * WEIGHT_REDIRECT_LOW +
+        s.colemak_similarity * WEIGHT_COLEMAK_SIMILARITY +
         s.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY +
         s.roll * WEIGHT_ROLL +
-        s.memorability * WEIGHT_MEMORABILITY +
         s.inroll * WEIGHT_INROLL +
-        s.arpeggio * WEIGHT_ARPEGGIO;
+        s.arpeggio * WEIGHT_ARPEGGIO +
+        s.memorability * WEIGHT_MEMORABILITY;
     
-    println!("\n=== Scoring: Core × (1 + Bonus/2700) ===");
-    println!("\nCore Metrics (乗算・幾何平均) - 低スコアは致命的:");
-    println!("┌───────────────────────────┬────────┬────────┐");
-    println!("│ Metric                    │ Score  │ Weight │");
-    println!("├───────────────────────────┼────────┼────────┤");
-    println!("│ 段飛ばし少 (2g同指跳躍)  │ {:6.2}%│ ^{:.1}  │", s.row_skip, WEIGHT_ROW_SKIP);
-    println!("│ 同指連続低 (2g SFB回避)  │ {:6.2}%│ ^{:.1}  │", s.same_finger, WEIGHT_SAME_FINGER);
-    println!("│ 総打鍵コスト少 (距離負担)│ {:6.2}%│ ^{:.1}  │", s.total_keystrokes, WEIGHT_TOTAL_KEYSTROKES);
-    println!("│ リダイレクト少 (3g方向)  │ {:6.2}%│ ^{:.1}  │", s.redirect_low, WEIGHT_REDIRECT_LOW);
-    println!("│ Colemak類似 (母音子音配置)│ {:6.2}%│ ^{:.1}  │", s.colemak_similarity, WEIGHT_COLEMAK_SIMILARITY);
-    println!("│ ホームポジ率 (中段使用)  │ {:6.2}%│ ^{:.1}  │", s.home_position, WEIGHT_HOME_POSITION);
-    println!("│ 単打鍵率 (シフト無し)    │ {:6.2}%│ ^{:.1}  │", s.single_key, WEIGHT_SINGLE_KEY);
-    println!("├───────────────────────────┼────────┼────────┤");
-    println!("│ Core Multiplier           │ {:6.2} │        │", core_multiplier);
-    println!("└───────────────────────────┴────────┴────────┘");
+    println!("\n=== Scoring: Core × (1 + Bonus/3100) ===");
+    println!("\nCore Metrics (乗算・優先度7→1) - 低スコアは致命的:");
+    println!("┌─────────────────────────────┬────────┬────────┬─────┐");
+    println!("│ Metric                      │ Score  │ Weight │ Pri │");
+    println!("├─────────────────────────────┼────────┼────────┼─────┤");
+    println!("│ 同指連続低 (2g SFB回避)     │ {:6.2}%│ ^{:.2}  │  7  │", s.same_finger, WEIGHT_SAME_FINGER);
+    println!("│ 段飛ばし少 (2g同指跳躍)     │ {:6.2}%│ ^{:.2}  │  6  │", s.row_skip, WEIGHT_ROW_SKIP);
+    println!("│ ホームポジ率 (中段使用)     │ {:6.2}%│ ^{:.2}  │  5  │", s.home_position, WEIGHT_HOME_POSITION);
+    println!("│ 総打鍵コスト少 (距離負担)   │ {:6.2}%│ ^{:.2}  │  4  │", s.total_keystrokes, WEIGHT_TOTAL_KEYSTROKES);
+    println!("│ 左右交互 (2g手の切替)       │ {:6.2}%│ ^{:.2}  │  3  │", s.alternating, WEIGHT_ALTERNATING);
+    println!("│ 単打鍵率 (シフト無し)       │ {:6.2}%│ ^{:.2}  │  2  │", s.single_key, WEIGHT_SINGLE_KEY);
+    println!("├─────────────────────────────┼────────┼────────┼─────┤");
+    println!("│ Core Multiplier             │ {:6.2} │        │     │", core_multiplier);
+    println!("└─────────────────────────────┴────────┴────────┴─────┘");
     
     println!("\nBonus Metrics (加算) - 高スコアで加点:");
-    println!("┌───────────────────────────┬────────┬────────┬──────────┐");
-    println!("│ Metric                    │ Score  │ Weight │ Weighted │");
-    println!("├───────────────────────────┼────────┼────────┼──────────┤");
-    println!("│ 左右交互 (2g手の切替)    │ {:6.2} │ {:6.1} │ {:8.2} │", s.alternating, WEIGHT_ALTERNATING, s.alternating * WEIGHT_ALTERNATING);
-    println!("│ 月配列類似 (日本語最適)  │ {:6.2} │ {:6.1} │ {:8.2} │", s.tsuki_similarity, WEIGHT_TSUKI_SIMILARITY, s.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY);
-    println!("│ ロール率 (3g同手の流れ)  │ {:6.2} │ {:6.1} │ {:8.2} │", s.roll, WEIGHT_ROLL, s.roll * WEIGHT_ROLL);
-    println!("│ 覚えやすさ (レイヤー一貫)│ {:6.2} │ {:6.1} │ {:8.2} │", s.memorability, WEIGHT_MEMORABILITY, s.memorability * WEIGHT_MEMORABILITY);
-    println!("│ インロール (3g外→内)    │ {:6.2} │ {:6.1} │ {:8.2} │", s.inroll, WEIGHT_INROLL, s.inroll * WEIGHT_INROLL);
-    println!("│ アルペジオ (3g隣接指)    │ {:6.2} │ {:6.1} │ {:8.2} │", s.arpeggio, WEIGHT_ARPEGGIO, s.arpeggio * WEIGHT_ARPEGGIO);
-    println!("├───────────────────────────┼────────┼────────┼──────────┤");
-    println!("│ Bonus Total               │        │        │ {:8.2} │", additive_bonus);
-    println!("└───────────────────────────┴────────┴────────┴──────────┘");
+    println!("┌─────────────────────────────┬────────┬────────┬──────────┐");
+    println!("│ Metric                      │ Score  │ Weight │ Weighted │");
+    println!("├─────────────────────────────┼────────┼────────┼──────────┤");
+    println!("│ リダイレクト少 (3g方向)     │ {:6.2} │ {:6.1} │ {:8.2} │", s.redirect_low, WEIGHT_REDIRECT_LOW, s.redirect_low * WEIGHT_REDIRECT_LOW);
+    println!("│ Colemak類似 (母音子音配置)  │ {:6.2} │ {:6.1} │ {:8.2} │", s.colemak_similarity, WEIGHT_COLEMAK_SIMILARITY, s.colemak_similarity * WEIGHT_COLEMAK_SIMILARITY);
+    println!("│ 月配列類似 (日本語最適)     │ {:6.2} │ {:6.1} │ {:8.2} │", s.tsuki_similarity, WEIGHT_TSUKI_SIMILARITY, s.tsuki_similarity * WEIGHT_TSUKI_SIMILARITY);
+    println!("│ ロール率 (3g同手の流れ)     │ {:6.2} │ {:6.1} │ {:8.2} │", s.roll, WEIGHT_ROLL, s.roll * WEIGHT_ROLL);
+    println!("│ インロール (3g外→内)        │ {:6.2} │ {:6.1} │ {:8.2} │", s.inroll, WEIGHT_INROLL, s.inroll * WEIGHT_INROLL);
+    println!("│ アルペジオ (3g隣接指)       │ {:6.2} │ {:6.1} │ {:8.2} │", s.arpeggio, WEIGHT_ARPEGGIO, s.arpeggio * WEIGHT_ARPEGGIO);
+    println!("│ 覚えやすさ (レイヤー一貫)   │ {:6.2} │ {:6.1} │ {:8.2} │", s.memorability, WEIGHT_MEMORABILITY, s.memorability * WEIGHT_MEMORABILITY);
+    println!("├─────────────────────────────┼────────┼────────┼──────────┤");
+    println!("│ Bonus Total                 │        │        │ {:8.2} │", additive_bonus);
+    println!("└─────────────────────────────┴────────┴────────┴──────────┘");
     
-    println!("\nFinal: {:.2} × (1 + {:.2}/2700) = {:.2}", core_multiplier, additive_bonus, fitness);
+    println!("\nFinal: {:.2} × (1 + {:.2}/3100) = {:.2}", core_multiplier, additive_bonus, fitness);
     
     // Save to file
     let s = &layout.scores;

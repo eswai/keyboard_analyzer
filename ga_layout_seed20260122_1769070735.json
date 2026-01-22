@@ -1,0 +1,322 @@
+{
+  "arpeggio": [],
+  "conversion": {},
+  "keys": [
+    [
+      {
+        "finger": 0,
+        "id": "q",
+        "legend": [
+          "き",
+          "べ",
+          "ぷ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 1,
+        "id": "w",
+        "legend": [
+          "ぽ",
+          "わ",
+          "づ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 2,
+        "id": "e",
+        "legend": [
+          "に",
+          "ご",
+          "へ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 3,
+        "id": "r",
+        "legend": [
+          "ほ",
+          "げ",
+          "お"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 3,
+        "id": "t",
+        "legend": [
+          "も",
+          "む",
+          "ひ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 6,
+        "id": "y",
+        "legend": [
+          "は",
+          "ぜ",
+          "ぶ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 6,
+        "id": "u",
+        "legend": [
+          "れ",
+          "ゔ",
+          "ぐ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 7,
+        "id": "i",
+        "legend": [
+          "と",
+          "よ",
+          "ぴ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 8,
+        "id": "o",
+        "legend": [
+          "て",
+          "び",
+          "ぼ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 9,
+        "id": "p",
+        "legend": [
+          "が",
+          "ゃ",
+          "　"
+        ],
+        "size": 1
+      }
+    ],
+    [
+      {
+        "finger": 0,
+        "home": true,
+        "id": "a",
+        "legend": [
+          "だ",
+          "せ",
+          "ざ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 1,
+        "home": true,
+        "id": "s",
+        "legend": [
+          "る",
+          "ん",
+          "じ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 2,
+        "home": true,
+        "id": "d",
+        "legend": [
+          "☆",
+          "く",
+          "つ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 3,
+        "home": true,
+        "id": "f",
+        "legend": [
+          "の",
+          "ち",
+          "ど"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 3,
+        "id": "g",
+        "legend": [
+          "け",
+          "め",
+          "ぬ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 6,
+        "id": "h",
+        "legend": [
+          "ょ",
+          "あ",
+          "ふ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 6,
+        "home": true,
+        "id": "j",
+        "legend": [
+          "す",
+          "し",
+          "り"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 7,
+        "home": true,
+        "id": "k",
+        "legend": [
+          "★",
+          "か",
+          "ば"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 8,
+        "home": true,
+        "id": "l",
+        "legend": [
+          "い",
+          "こ",
+          "ね"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 9,
+        "home": true,
+        "id": ";",
+        "legend": [
+          "た",
+          "を",
+          "ぎ"
+        ],
+        "size": 1
+      }
+    ],
+    [
+      {
+        "finger": 0,
+        "id": "z",
+        "legend": [
+          "っ",
+          "や",
+          "ぞ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 1,
+        "id": "x",
+        "legend": [
+          "ず",
+          "で",
+          "ぢ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 2,
+        "id": "c",
+        "legend": [
+          "ぅ",
+          "な",
+          "ぺ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 3,
+        "id": "v",
+        "legend": [
+          "ら",
+          "ゆ",
+          "み"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 3,
+        "id": "b",
+        "legend": [
+          "ー",
+          "ろ",
+          "え"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 6,
+        "id": "n",
+        "legend": [
+          "さ",
+          "ま",
+          "　"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 6,
+        "id": "m",
+        "legend": [
+          "そ",
+          "ぃ",
+          "ぱ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 7,
+        "id": ",",
+        "legend": [
+          "、",
+          ";",
+          "ゅ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 8,
+        "id": ".",
+        "legend": [
+          "。",
+          "・",
+          "ぁ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 9,
+        "id": "/",
+        "legend": [
+          "う",
+          "ぉ",
+          "ぇ"
+        ],
+        "size": 1
+      }
+    ]
+  ],
+  "name": "GA Optimized Layout (seed: 20260122, gen: 25)",
+  "remark": "Generated by GA optimizer. Fitness: 92.7067"
+}
