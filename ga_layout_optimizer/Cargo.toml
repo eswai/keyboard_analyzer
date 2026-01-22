@@ -1,0 +1,37 @@
+[package]
+name = "ga_layout_optimizer"
+version = "0.1.0"
+edition = "2021"
+authors = ["eswai"]
+description = "Genetic Algorithm based Japanese keyboard layout optimizer with GPU acceleration"
+
+[dependencies]
+# Random number generation with reproducible seeds
+rand = "0.8"
+rand_chacha = "0.3"
+
+# Parallel computation on CPU
+rayon = "1.10"
+
+# GPU compute via WebGPU
+wgpu = "23"
+pollster = "0.4"
+bytemuck = { version = "1.19", features = ["derive"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Command line arguments
+clap = { version = "4.5", features = ["derive"] }
+
+# Progress bar
+indicatif = "0.17"
+
+# Unicode handling
+unicode-normalization = "0.1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
