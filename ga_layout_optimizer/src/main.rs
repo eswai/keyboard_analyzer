@@ -1415,27 +1415,34 @@ impl Evaluator {
     }
     
     /// 月配列類似度計算
-    /// - Layer 0: 計算しない（除外）
-    /// - Layer 1, 2のみ: 100%で計算
+    /// 月配列は2層構造（表面・裏面）:
+    /// - GA Layer 0 → 月 表面 (layer 0) と比較
+    /// - GA Layer 1, 2 → 月 裏面 (layer 1) と比較
     fn calc_tsuki_similarity(&self, layout: &Layout) -> f64 {
         let mut matches = 0;
         let mut total = 0;
         
-        // Only check Layer 1 and Layer 2 (not Layer 0)
-        for layer in 1..NUM_LAYERS {
+        // Check all GA layers
+        for ga_layer in 0..NUM_LAYERS {
+            // Map GA layer to Tsuki layer: GA 0 → Tsuki 0, GA 1/2 → Tsuki 1
+            let expected_tsuki_layer = if ga_layer == 0 { 0 } else { 1 };
+            
             for row in 0..ROWS {
                 for col in 0..COLS {
-                    let c = layout.layers[layer][row][col];
+                    let c = layout.layers[ga_layer][row][col];
                     if c == '☆' || c == '★' || c == '、' || c == '。' || c == '　' || c == '\0' || c == '゛' || c == '゜' {
                         continue;
                     }
                     
-                    // Check if this character exists in tsuki layout at same position
+                    // Check if this character exists in tsuki layout
                     if let Some(&tsuki_pos) = self.tsuki.char_positions.get(&c) {
-                        total += 1;
-                        // Position match (row, col) - layer doesn't need to match since tsuki is 2-layer
-                        if row == tsuki_pos.row && col == tsuki_pos.col {
-                            matches += 1;
+                        // Only count if the tsuki layer matches expected
+                        if tsuki_pos.layer == expected_tsuki_layer {
+                            total += 1;
+                            // Position match (row, col)
+                            if row == tsuki_pos.row && col == tsuki_pos.col {
+                                matches += 1;
+                            }
                         }
                     }
                 }
