@@ -1,0 +1,1302 @@
+{
+  "arpeggio": [
+    [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ]
+    ],
+    [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ]
+    ],
+    [
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        3
+      ]
+    ],
+    [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    [
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ]
+    ],
+    [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        3
+      ]
+    ],
+    [
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    [
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    [
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    [
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        3
+      ]
+    ],
+    [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    [
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        3
+      ]
+    ],
+    [
+      [
+        0,
+        7
+      ],
+      [
+        0,
+        8
+      ]
+    ],
+    [
+      [
+        0,
+        6
+      ],
+      [
+        0,
+        7
+      ]
+    ],
+    [
+      [
+        0,
+        6
+      ],
+      [
+        0,
+        8
+      ]
+    ],
+    [
+      [
+        1,
+        7
+      ],
+      [
+        1,
+        8
+      ]
+    ],
+    [
+      [
+        1,
+        6
+      ],
+      [
+        1,
+        7
+      ]
+    ],
+    [
+      [
+        1,
+        6
+      ],
+      [
+        1,
+        8
+      ]
+    ],
+    [
+      [
+        2,
+        7
+      ],
+      [
+        2,
+        8
+      ]
+    ],
+    [
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        7
+      ]
+    ],
+    [
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        8
+      ]
+    ],
+    [
+      [
+        0,
+        6
+      ],
+      [
+        1,
+        7
+      ]
+    ],
+    [
+      [
+        0,
+        7
+      ],
+      [
+        1,
+        8
+      ]
+    ],
+    [
+      [
+        1,
+        6
+      ],
+      [
+        2,
+        7
+      ]
+    ],
+    [
+      [
+        1,
+        7
+      ],
+      [
+        2,
+        8
+      ]
+    ]
+  ],
+  "conversion": {
+    ";": {
+      "keys": [
+        ","
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "、": {
+      "keys": [
+        ","
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "。": {
+      "keys": [
+        "."
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "ぁ": {
+      "keys": [
+        "m"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "あ": {
+      "keys": [
+        "k"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ぃ": {
+      "keys": [
+        ","
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "い": {
+      "keys": [
+        "f"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "ぅ": {
+      "keys": [
+        "y"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "う": {
+      "keys": [
+        "j"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "ぇ": {
+      "keys": [
+        "h"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "え": {
+      "keys": [
+        "x"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ぉ": {
+      "keys": [
+        "y"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "お": {
+      "keys": [
+        "j"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "か": {
+      "keys": [
+        "l"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "が": {
+      "keys": [
+        "r"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "き": {
+      "keys": [
+        "/"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "ぎ": {
+      "keys": [
+        "h"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "く": {
+      "keys": [
+        "t"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "ぐ": {
+      "keys": [
+        "c"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "け": {
+      "keys": [
+        "n"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "げ": {
+      "keys": [
+        "e"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "こ": {
+      "keys": [
+        "w"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ご": {
+      "keys": [
+        "b"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "さ": {
+      "keys": [
+        "z"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ざ": {
+      "keys": [
+        "z"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "し": {
+      "keys": [
+        "a"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "じ": {
+      "keys": [
+        "a"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "す": {
+      "keys": [
+        "g"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "ず": {
+      "keys": [
+        "v"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "せ": {
+      "keys": [
+        "c"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ぜ": {
+      "keys": [
+        "."
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "そ": {
+      "keys": [
+        "b"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "ぞ": {
+      "keys": [
+        "n"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "た": {
+      "keys": [
+        "e"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "だ": {
+      "keys": [
+        "v"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ち": {
+      "keys": [
+        ";"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ぢ": {
+      "keys": [
+        ";"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "っ": {
+      "keys": [
+        "u"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "つ": {
+      "keys": [
+        "s"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "づ": {
+      "keys": [
+        "o"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "て": {
+      "keys": [
+        "x"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "で": {
+      "keys": [
+        "o"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "と": {
+      "keys": [
+        "k"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "ど": {
+      "keys": [
+        "m"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "な": {
+      "keys": [
+        "c"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "に": {
+      "keys": [
+        "h"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "ぬ": {
+      "keys": [
+        "y"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "ね": {
+      "keys": [
+        "/"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "の": {
+      "keys": [
+        ";"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "は": {
+      "keys": [
+        "d"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ば": {
+      "keys": [
+        "a"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "ぱ": {
+      "keys": [
+        "q"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "ひ": {
+      "keys": [
+        "l"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "び": {
+      "keys": [
+        "b"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "ぴ": {
+      "keys": [
+        "p"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ふ": {
+      "keys": [
+        "g"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ぶ": {
+      "keys": [
+        "i"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "ぷ": {
+      "keys": [
+        "n"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "へ": {
+      "keys": [
+        "x"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "べ": {
+      "keys": [
+        "u"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "ぺ": {
+      "keys": [
+        "r"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "ほ": {
+      "keys": [
+        "/"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ぼ": {
+      "keys": [
+        "d"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "ぽ": {
+      "keys": [
+        "t"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ま": {
+      "keys": [
+        "j"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "み": {
+      "keys": [
+        "i"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "む": {
+      "keys": [
+        "q"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "め": {
+      "keys": [
+        "p"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "も": {
+      "keys": [
+        "f"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "ゃ": {
+      "keys": [
+        "g"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "や": {
+      "keys": [
+        "p"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "ゅ": {
+      "keys": [
+        "v"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "ゆ": {
+      "keys": [
+        "s"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "ょ": {
+      "keys": [
+        "r"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "よ": {
+      "keys": [
+        "w"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "ら": {
+      "keys": [
+        "u"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "り": {
+      "keys": [
+        "z"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "る": {
+      "keys": [
+        "i"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "れ": {
+      "keys": [
+        "l"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ろ": {
+      "keys": [
+        "m"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "わ": {
+      "keys": [
+        "e"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "を": {
+      "keys": [
+        "o"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ん": {
+      "keys": [
+        "s"
+      ],
+      "shift": [],
+      "type": "douji"
+    },
+    "ゔ": {
+      "keys": [
+        "q"
+      ],
+      "shift": [
+        "k"
+      ],
+      "type": "douji"
+    },
+    "・": {
+      "keys": [
+        "."
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    },
+    "ー": {
+      "keys": [
+        "f"
+      ],
+      "shift": [
+        "d"
+      ],
+      "type": "douji"
+    }
+  },
+  "keys": [
+    [
+      {
+        "finger": 0,
+        "id": "q",
+        "legend": [
+          "ぱ",
+          "む",
+          "ゔ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 1,
+        "id": "w",
+        "legend": [
+          "よ",
+          "こ",
+          "　"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 2,
+        "id": "e",
+        "legend": [
+          "た",
+          "わ",
+          "げ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 3,
+        "id": "r",
+        "legend": [
+          "が",
+          "ょ",
+          "ぺ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 3,
+        "id": "t",
+        "legend": [
+          "く",
+          "ぽ",
+          "　"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 6,
+        "id": "y",
+        "legend": [
+          "ぬ",
+          "ぅ",
+          "ぉ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 6,
+        "id": "u",
+        "legend": [
+          "っ",
+          "ら",
+          "べ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 7,
+        "id": "i",
+        "legend": [
+          "る",
+          "み",
+          "ぶ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 8,
+        "id": "o",
+        "legend": [
+          "で",
+          "を",
+          "づ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 9,
+        "id": "p",
+        "legend": [
+          "め",
+          "ぴ",
+          "や"
+        ],
+        "size": 1
+      }
+    ],
+    [
+      {
+        "finger": 0,
+        "home": true,
+        "id": "a",
+        "legend": [
+          "し",
+          "じ",
+          "ば"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 1,
+        "home": true,
+        "id": "s",
+        "legend": [
+          "ん",
+          "つ",
+          "ゆ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 2,
+        "home": true,
+        "id": "d",
+        "legend": [
+          "☆",
+          "は",
+          "ぼ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 3,
+        "home": true,
+        "id": "f",
+        "legend": [
+          "い",
+          "ー",
+          "も"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 3,
+        "id": "g",
+        "legend": [
+          "ゃ",
+          "ふ",
+          "す"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 6,
+        "id": "h",
+        "legend": [
+          "に",
+          "ぎ",
+          "ぇ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 6,
+        "home": true,
+        "id": "j",
+        "legend": [
+          "う",
+          "ま",
+          "お"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 7,
+        "home": true,
+        "id": "k",
+        "legend": [
+          "★",
+          "あ",
+          "と"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 8,
+        "home": true,
+        "id": "l",
+        "legend": [
+          "か",
+          "れ",
+          "ひ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 9,
+        "home": true,
+        "id": ";",
+        "legend": [
+          "の",
+          "ち",
+          "ぢ"
+        ],
+        "size": 1
+      }
+    ],
+    [
+      {
+        "finger": 0,
+        "id": "z",
+        "legend": [
+          "ざ",
+          "さ",
+          "り"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 1,
+        "id": "x",
+        "legend": [
+          "て",
+          "え",
+          "へ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 2,
+        "id": "c",
+        "legend": [
+          "な",
+          "せ",
+          "ぐ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 3,
+        "id": "v",
+        "legend": [
+          "ず",
+          "だ",
+          "ゅ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 3,
+        "id": "b",
+        "legend": [
+          "そ",
+          "ご",
+          "び"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 6,
+        "id": "n",
+        "legend": [
+          "け",
+          "ぞ",
+          "ぷ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 6,
+        "id": "m",
+        "legend": [
+          "ど",
+          "ろ",
+          "ぁ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 7,
+        "id": ",",
+        "legend": [
+          "、",
+          ";",
+          "ぃ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 8,
+        "id": ".",
+        "legend": [
+          "。",
+          "・",
+          "ぜ"
+        ],
+        "size": 1
+      },
+      {
+        "finger": 9,
+        "id": "/",
+        "legend": [
+          "き",
+          "ほ",
+          "ね"
+        ],
+        "size": 1
+      }
+    ]
+  ],
+  "name": "GA Optimized Layout (seed: 42, gen: 400)",
+  "remark": "Generated by GA optimizer. Fitness: 85.0125"
+}

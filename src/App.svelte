@@ -27,6 +27,18 @@
   import shinjis from './keyboards/jis_shinjis.json';
   import keinarabe from './keyboards/jis_keinarabe.json';
   import tsuki from './keyboards/jis_tsuki.json';
+  import shingetsu from './keyboards/us_shingetsu.json';
+  import composition31 from './keyboards/jis_composition31.json';
+  import tsukimisouv2 from './keyboards/jis_tsukimisou_v2.json';
+  import rand_20260121_211006 from './keyboards/jis_rand_20260121_211006.json';
+  import rand_20260121_212847 from './keyboards/jis_rand_20260121_212847.json';
+  import rand_20260122_082955 from './keyboards/jis_rand_20260122_082955.json';
+  import rand_20260122_083600 from './keyboards/jis_rand_20260122_083600.json';
+  import rand_20260122_084035 from './keyboards/jis_rand_20260122_084035.json';
+  import rand_20260122_090633 from './keyboards/jis_rand_20260122_090633.json';
+  import rand_20260122_091946 from './keyboards/jis_rand_20260122_091946.json';
+  import ga_optimized from './keyboards/ga_optimized_20260122.json';
+  import ga_optimized_v2 from './keyboards/ga_optimized_20260122_v2.json';
 
   // Material UI
   import Textfield from '@smui/textfield';
@@ -42,6 +54,8 @@
   // 入力UI
   const keyboards = {
     "QWERTYローマ字" : romaji,
+    "GA最適化配列 v2 (F:95.93)": ga_optimized_v2,
+    "GA最適化配列 v1 (F:95.50)": ga_optimized,
     "薙刀式v14": naginata,
     "薙刀式v15B1 MiniAxe": ortho_naginata15,
     "薙刀式v14 MiniAxe": ortho_naginata14,
@@ -53,6 +67,16 @@
     "新下駄": shingeta,
     "飛鳥123": asuka,
     "月配列2-263": tsuki,
+    "新月配列": shingetsu,
+    "コンポジション#3.1": composition31,
+    "月見草v2": tsukimisouv2,
+    "RAND_20260121_211006": rand_20260121_211006,
+    "RAND_20260121_212847": rand_20260121_212847,
+    "RAND_20260122_082955": rand_20260122_082955,
+    "RAND_20260122_083600": rand_20260122_083600,
+    "RAND_20260122_084035": rand_20260122_084035,
+    "RAND_20260122_090633": rand_20260122_090633,
+    "RAND_20260122_091946": rand_20260122_091946,
     "けいならべ": keinarabe,
     "Eucalynローマ字": eucalyn,
     "Dvorak": dvorak,
