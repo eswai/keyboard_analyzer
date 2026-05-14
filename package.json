@@ -28,7 +28,7 @@
     "rollup-plugin-svelte": "^7.2.3",
     "sass": "^1.53.0",
     "serialize-javascript": "^7.0.5",
-    "svelte": "5.55.0",
+    "svelte": "5.55.7",
     "svelte-jester": "^5.0.0",
     "svelte-material-ui": "8.0.3"
   },
@@ -37,6 +37,6 @@
     "svelte-frappe-charts": "^2.0.0"
   },
   "overrides": {
-    "svelte": "5.55.0"
+    "svelte": "5.55.7"
   }
 }
